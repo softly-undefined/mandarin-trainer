@@ -1,0 +1,693 @@
+{
+    "sets": [
+        {
+            "setName": "Chapter 4",
+            "words": [
+                {
+                    "word": "打工",
+                    "pinyin": "da3 gong1",
+                    "definition": "Part-time job"
+                },
+                {
+                    "word": "主任",
+                    "pinyin": "zhu3 ren4",
+                    "definition": "Director"
+                },
+                {
+                    "word": "介紹",
+                    "pinyin": "jie4 shao4",
+                    "definition": "Introduce"
+                },
+                {
+                    "word": "歲",
+                    "pinyin": "sui4",
+                    "definition": "Age"
+                },
+                {
+                    "word": "語言學",
+                    "pinyin": "yu3 yan2 xue2",
+                    "definition": "Linguistics"
+                },
+                {
+                    "word": "經驗",
+                    "pinyin": "jing1 yan4",
+                    "definition": "Experience"
+                },
+                {
+                    "word": "談",
+                    "pinyin": "tan2",
+                    "definition": "Chat"
+                },
+                {
+                    "word": "當",
+                    "pinyin": "dang1",
+                    "definition": "To serve as"
+                },
+                {
+                    "word": "助教",
+                    "pinyin": "zhu4 jiao4",
+                    "definition": "Teaching assistant"
+                },
+                {
+                    "word": "上午",
+                    "pinyin": "shang4 wu3",
+                    "definition": "Before noon"
+                },
+                {
+                    "word": "除了",
+                    "pinyin": "chu2 le",
+                    "definition": "Other than"
+                },
+                {
+                    "word": "年紀",
+                    "pinyin": "nian2 ji2",
+                    "definition": "Year in school"
+                },
+                {
+                    "word": "暑假",
+                    "pinyin": "shu3 jia4",
+                    "definition": "Summer vacation"
+                },
+                {
+                    "word": "請教",
+                    "pinyin": "qing3 jiao4",
+                    "definition": "To ask (polite)"
+                },
+                {
+                    "word": "貴",
+                    "pinyin": "gui4",
+                    "definition": "Your (honorable)"
+                },
+                {
+                    "word": "薪水",
+                    "pinyin": "xin1 shui3",
+                    "definition": "Wage"
+                },
+                {
+                    "word": "算",
+                    "pinyin": "suan4",
+                    "definition": "To calculate"
+                },
+                {
+                    "word": "按照",
+                    "pinyin": "an4 zhao4",
+                    "definition": "According to"
+                },
+                {
+                    "word": "教授",
+                    "pinyin": "jiao4 shou4",
+                    "definition": "Professor"
+                },
+                {
+                    "word": "鐘點費",
+                    "pinyin": "zhong1 dian3 fei4",
+                    "definition": "Hourly wage for teacher"
+                },
+                {
+                    "word": "份",
+                    "pinyin": "fen4",
+                    "definition": "Measure word for job"
+                },
+                {
+                    "word": "法文",
+                    "pinyin": "fa3 wen2",
+                    "definition": "French language"
+                },
+                {
+                    "word": "亞洲",
+                    "pinyin": "ya4 zhou1",
+                    "definition": "Asia"
+                },
+                {
+                    "word": "西班牙語",
+                    "pinyin": "xi1 ban1 ya2 yu3",
+                    "definition": "Spanish language"
+                },
+                {
+                    "word": "英文",
+                    "pinyin": "ying1 wen2",
+                    "definition": "English language"
+                },
+                {
+                    "word": "法律",
+                    "pinyin": "fa3 lv4",
+                    "definition": "Law"
+                },
+                {
+                    "word": "夠",
+                    "pinyin": "gou4",
+                    "definition": "Enough"
+                },
+                {
+                    "word": "履歷表",
+                    "pinyin": "lv3 li4 biao3",
+                    "definition": "Resume"
+                },
+                {
+                    "word": "面談",
+                    "pinyin": "mian4 tan2",
+                    "definition": "To have interview, interview"
+                },
+                {
+                    "word": "華僑",
+                    "pinyin": "hua2 qiao2",
+                    "definition": "Chinese person overseas"
+                },
+                {
+                    "word": "辦公室",
+                    "pinyin": "ban4 gong1 shi4",
+                    "definition": "Office"
+                },
+                {
+                    "word": "談話",
+                    "pinyin": "tan2 hua4",
+                    "definition": "To talk"
+                },
+                {
+                    "word": "情形",
+                    "pinyin": "qing2 xing2",
+                    "definition": "Situation"
+                },
+                {
+                    "word": "適合",
+                    "pinyin": "shi4 he2",
+                    "definition": "Suitable"
+                },
+                {
+                    "word": "說明",
+                    "pinyin": "shuo1 ming2",
+                    "definition": "To explain"
+                },
+                {
+                    "word": "然後",
+                    "pinyin": "ran2 hou4",
+                    "definition": "After that"
+                },
+                {
+                    "word": "月底",
+                    "pinyin": "yue4 di3",
+                    "definition": "End of the month"
+                },
+                {
+                    "word": "發",
+                    "pinyin": "fa1",
+                    "definition": "To pay (wages)"
+                },
+                {
+                    "word": "馬上",
+                    "pinyin": "ma3 shang4",
+                    "definition": "Immediately"
+                },
+                {
+                    "word": "答應",
+                    "pinyin": "da1 ying4",
+                    "definition": "To accept"
+                },
+                {
+                    "word": "順利",
+                    "pinyin": "shun4 li4",
+                    "definition": "To go smoothly"
+                },
+                {
+                    "word": "黃",
+                    "pinyin": "huang2",
+                    "definition": "Yellow"
+                },
+                {
+                    "word": "沒想到",
+                    "pinyin": "mei2 xiang3 dao4",
+                    "definition": "Unexpectedly, didn't expect"
+                }
+            ]
+        },
+        {
+            "setName": "Chapter 5",
+            "words": [
+                {
+                    "word": "喜酒",
+                    "pinyin": "xi3 jiu3",
+                    "definition": "Wedding banquet/reception"
+                },
+                {
+                    "word": "恭喜",
+                    "pinyin": "gong1 xi3",
+                    "definition": "Congratulate"
+                },
+                {
+                    "word": "新娘",
+                    "pinyin": "xin1 niang2",
+                    "definition": "Bride"
+                },
+                {
+                    "word": "參加",
+                    "pinyin": "can1 jia1",
+                    "definition": "Attend"
+                },
+                {
+                    "word": "婚禮",
+                    "pinyin": "hun1 li3",
+                    "definition": "Wedding ceremony"
+                },
+                {
+                    "word": "西裝",
+                    "pinyin": "xi1 zhuang1",
+                    "definition": "Western suit"
+                },
+                {
+                    "word": "正式",
+                    "pinyin": "zheng4 shi4",
+                    "definition": "Formal"
+                },
+                {
+                    "word": "客人",
+                    "pinyin": "ke4 ren2",
+                    "definition": "Guest"
+                },
+                {
+                    "word": "手",
+                    "pinyin": "shou3",
+                    "definition": "Hand"
+                },
+                {
+                    "word": "照相機",
+                    "pinyin": "zhao4 xiang4 ji1",
+                    "definition": "Camera"
+                },
+                {
+                    "word": "新郎",
+                    "pinyin": "xin1 lang2",
+                    "definition": "Groom"
+                },
+                {
+                    "word": "站",
+                    "pinyin": "zhan4",
+                    "definition": "Stand"
+                },
+                {
+                    "word": "白",
+                    "pinyin": "bai2",
+                    "definition": "White"
+                },
+                {
+                    "word": "帥",
+                    "pinyin": "shuai4",
+                    "definition": "Handsome"
+                },
+                {
+                    "word": "禮服",
+                    "pinyin": "li3 fu2",
+                    "definition": "Formal attire"
+                },
+                {
+                    "word": "座位",
+                    "pinyin": "zuo4 wei4",
+                    "definition": "Seat"
+                },
+                {
+                    "word": "看起來",
+                    "pinyin": "kan4 qi3 lai2",
+                    "definition": "It appears to me"
+                },
+                {
+                    "word": "結婚",
+                    "pinyin": "jie2 hun1",
+                    "definition": "To get married"
+                },
+                {
+                    "word": "日子",
+                    "pinyin": "ri2 zi",
+                    "definition": "Notable day"
+                },
+                {
+                    "word": "親戚",
+                    "pinyin": "qin1 qi1",
+                    "definition": "Relatives"
+                },
+                {
+                    "word": "熱鬧",
+                    "pinyin": "re4 nao4",
+                    "definition": "To be boisterous"
+                },
+                {
+                    "word": "慶祝",
+                    "pinyin": "qing4 zhu4",
+                    "definition": "Celebrate"
+                },
+                {
+                    "word": "件",
+                    "pinyin": "jian4",
+                    "definition": "Measure word for clothing"
+                },
+                {
+                    "word": "喜事",
+                    "pinyin": "xi3 shi4",
+                    "definition": "A very special occasion"
+                },
+                {
+                    "word": "請客",
+                    "pinyin": "qing3 ke4",
+                    "definition": "To treat someone to a meal"
+                },
+                {
+                    "word": "紅包",
+                    "pinyin": "hong2 bao1",
+                    "definition": "Red Envelope"
+                },
+                {
+                    "word": "送",
+                    "pinyin": "song4",
+                    "definition": "To give"
+                },
+                {
+                    "word": "新人",
+                    "pinyin": "xin1 ren2",
+                    "definition": "Newlyweds (when said at wedding)"
+                },
+                {
+                    "word": "喜宴",
+                    "pinyin": "xi3 yan4",
+                    "definition": "Wedding banquet/reception"
+                },
+                {
+                    "word": "敬酒",
+                    "pinyin": "jing4 jiu3",
+                    "definition": "To make a toast"
+                },
+                {
+                    "word": "大人",
+                    "pinyin": "da4 ren2",
+                    "definition": "Adult"
+                },
+                {
+                    "word": "小孩",
+                    "pinyin": "xiao3 hai2",
+                    "definition": "Child"
+                },
+                {
+                    "word": "不得了",
+                    "pinyin": "bu4 de2 liao3",
+                    "definition": "Extremely"
+                },
+                {
+                    "word": "另外",
+                    "pinyin": "ling4 wai4",
+                    "definition": "Another"
+                },
+                {
+                    "word": "糖",
+                    "pinyin": "tang2",
+                    "definition": "Candies"
+                },
+                {
+                    "word": "離開",
+                    "pinyin": "li2 kai1",
+                    "definition": "To depart/leave"
+                },
+                {
+                    "word": "句",
+                    "pinyin": "ju4",
+                    "definition": "Measure word for utterances"
+                },
+                {
+                    "word": "祝福",
+                    "pinyin": "zhu4 fu2",
+                    "definition": "To give blessings to"
+                },
+                {
+                    "word": "話",
+                    "pinyin": "hua4",
+                    "definition": "Utterance, word"
+                },
+                {
+                    "word": "一會兒",
+                    "pinyin": "yi4 huir3",
+                    "definition": "In a moment"
+                },
+                {
+                    "word": "有說有笑",
+                    "pinyin": "you3 shuo1 you3 xiao4",
+                    "definition": "Laughing and joking"
+                },
+                {
+                    "word": "有吃有喝",
+                    "pinyin": "you3 chi1 you3 he1",
+                    "definition": "An availability of food/drink"
+                },
+                {
+                    "word": "百年好合",
+                    "pinyin": "bai3 nian2 hao3 he2",
+                    "definition": "Centurly long marriage"
+                },
+                {
+                    "word": "早生貴子",
+                    "pinyin": "zao3 sheng1 gui4 zi3",
+                    "definition": "May you soon have a child"
+                }
+            ]
+        },
+        {
+            "setName": "Chapter 6",
+            "words": [
+                {
+                    "word": "搬",
+                    "pinyin": "ban1",
+                    "definition": "To move to"
+                },
+                {
+                    "word": "河邊",
+                    "pinyin": "he2 bian1",
+                    "definition": "Riverside"
+                },
+                {
+                    "word": "公園",
+                    "pinyin": "gong1 yuan2",
+                    "definition": "Park"
+                },
+                {
+                    "word": "腳踏車",
+                    "pinyin": "jiao3 ta4 che1",
+                    "definition": "Bicycle"
+                },
+                {
+                    "word": "正在",
+                    "pinyin": "zheng4 zai4",
+                    "definition": "Right in the middle of"
+                },
+                {
+                    "word": "網站",
+                    "pinyin": "wang3 zhan4",
+                    "definition": "Website"
+                },
+                {
+                    "word": "資料",
+                    "pinyin": "zi1 liao4",
+                    "definition": "Information"
+                },
+                {
+                    "word": "搬家",
+                    "pinyin": "ban1 jia1",
+                    "definition": "To move home"
+                },
+                {
+                    "word": "近",
+                    "pinyin": "jin4",
+                    "definition": "Near, close by"
+                },
+                {
+                    "word": "合約",
+                    "pinyin": "he2 yue1",
+                    "definition": "Contract, agreement"
+                },
+                {
+                    "word": "到期",
+                    "pinyin": "dao4 qi2",
+                    "definition": "To expire"
+                },
+                {
+                    "word": "還好",
+                    "pinyin": "hai2 hao3",
+                    "definition": "Fortunately"
+                },
+                {
+                    "word": "光線",
+                    "pinyin": "guang1 xian4",
+                    "definition": "Natural lighting"
+                },
+                {
+                    "word": "重要",
+                    "pinyin": "zhong4 yao4",
+                    "definition": "Important"
+                },
+                {
+                    "word": "如果",
+                    "pinyin": "ru2 guo3",
+                    "definition": "If"
+                },
+                {
+                    "word": "別的",
+                    "pinyin": "bie2 de",
+                    "definition": "Other"
+                },
+                {
+                    "word": "合適",
+                    "pinyin": "he2 shi4",
+                    "definition": "Suitable"
+                },
+                {
+                    "word": "少",
+                    "pinyin": "shao3",
+                    "definition": "To lack"
+                },
+                {
+                    "word": "可惜",
+                    "pinyin": "ke3 xi2",
+                    "definition": "To be a shame"
+                },
+                {
+                    "word": "放",
+                    "pinyin": "fang4",
+                    "definition": "To store, to leave in place"
+                },
+                {
+                    "word": "兩邊",
+                    "pinyin": "liang3 bian1",
+                    "definition": "Both places"
+                },
+                {
+                    "word": "願意",
+                    "pinyin": "yuan4 yi4",
+                    "definition": "To be willing to"
+                },
+                {
+                    "word": "開",
+                    "pinyin": "kai1",
+                    "definition": "To drive"
+                },
+                {
+                    "word": "存",
+                    "pinyin": "cun2",
+                    "definition": "To save"
+                },
+                {
+                    "word": "隨身碟",
+                    "pinyin": "sui2 shen1 die2",
+                    "definition": "Flash drive"
+                },
+                {
+                    "word": "什麼樣",
+                    "pinyin": "shen2 me yang4",
+                    "definition": "What kind of"
+                },
+                {
+                    "word": "慢慢來",
+                    "pinyin": "man4 man4 lai2",
+                    "definition": "Take your time"
+                },
+                {
+                    "word": "不急",
+                    "pinyin": "bu4 ji2",
+                    "definition": "Don't rush, no hurry"
+                }
+
+
+
+
+            ]
+        },
+        {
+            "setName": "what about change name of set",
+            "words": [
+                {
+                    "word": "",
+                    "pinyin": "",
+                    "definition": ""
+                },
+                {
+                    "word": "",
+                    "pinyin": "",
+                    "definition": ""
+                }
+            ]
+        },
+        {
+            "setName": "add yet another set",
+            "words": [
+                {
+                    "word": "",
+                    "pinyin": "",
+                    "definition": ""
+                },
+                {
+                    "word": "",
+                    "pinyin": "",
+                    "definition": ""
+                }
+            ]
+        },
+        {
+            "setName": "and ANOTHER set",
+            "words": [
+                {
+                    "word": "",
+                    "pinyin": "",
+                    "definition": ""
+                },
+                {
+                    "word": "",
+                    "pinyin": "",
+                    "definition": ""
+                }
+            ]
+        },
+        {
+            "setName": "AND ANOTHER set",
+            "words": [
+                {
+                    "word": "",
+                    "pinyin": "",
+                    "definition": ""
+                },
+                {
+                    "word": "",
+                    "pinyin": "",
+                    "definition": ""
+                }
+            ]
+        },
+        {
+            "setName": "For this one I am going to make the name of the selection really long to test out what would happen with a long name",
+            "words": [
+                {
+                    "word": "朋友",
+                    "pinyin": "peng you",
+                    "definition": "friend"
+                },
+                {
+                    "word": "國",
+                    "pinyin": "guo1",
+                    "definition": "country"
+                }
+            ]
+        },
+        {
+            "setName": "Example 中文課本二 第三課",
+            "words": [
+                {
+                    "word": "我",
+                    "pinyin": "wo3",
+                    "definition": "I, me"
+                },
+                {
+                    "word": "你",
+                    "pinyin": "ni3",
+                    "definition": "You"
+                },
+                {
+                    "word": "很",
+                    "pinyin": "hen3",
+                    "definition": "very"
+                }
+            ]
+        }
+    ]
+}
