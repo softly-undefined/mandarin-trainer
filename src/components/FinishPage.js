@@ -28,8 +28,9 @@ export default function Menu(props) {
             </Stack>
 
             <Stack gap='3'>
-                This is where I want to put graphs and stuff analyzing your
-                performance and success rates and stuff later.
+
+                !Work in progress: going to have statistics here about how many you got right and wrong later!
+
                 <Button
                     variant='success'
                     onClick={() => {
