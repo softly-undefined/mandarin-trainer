@@ -124,7 +124,9 @@ export default function Menu(props) {
                         variant='success'
                         disabled={!setChoice || !given || !want}
                         onClick={() => {
-                            goToPage("testingZone");
+                            if(setChoice != "select a learning set"){
+                                goToPage("testingZone");
+                            }
                             //set off the algorithm (how do that)
                         }}
                     >
