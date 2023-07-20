@@ -1,57 +1,63 @@
-
-import { useState, useEffect } from 'react'
-import { Stack, Card, Form, Button, ButtonGroup, ToggleButton, Spinner, CloseButton, Table } from 'react-bootstrap'
-import data from './dictionary.json'
+import { useState, useEffect } from "react";
+import {
+    Stack,
+    Card,
+    Form,
+    Button,
+    ButtonGroup,
+    ToggleButton,
+    Spinner,
+    CloseButton,
+    Table,
+} from "react-bootstrap";
+import data from "./dictionary.json";
 
 export default function Menu(props) {
-
-    const { setChoice, setSetChoice } = props;
-
-
-    //use Table to make this the thing
-    //ok heer we go
-
+    const { setChoice, setSetChoice, goToPage } = props;
     return (
-        <Card body style={{ width: "400px" }}>
-            <Stack direction="horizontal" style={{ justifyContent: "space-between", alignItems: "right" }}>
-                <Card.Title>
-                    {setChoice}
-                </Card.Title>
-                <CloseButton 
-                    //code for the close button
-                    //go back to the menu area somehow
-                    //anything it needs to do to 'reset' this page?
-                    //like what if you quit in the middle of the intermediary stage
-                    //also interactions with the algorithm
-                />
-            </Stack>
+        <Card style={{ width: "400px", maxHeight: "90%" }}>
+            <Card.Body style={{ height: "100%", overflow: "hidden" }}>
+                <Stack
+                    direction='horizontal'
+                    style={{
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                        gap: "5px",
+                    }}
+                >
+                    <Card.Title>{setChoice}</Card.Title>
+                    <CloseButton
+                        onClick={() => {
+                            goToPage("menu");
+                        }}
+                    />
+                </Stack>
 
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Term</th>
-                        <th>PINYIN</th>
-                        <th>Definition</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.sets.map((set) =>
-                        set.setName === setChoice &&
-                        set.words.map((word) => (
-                            <tr key={word}>
-                                <td>{word.word}</td>
-                                <td>{word.pinyin}</td>
-                                <td>{word.definition}</td>
+                <div style={{ height: "100%", overflow: "auto" }}>
+                    <Table style={{ height: "auto", overflow: "hidden" }}>
+                        <thead>
+                            <tr>
+                                <th>Term</th>
+                                <th>PINYIN</th>
+                                <th>Definition</th>
                             </tr>
-                        )
-                        ))}
-
-                </tbody>
-            </Table>
-
-
-
-            {/* <Card.Body>
+                        </thead>
+                        <tbody style={{ overflow: "auto" }}>
+                            {data.sets.map(
+                                (set) =>
+                                    set.setName === setChoice &&
+                                    set.words.map((word) => (
+                                        <tr key={word}>
+                                            <td>{word.character}</td>
+                                            <td>{word.pinyin}</td>
+                                            <td>{word.definition}</td>
+                                        </tr>
+                                    ))
+                            )}
+                        </tbody>
+                    </Table>
+                </div>
+                {/* <Card.Body>
                 <Stack gap={1}>
                     <Stack gap={2}>
                         <Stack gap={0}>
@@ -62,8 +68,7 @@ export default function Menu(props) {
                 </Stack>
 
             </Card.Body> */}
+            </Card.Body>
         </Card>
-    )
+    );
 }
-
-
