@@ -17,6 +17,8 @@ export default function Menu(props) {
         setGiven,
         want,
         setWant,
+        //extra,
+        //setExtra,
         setChoice,
         setSetChoice,
         goToPage,
@@ -24,8 +26,10 @@ export default function Menu(props) {
 
     const [term, setTerm] = useState(""); //change this initial value
     const [key, setKey] = useState(""); //change this initial value
+    //const [extraKey, setExtraKey] = useState("");
     const [answer, setAnswer] = useState("");
-    const [keyText, setKeyText] = useState("");
+    const [keyText, setKeyText] = useState(false);
+    //const [extraKeyText, setExtraKeyText] = useState("");
 
     const [submissionNum, setSubmissionNum] = useState(1); //does the alternating intermediary state
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -33,6 +37,11 @@ export default function Menu(props) {
     const [isCorrect, setIsCorrect] = useState(false);
     const [isDefault, setIsDefault] = useState(true);
     const [formColor, setFormColor] = useState("black"); //sets color of wrongright
+
+    //used for displaying correct info after person answers
+    const [currChar, setCurrChar] = useState("");
+    const [currPinyin, setCurrPinyin] = useState("");
+    const [currDefinition, setCurrDefinition] = useState("");
 
     const [buttonState, setButtonState] = useState("primary");
     const [buttonText, setButtonText] = useState("SUBMIT");
@@ -50,6 +59,10 @@ export default function Menu(props) {
 
     const [answerCounts, setAnswerCounts] = useState({});
     const [wrongCounts, setWrongCounts] = useState({});
+
+    const getFontSize = (length) => {
+        return length > 5 ? '25px' : '50px';
+    }
 
     const shuffle = (set) => { //takes an array and shuffles the stuff inside
         if (set.words.length > 0) {
@@ -73,6 +86,10 @@ export default function Menu(props) {
         setRemainingSet(nextSet);
         setTerm(next[given]);
         setKey(next[want]);
+        setCurrChar(next["character"]);
+        setCurrPinyin(next["pinyin"]);
+        setCurrDefinition(next["definition"]);
+        //setExtraKey(next[extra]);
     }, [given, remainingSet, want]);
 
     const prepareNext = useCallback(() => {
@@ -105,7 +122,8 @@ export default function Menu(props) {
         //when this happens {answer} will be set to the persons answer so here is where handle a "submission"
         if (submissionNum % 2 === 0) {
             //the "answering" part of submission (here is where you input answer)
-            setKeyText(""); //resets the correct answer which is displayed after submission
+            setKeyText(false); //resets the correct answer which is displayed after submission
+            // setExtraKeyText("");
             setAnswer(""); //resets the submission box holding the answer
             setFormColor("black");
             setButtonState("primary");
@@ -117,7 +135,9 @@ export default function Menu(props) {
             prepareNext();
         } else {
             //below is the intermediary state of submission (here is where displays right/wrong)
-            setKeyText(key);
+            setKeyText(true);
+            setTerm("");
+            //setExtraKeyText(extraKey);
             setIsSubmitting(true);
 
             //we don't setAnswer here because not sure if want to leave persons answer in the textbox
@@ -184,24 +204,28 @@ export default function Menu(props) {
                 <Form onSubmit={handleSubmit}>
                     <Stack gap={1}>
                         <Stack gap={2}>
-                            <Stack gap={0}>
-                                <Form.Label
-                                    style={{
-                                        fontSize:
-                                            "50px" /*would love to make this font size variable*/,
-                                    }}
-                                >
-                                    {term}
-                                </Form.Label>
-                                <Form.Label
-                                    style={{
-                                        fontSize:
-                                            "25px" /*same here but less necessary*/,
-                                    }}
-                                >
-                                    {keyText || ""}
-                                </Form.Label>
-                            </Stack>
+                            <Form.Label
+                                style={{
+                                    fontSize: getFontSize(term.length)/*would love to make this font size variable*/,
+                                }}
+                            >
+                                {term}
+                            </Form.Label>
+                            <Form.Label
+                                style={{
+                                    fontSize:
+                                        "25px" /*same here but less necessary*/,
+                                }}
+                            >
+                                {keyText &&
+                                    <Stack>
+                                        <Form.Label style={{ fontSize: "50px" }}>{currChar}</Form.Label>
+                                        <Form.Label>{currPinyin}</Form.Label>
+                                        <Form.Label>{currDefinition}</Form.Label>
+                                    </Stack>
+                                }
+                            </Form.Label>
+
                             <Form.Control
                                 style={formStyle}
                                 spellCheck='false'

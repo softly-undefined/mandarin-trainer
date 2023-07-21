@@ -16,6 +16,7 @@ import FinishPage from "./components/FinishPage";
 function App() {
     const [given, setGiven] = useState("");
     const [want, setWant] = useState("");
+    const [extra, setExtra] = useState("");
     const [setChoice, setSetChoice] = useState("");
 
     //to show or not to show each of the pages
@@ -59,6 +60,8 @@ function App() {
                         setChoice={setChoice}
                         setSetChoice={setSetChoice}
                         goToPage={goToPage}
+                        extra={extra}
+                        SetExtra={setExtra}
                     />
                 )}
 
@@ -71,6 +74,8 @@ function App() {
                         setChoice={setChoice}
                         setSetChoice={setSetChoice}
                         goToPage={goToPage}
+                        extra={extra}
+                        setExtra={setExtra}
                     />
                 )}
 
