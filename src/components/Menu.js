@@ -14,8 +14,6 @@ export default function Menu(props) {
         given,
         setGiven,
         want,
-        //extra,
-        //setExtra,
         setWant,
         setChoice,
         setSetChoice,
@@ -50,7 +48,7 @@ export default function Menu(props) {
                                 setSetChoice(event.target.value)
                             }
                         >
-                            <option>select a set</option> 
+                            <option>select a set</option>
                             {data.sets.map((setChoice) => (
                                 <option
                                     key={setChoice.setName}
@@ -126,18 +124,8 @@ export default function Menu(props) {
                         variant='success'
                         disabled={!setChoice || !given || !want}
                         onClick={() => {
-                            //make the extra set
-                            // if(given === "character" || want === "character"){
-                            //     if(given === "pinyin" || want === "pinyin"){
-                            //         setExtra("definition")
-                            //     }else{
-                            //         setExtra("pinyin")
-                            //     }
-                            // }else{
-                            //     setExtra("character");
-                            // }
-                            //     setExtra();
-                            if(setChoice != "select a learning set"){
+                            //kicks off the testing zone
+                            if (setChoice != "select a learning set") {
                                 goToPage("testingZone");
                             }
                             //set off the algorithm (how do that)

@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-    Stack,
-    Card,
-    Form,
-    Button,
-    ButtonGroup,
-    ToggleButton,
-} from "react-bootstrap";
+import { Stack } from "react-bootstrap";
 
 import Menu from "./components/Menu";
 import TestingZone from "./components/TestingZone";
@@ -16,7 +9,6 @@ import FinishPage from "./components/FinishPage";
 function App() {
     const [given, setGiven] = useState("");
     const [want, setWant] = useState("");
-    const [extra, setExtra] = useState("");
     const [setChoice, setSetChoice] = useState("");
 
     //to show or not to show each of the pages
@@ -60,8 +52,6 @@ function App() {
                         setChoice={setChoice}
                         setSetChoice={setSetChoice}
                         goToPage={goToPage}
-                        extra={extra}
-                        SetExtra={setExtra}
                     />
                 )}
 
@@ -74,8 +64,6 @@ function App() {
                         setChoice={setChoice}
                         setSetChoice={setSetChoice}
                         goToPage={goToPage}
-                        extra={extra}
-                        setExtra={setExtra}
                     />
                 )}
 
