@@ -37,7 +37,7 @@ export default function Menu(props) {
 
     return (
         <Card body style={{ width: "400px" }}>
-            <Card.Title>Mandarin Trainer BETA零</Card.Title>
+            <Card.Title>Mandarin Trainer BETA兩</Card.Title>
             <Card.Body>
                 <Stack gap={3}>
                     <Stack gap={1}>
@@ -48,7 +48,7 @@ export default function Menu(props) {
                                 setSetChoice(event.target.value)
                             }
                         >
-                            <option>select a learning set</option>
+                            <option>select a set</option> 
                             {data.sets.map((setChoice) => (
                                 <option
                                     key={setChoice.setName}

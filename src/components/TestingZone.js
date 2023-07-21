@@ -51,7 +51,7 @@ export default function Menu(props) {
     const [answerCounts, setAnswerCounts] = useState({});
     const [wrongCounts, setWrongCounts] = useState({});
 
-    const shuffle = (set) => {
+    const shuffle = (set) => { //takes an array and shuffles the stuff inside
         if (set.words.length > 0) {
             let shuffled = set.words
                 .map((value) => ({ value, sort: Math.random() }))
@@ -63,6 +63,7 @@ export default function Menu(props) {
         } else {
             goToPage("finishPage");
             console.log("DONE!");
+            //maybe have a command to render the graph objects here? bc exit conidition
         }
     };
 
@@ -82,7 +83,8 @@ export default function Menu(props) {
             // filter out the ones that have been answered correctly 3 times
             let newTrainingSet = { ...trainingSet };
             newTrainingSet.words = newTrainingSet.words.filter((word) => {
-                return (answerCounts[word[want]] || 0) < 3;
+                //this area iterates through the set adding ones in that shouldnt be removed
+                return ((answerCounts[word[want]] || 0) < 3) && !(((answerCounts[word[want]] || 0) >= 2) && ((wrongCounts[word[want]] || 0) == 0));
             });
             console.log(newTrainingSet);
             shuffle(newTrainingSet);
