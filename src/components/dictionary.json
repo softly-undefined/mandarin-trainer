@@ -680,6 +680,31 @@
                 }
 
             ]
+        },
+        {
+            "setName": "testing1000",
+            "words": [
+                {
+                    "character": "THIS",
+                    "pinyin": "this",
+                    "definition": "this definition"
+                },
+                {
+                    "character": "IS",
+                    "pinyin": "is",
+                    "definition": "is definition"
+                },
+                {
+                    "character": "A",
+                    "pinyin": "a",
+                    "definition": "a definition"
+                },
+                {
+                    "character": "TESTING",
+                    "pinyin": "testing",
+                    "definition": "testing definition"
+                }
+            ]
         }
     ]
 }
