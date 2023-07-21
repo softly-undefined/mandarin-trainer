@@ -4,9 +4,6 @@ import {
     Card,
     Form,
     Button,
-    ButtonGroup,
-    ToggleButton,
-    Spinner,
     CloseButton,
 } from "react-bootstrap";
 import data from "./dictionary.json";
@@ -17,8 +14,6 @@ export default function Menu(props) {
         setGiven,
         want,
         setWant,
-        //extra,
-        //setExtra,
         setChoice,
         setSetChoice,
         goToPage,
@@ -26,16 +21,13 @@ export default function Menu(props) {
 
     const [term, setTerm] = useState(""); //change this initial value
     const [key, setKey] = useState(""); //change this initial value
-    //const [extraKey, setExtraKey] = useState("");
     const [answer, setAnswer] = useState("");
     const [keyText, setKeyText] = useState(false);
-    //const [extraKeyText, setExtraKeyText] = useState("");
 
     const [submissionNum, setSubmissionNum] = useState(1); //does the alternating intermediary state
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [isCorrect, setIsCorrect] = useState(false);
-    const [isDefault, setIsDefault] = useState(true);
     const [formColor, setFormColor] = useState("black"); //sets color of wrongright
 
     //used for displaying correct info after person answers
@@ -89,7 +81,6 @@ export default function Menu(props) {
         setCurrChar(next["character"]);
         setCurrPinyin(next["pinyin"]);
         setCurrDefinition(next["definition"]);
-        //setExtraKey(next[extra]);
     }, [given, remainingSet, want]);
 
     const prepareNext = useCallback(() => {
@@ -123,7 +114,6 @@ export default function Menu(props) {
         if (submissionNum % 2 === 0) {
             //the "answering" part of submission (here is where you input answer)
             setKeyText(false); //resets the correct answer which is displayed after submission
-            // setExtraKeyText("");
             setAnswer(""); //resets the submission box holding the answer
             setFormColor("black");
             setButtonState("primary");
@@ -137,7 +127,6 @@ export default function Menu(props) {
             //below is the intermediary state of submission (here is where displays right/wrong)
             setKeyText(true);
             setTerm("");
-            //setExtraKeyText(extraKey);
             setIsSubmitting(true);
 
             //we don't setAnswer here because not sure if want to leave persons answer in the textbox
@@ -242,6 +231,7 @@ export default function Menu(props) {
                         <Button type='submit' variant={buttonState}>
                             {buttonText}
                         </Button>
+                        
                     </Stack>
                 </Form>
             </Card.Body>
