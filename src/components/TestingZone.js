@@ -38,6 +38,13 @@ export default function Menu(props) {
     const [buttonState, setButtonState] = useState("primary");
     const [buttonText, setButtonText] = useState("SUBMIT");
 
+    //multiple choice variables
+    const [isMultipleChoice, setIsMultipleChoice] = useState(false);
+    const [mcButtonSize, setMCButtonSize] = useState(10); //rn i just hardwired the button minwidth but it should be variable around cardsize eventually
+
+
+    const [cardWidth, setCardWidth] = useState(400); //doesn't change right now but can add functionality eventually
+
     const formStyle = {
         color: formColor,
     };
@@ -52,8 +59,20 @@ export default function Menu(props) {
     const [answerCounts, setAnswerCounts] = useState({});
     const [wrongCounts, setWrongCounts] = useState({});
 
+    // const getMCButtonStyle = (length) => {
+    //     //do some calculations here about length
+    //     setMCButtonSize(cardWidth / 4);
+    //     minWidth: mcButtonSize,
+    // }
     const getFontSize = (length) => {
         return length > 5 ? '25px' : '50px';
+    }
+
+    const selectRandomAnswer = (currAns) => {
+        if(trainingSet.words.length > 4) {
+            const randomIndex = Math.floor(Math.random() * trainingSet.words.length);
+            return trainingSet.words[randomIndex][want] === currAns ? selectRandomAnswer(currAns) : trainingSet.words[randomIndex][want];
+        }
     }
 
     const shuffle = (set) => { //takes an array and shuffles the stuff inside
@@ -165,7 +184,7 @@ export default function Menu(props) {
     };
 
     return (
-        <Card body style={{ width: "400px" }}>
+        <Card body style={{ width: cardWidth }}>
             <Stack
                 direction='horizontal'
                 style={{
@@ -215,7 +234,8 @@ export default function Menu(props) {
                                 }
                             </Form.Label>
 
-                            <Form.Control
+                            { !isMultipleChoice && 
+                                <Form.Control
                                 style={formStyle}
                                 spellCheck='false'
                                 placeholder='Answer'
@@ -227,10 +247,46 @@ export default function Menu(props) {
                                     setAnswer(event.target.value)
                                 }
                             />
+                            }
                         </Stack>
+                        { !isMultipleChoice &&
                         <Button type='submit' variant={buttonState}>
                             {buttonText}
                         </Button>
+                        }
+                        { isMultipleChoice &&
+                        <Stack
+                        direction='horizontal'
+                        gap={1}
+                        style={{
+                            justifyContent: "flex-start",
+                            alignItems: "center",
+                        }}
+                        >
+                            <Stack
+                                direction='vertical'
+                                gap={1}
+                                style={{
+                                    justifyContent: "flex-start",
+                                    alignItems: "center",
+                            }}
+                            >       
+                                <Button style={{fontSize:'10px', minWidth: '165px'}}>{selectRandomAnswer(key)}</Button>
+                                <Button style={{fontSize:'10px', minWidth: '165px'}}>{selectRandomAnswer(key)}</Button>
+                            </Stack>
+                            <Stack
+                                direction='vertical'
+                                gap={1}
+                                style={{
+                                    justifyContent: "flex-start",
+                                    alignItems: "center",
+                            }}
+                            >       
+                                <Button style={{fontSize:'10px', minWidth: '165px'}}>{selectRandomAnswer(key)}</Button>
+                                <Button style={{fontSize:'10px', minWidth: '165px'}}>{selectRandomAnswer(key)}</Button>
+                            </Stack>
+                        </Stack>
+                        }
                         
                     </Stack>
                 </Form>
