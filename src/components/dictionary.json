@@ -682,27 +682,272 @@
             ]
         },
         {
-            "setName": "testing1000",
+            "setName": "注音符號練習",
             "words": [
                 {
-                    "character": "THIS",
-                    "pinyin": "this",
-                    "definition": "this definition"
+                    "character": "ㄅ",
+                    "pinyin": "b",
+                    "definition": "爸：ㄅㄚˋ"
                 },
                 {
-                    "character": "IS",
-                    "pinyin": "is",
-                    "definition": "is definition"
+                    "character": "ㄆ",
+                    "pinyin": "p",
+                    "definition": "跑：ㄆㄠˇ"
                 },
                 {
-                    "character": "A",
+                    "character": "ㄇ",
+                    "pinyin": "m",
+                    "definition": "媽：ㄇㄚ"
+                },
+                {
+                    "character": "ㄈ",
+                    "pinyin": "f",
+                    "definition": "放：ㄈㄤˋ"
+                },
+                {
+                    "character": "ㄉ",
+                    "pinyin": "d",
+                    "definition": "大：ㄉㄚˋ"
+                },
+                {
+                    "character": "ㄊ",
+                    "pinyin": "t",
+                    "definition": "他：ㄊㄚ"
+                },
+                {
+                    "character": "ㄋ",
+                    "pinyin": "n",
+                    "definition": "你：ㄋㄧˇ"
+                },
+                {
+                    "character": "ㄌ",
+                    "pinyin": "l",
+                    "definition": "來：ㄌㄞˊ"
+                },
+                {
+                    "character": "ㄍ",
+                    "pinyin": "g",
+                    "definition": "夠：ㄍㄡˋ"
+                },
+                {
+                    "character": "ㄎ",
+                    "pinyin": "k",
+                    "definition": "看：ㄎㄢˋ"
+                },
+                {
+                    "character": "ㄏ",
+                    "pinyin": "h",
+                    "definition": "紅：ㄏㄨㄥˊ"
+                },
+                {
+                    "character": "ㄐ",
+                    "pinyin": "j",
+                    "definition": "今：ㄐㄧㄣ"
+                },
+                {
+                    "character": "ㄑ",
+                    "pinyin": "q",
+                    "definition": "七：ㄑㄧ"
+                },
+                {
+                    "character": "ㄒ",
+                    "pinyin": "x",
+                    "definition": "學;ㄒㄩㄝˊ"
+                },
+                {
+                    "character": "ㄓ",
+                    "pinyin": "zh",
+                    "definition": "知：ㄓ"
+                },
+                {
+                    "character": "ㄔ",
+                    "pinyin": "ch",
+                    "definition": "吃：ㄔ"
+                },
+                {
+                    "character": "ㄕ",
+                    "pinyin": "sh",
+                    "definition": "誰：ㄕㄟˊ"
+                },
+                {
+                    "character": "ㄖ",
+                    "pinyin": "r",
+                    "definition": "日：ㄖˊ"
+                },
+                {
+                    "character": "ㄗ",
+                    "pinyin": "z",
+                    "definition": "字：ㄗˋ"
+                },
+                {
+                    "character": "ㄘ",
+                    "pinyin": "c",
+                    "definition": "菜：ㄘㄞˋ"
+                },
+                {
+                    "character": "ㄙ",
+                    "pinyin": "s",
+                    "definition": "四：ㄙˋ"
+                },
+                {
+                    "character": "ㄚ",
                     "pinyin": "a",
-                    "definition": "a definition"
+                    "definition": "爸：ㄅㄚˋ"
                 },
                 {
-                    "character": "TESTING",
-                    "pinyin": "testing",
-                    "definition": "testing definition"
+                    "character": "ㄛ",
+                    "pinyin": "o",
+                    "definition": "我：ㄨㄛˇ"
+                },
+                {
+                    "character": "ㄜ",
+                    "pinyin": "e",
+                    "definition": "喝：ㄏㄜ"
+                },
+                {
+                    "character": "ㄝ",
+                    "pinyin": "ie",
+                    "definition": "ㄧㄝˇ"
+                },
+                {
+                    "character": "ㄞ",
+                    "pinyin": "ai",
+                    "definition": "愛：ㄞˋ"
+                },
+                {
+                    "character": "ㄟ",
+                    "pinyin": "ei",
+                    "definition": "ㄍㄟˇ"
+                },
+                {
+                    "character": "ㄠ",
+                    "pinyin": "ao",
+                    "definition": "老：ㄌㄠˇ"
+                },
+                {
+                    "character": "ㄡ",
+                    "pinyin": "ou",
+                    "definition": "夠：ㄍㄡˋ"
+                },
+                {
+                    "character": "ㄢ",
+                    "pinyin": "an",
+                    "definition": "搬：ㄅㄢ"
+                },
+                {
+                    "character": "ㄣ",
+                    "pinyin": "en",
+                    "definition": "很：ㄏㄣˇ"
+                },
+                {
+                    "character": "ㄤ",
+                    "pinyin": "ang",
+                    "definition": "忙：ㄇㄤˊ"
+                },
+                {
+                    "character": "ㄥ",
+                    "pinyin": "eng",
+                    "definition": "冷：ㄌㄥˇ"
+                },
+                {
+                    "character": "ㄦ",
+                    "pinyin": "er",
+                    "definition": "而：ㄦˊ"
+                },
+                {
+                    "character": "ㄧ",
+                    "pinyin": "yi",
+                    "definition": "寫：ㄒㄧㄝˇ"
+                },
+                {
+                    "character": "ㄨ",
+                    "pinyin": "w",
+                    "definition": "五：ㄨˇ"
+                },
+                {
+                    "character": "ㄩ",
+                    "pinyin": "v",
+                    "definition": "女：ㄋㄩˇ"
+                },
+                {
+                    "character": "ˉ",
+                    "pinyin": "1",
+                    "definition": "搬：ㄅㄢ"
+                },
+                {
+                    "character": "ˊ",
+                    "pinyin": "2",
+                    "definition": "而：ㄦˊ"
+                },
+                {
+                    "character": "ˇ",
+                    "pinyin": "3",
+                    "definition": "很：ㄏㄣˇ"
+                },
+                {
+                    "character": "ˋ",
+                    "pinyin": "4",
+                    "definition": "夠：ㄍㄡˋ"
+                },
+                {
+                    "character": "˙",
+                    "pinyin": "5",
+                    "definition": "ㄅㄚ˙"
+                }
+            ]
+        },
+        {
+            "setName": "Easy Word Set",
+            "words": [
+                {
+                    "character": "我",
+                    "pinyin": "wo3",
+                    "definition": "I, me"
+                },
+                {
+                    "character": "很",
+                    "pinyin": "hen3",
+                    "definition": "Very"
+                },
+                {
+                    "character": "你",
+                    "pinyin": "ni3",
+                    "definition": "You"
+                },
+                {
+                    "character": "想",
+                    "pinyin": "xiang3",
+                    "definition": "Think/miss"
+                },
+                {
+                    "character": "到",
+                    "pinyin": "dao4",
+                    "definition": "To"
+                },
+                {
+                    "character": "知道",
+                    "pinyin": "zhi1 dao4",
+                    "definition": "Know"
+                },
+                {
+                    "character": "可以",
+                    "pinyin": "ke3 yi3",
+                    "definition": "Can"
+                },
+                {
+                    "character": "真",
+                    "pinyin": "zhen1",
+                    "definition": "Very"
+                },
+                {
+                    "character": "們",
+                    "pinyin": "men",
+                    "definition": "Plural"
+                },
+                {
+                    "character": "非常",
+                    "pinyin": "fei1 chang2",
+                    "definition": "extremely"
                 }
             ]
         }
