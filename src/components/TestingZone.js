@@ -17,6 +17,8 @@ export default function Menu(props) {
         setChoice,
         setSetChoice,
         goToPage,
+        isMultipleChoice,
+        setIsMultipleChoice
     } = props; //should probably change this to get only given, want, and set because we dont need to change them
 
     const [term, setTerm] = useState(""); //change this initial value
@@ -39,7 +41,7 @@ export default function Menu(props) {
     const [buttonText, setButtonText] = useState("SUBMIT");
 
     //multiple choice variables
-    const [isMultipleChoice, setIsMultipleChoice] = useState(false);
+    // const [isMultipleChoice, setIsMultipleChoice] = useState(true);
     const [mcButtonSize, setMCButtonSize] = useState(10); //rn i just hardwired the button minwidth but it should be variable around cardsize eventually
 
 
@@ -58,6 +60,38 @@ export default function Menu(props) {
 
     const [answerCounts, setAnswerCounts] = useState({});
     const [wrongCounts, setWrongCounts] = useState({});
+
+    const [answer1, setAnswer1] = useState(false);
+    const [answer2, setAnswer2] = useState(false);
+    const [answer3, setAnswer3] = useState(false);
+    const [answer4, setAnswer4] = useState(false);
+    const [mcAnswerChoice, setMCAnswerChoice] = useState(4);
+    const [answerPlacement, setAnswerPlacement] = useState(4);
+    const [mcCorrect, setMCCorrect] = useState(false);
+
+    const assignMC = (currAns) => {
+        const answerLocation = Math.floor(Math.random() * 4);
+        console.log("CURRENT KEY", currAns);
+        setAnswer1(selectRandomAnswer(currAns));
+        setAnswer2(selectRandomAnswer(currAns));
+        setAnswer3(selectRandomAnswer(currAns));
+        setAnswer4(selectRandomAnswer(currAns));
+        // console.log(answerLocation); //debuggywuggy tools
+        // console.log(currAns);
+        if(answerLocation === 0) {
+            setAnswer1(currAns);
+            setAnswerPlacement(0);
+        }else if(answerLocation === 1) {
+            setAnswer2(currAns);
+            setAnswerPlacement(1);
+        }else if(answerLocation === 2) {
+            setAnswer3(currAns);
+            setAnswerPlacement(2);
+        }else if(answerLocation === 3) {
+            setAnswer4(currAns);
+            setAnswerPlacement(3);
+        }
+    }
 
     // const getMCButtonStyle = (length) => {
     //     //do some calculations here about length
@@ -97,6 +131,9 @@ export default function Menu(props) {
         setRemainingSet(nextSet);
         setTerm(next[given]);
         setKey(next[want]);
+        if(isMultipleChoice){
+            assignMC(next[want]); //assigns the multiple choice answers/questions
+        }
         setCurrChar(next["character"]);
         setCurrPinyin(next["pinyin"]);
         setCurrDefinition(next["definition"]);
@@ -111,7 +148,7 @@ export default function Menu(props) {
             let newTrainingSet = { ...trainingSet };
             newTrainingSet.words = newTrainingSet.words.filter((word) => {
                 //this area iterates through the set adding ones in that shouldnt be removed
-                return ((answerCounts[word[want]] || 0) < 3) && !(((answerCounts[word[want]] || 0) >= 2) && ((wrongCounts[word[want]] || 0) == 0));
+                return ((answerCounts[word[want]] || 0) < 3) && !(((answerCounts[word[want]] || 0) >= 2) && ((wrongCounts[word[want]] || 0) === 0));
             });
             console.log(newTrainingSet);
             shuffle(newTrainingSet);
@@ -128,7 +165,10 @@ export default function Menu(props) {
     }, [trainingSet]);
 
     const handleSubmit = (event) => {
-        event.preventDefault();
+        console.log("isMultipleChoice", isMultipleChoice);
+        if(!isMultipleChoice){
+            event.preventDefault();
+        }
         //when this happens {answer} will be set to the persons answer so here is where handle a "submission"
         if (submissionNum % 2 === 0) {
             //the "answering" part of submission (here is where you input answer)
@@ -149,7 +189,13 @@ export default function Menu(props) {
             setIsSubmitting(true);
 
             //we don't setAnswer here because not sure if want to leave persons answer in the textbox
-            if (answer === key) {
+            if (answer === key || (event === answerPlacement)) {
+                if(isMultipleChoice) { 
+                    setAnswer1("CORRECT!");
+                    setAnswer2("CORRECT!");
+                    setAnswer3("CORRECT!");
+                    setAnswer4("CORRECT!");
+                }
                 setIsCorrect(true);
                 setFormColor("green");
                 setButtonState("success");
@@ -165,6 +211,12 @@ export default function Menu(props) {
 
                 //interact with the algorithm
             } else {
+                if(isMultipleChoice) { 
+                    setAnswer1("INCORRECT");
+                    setAnswer2("INCORRECT!");
+                    setAnswer3("INCORRECT!");
+                    setAnswer4("INCORRECT");
+                }
                 setIsCorrect(false);
                 setFormColor("red");
                 setButtonState("danger");
@@ -246,7 +298,7 @@ export default function Menu(props) {
                                 onChange={(event) =>
                                     setAnswer(event.target.value)
                                 }
-                            />
+                                />
                             }
                         </Stack>
                         { !isMultipleChoice &&
@@ -271,8 +323,12 @@ export default function Menu(props) {
                                     alignItems: "center",
                             }}
                             >       
-                                <Button style={{fontSize:'10px', minWidth: '165px'}}>{selectRandomAnswer(key)}</Button>
-                                <Button style={{fontSize:'10px', minWidth: '165px'}}>{selectRandomAnswer(key)}</Button>
+                                <Button style={{fontSize:'10px', minWidth: '165px'}} variant={buttonState} onClick={() => {
+                                    handleSubmit(0);
+                                }}>{answer1}</Button>
+                                <Button style={{fontSize:'10px', minWidth: '165px'}} variant={buttonState} onClick={() => {
+                                    handleSubmit(1);
+                                }}>{answer2}</Button>
                             </Stack>
                             <Stack
                                 direction='vertical'
@@ -282,8 +338,12 @@ export default function Menu(props) {
                                     alignItems: "center",
                             }}
                             >       
-                                <Button style={{fontSize:'10px', minWidth: '165px'}}>{selectRandomAnswer(key)}</Button>
-                                <Button style={{fontSize:'10px', minWidth: '165px'}}>{selectRandomAnswer(key)}</Button>
+                                <Button style={{fontSize:'10px', minWidth: '165px'}} variant={buttonState} onClick={() => {
+                                    handleSubmit(2);
+                                }}>{answer3}</Button>
+                                <Button style={{fontSize:'10px', minWidth: '165px'}} variant={buttonState} onClick={() => {
+                                    handleSubmit(3);
+                                }}>{answer4}</Button>
                             </Stack>
                         </Stack>
                         }

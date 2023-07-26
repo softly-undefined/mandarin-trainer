@@ -6,8 +6,10 @@ import {
     Button,
     ButtonGroup,
     ToggleButton,
+    CloseButton
 } from "react-bootstrap";
 import data from "./dictionary.json";
+import { FaChessPawn } from 'react-icons/fa';
 
 export default function Menu(props) {
     const {
@@ -37,7 +39,26 @@ export default function Menu(props) {
 
     return (
         <Card body style={{ width: "400px" }}>
-            <Card.Title>Mandarin Trainer BETA兩</Card.Title>
+            <Stack
+                    direction='horizontal'
+                    style={{
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                        gap: "5px",
+                    }}
+                >
+                    <Card.Title>Mandarin Trainer BETA兩</Card.Title>
+                    <Button 
+                        style={{
+                            backgroundColor: "transparent",
+                            border: "none"
+                        }}
+                        variant="light"
+                        onClick={() => {
+                            goToPage("settings");
+                        }}
+                    > <FaChessPawn /> </Button> 
+            </Stack>
             <Card.Body>
                 <Stack gap={3}>
                     <Stack gap={1}>
