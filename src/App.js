@@ -12,6 +12,7 @@ function App() {
     const [want, setWant] = useState("");
     const [setChoice, setSetChoice] = useState("");
     const [isMultipleChoice, setIsMultipleChoice] = useState(false);
+    const [value, setValue] = useState([2]);
 
     //to show or not to show each of the pages
     const [showMenu, setShowMenu] = useState(true);
@@ -95,6 +96,8 @@ function App() {
                         isMultipleChoice={isMultipleChoice}
                         setIsMultipleChoice={setIsMultipleChoice}
                         goToPage={goToPage}
+                        value={value}
+                        setValue={setValue}
                     />
                 )}
             </Stack>

@@ -13,9 +13,8 @@ import {
 } from "react-bootstrap";
 
 export default function Menu(props) {
-    const { goToPage, isMultipleChoice, setIsMultipleChoice } = props;
+    const { goToPage, isMultipleChoice, setIsMultipleChoice, value, setValue } = props;
 
-    const [value, setValue] = useState([2]);
     const handleChange = (val) => {
         setValue(val);
         if(val === 1) {

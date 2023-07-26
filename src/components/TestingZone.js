@@ -323,10 +323,10 @@ export default function Menu(props) {
                                     alignItems: "center",
                             }}
                             >       
-                                <Button style={{fontSize:'10px', minWidth: '165px'}} variant={buttonState} onClick={() => {
+                                <Button style={{fontSize:'20px', minWidth: '165px'}} variant={buttonState} onClick={() => {
                                     handleSubmit(0);
                                 }}>{answer1}</Button>
-                                <Button style={{fontSize:'10px', minWidth: '165px'}} variant={buttonState} onClick={() => {
+                                <Button style={{fontSize:'20px', minWidth: '165px'}} variant={buttonState} onClick={() => {
                                     handleSubmit(1);
                                 }}>{answer2}</Button>
                             </Stack>
@@ -338,10 +338,10 @@ export default function Menu(props) {
                                     alignItems: "center",
                             }}
                             >       
-                                <Button style={{fontSize:'10px', minWidth: '165px'}} variant={buttonState} onClick={() => {
+                                <Button style={{fontSize:'20px', minWidth: '165px'}} variant={buttonState} onClick={() => {
                                     handleSubmit(2);
                                 }}>{answer3}</Button>
-                                <Button style={{fontSize:'10px', minWidth: '165px'}} variant={buttonState} onClick={() => {
+                                <Button style={{fontSize:'20px', minWidth: '165px'}} variant={buttonState} onClick={() => {
                                     handleSubmit(3);
                                 }}>{answer4}</Button>
                             </Stack>
