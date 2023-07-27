@@ -682,6 +682,227 @@
             ]
         },
         {
+            "setName": "Chapter 7 Part 1",
+            "words": [
+                {
+                    "character": "垃圾",
+                    "pinyin": "le4 se4",
+                    "definition": "Garbage"
+                },
+                {
+                    "character": "倒",
+                    "pinyin": "dao4",
+                    "definition": "To throw out"
+                },
+                {
+                    "character": "丟",
+                    "pinyin": "diu1",
+                    "definition": "To throw"
+                },
+                {
+                    "character": "收",
+                    "pinyin": "shou1",
+                    "definition": "To collect"
+                },
+                {
+                    "character": "以為",
+                    "pinyin": "yi3 wei2",
+                    "definition": "To assume wrongly"
+                },
+                {
+                    "character": "回收",
+                    "pinyin": "hui2 shou1",
+                    "definition": "To recycle"
+                },
+                {
+                    "character": "規定",
+                    "pinyin": "gui1 ding4",
+                    "definition": "Rules, regulation"
+                },
+                {
+                    "character": "要不然",
+                    "pinyin": "yao4 bu4 ran2",
+                    "definition": "Otherwise"
+                },
+                {
+                    "character": "皮包",
+                    "pinyin": "pi2 bao1",
+                    "definition": "Purse"
+                },
+                {
+                    "character": "跑",
+                    "pinyin": "pao3",
+                    "definition": "To run"
+                },
+                {
+                    "character": "追",
+                    "pinyin": "zhui1",
+                    "definition": "To chase"
+                },
+                {
+                    "character": "有趣",
+                    "pinyin": "you3 qu4",
+                    "definition": "Interesting"
+                },
+                {
+                    "character": "不壞",
+                    "pinyin": "bu2 huai4",
+                    "definition": "Not too bad"
+                },
+                {
+                    "character": "天天",
+                    "pinyin": "tian1 tian1",
+                    "definition": "Everyday"
+                },
+                {
+                    "character": "汽水罐",
+                    "pinyin": "qi4 shui3 guan4",
+                    "definition": "Soda can"
+                },
+                {
+                    "character": "紙杯",
+                    "pinyin": "zhi3 bei1",
+                    "definition": "Paper cup"
+                },
+                {
+                    "character": "放下",
+                    "pinyin": "fang4 xia4",
+                    "definition": "Put down"
+                },
+                {
+                    "character": "走出來",
+                    "pinyin": "zou3 chu1 lai2",
+                    "definition": "To walk out of"
+                },
+                {
+                    "character": "怎麼辦",
+                    "pinyin": "zen3 me ban4",
+                    "definition": "What now?"
+                }
+            ]
+        },
+        {
+            "setName": "Chapter 7 Part 2",
+            "words": [
+                {
+                    "character": "聊",
+                    "pinyin": "liao2",
+                    "definition": "To chat (about)"
+                },
+                {
+                    "character": "忽然",
+                    "pinyin": "hu1 ran2",
+                    "definition": "Suddenly"
+                },
+                {
+                    "character": "聲音",
+                    "pinyin": "sheng1 yin1",
+                    "definition": "Sound"
+                },
+                {
+                    "character": "奇怪",
+                    "pinyin": "qi2 guai4",
+                    "definition": "Strange, odd"
+                },
+                {
+                    "character": "袋子",
+                    "pinyin": "dai4 zi",
+                    "definition": "Bag"
+                },
+                {
+                    "character": "輛",
+                    "pinyin": "liang4",
+                    "definition": "Measure word for vehicles"
+                },
+                {
+                    "character": "一定",
+                    "pinyin": "yi2 ding4",
+                    "definition": "Fixed, set, at a certain"
+                },
+                {
+                    "character": "地點",
+                    "pinyin": "di4 dian3",
+                    "definition": "Location"
+                },
+                {
+                    "character": "為了",
+                    "pinyin": "wei4 le",
+                    "definition": "To, for the sake of"
+                },
+                {
+                    "character": "保護",
+                    "pinyin": "bao3 hu4",
+                    "definition": "To protect"
+                },
+                {
+                    "character": "分類",
+                    "pinyin": "fen1 lei4",
+                    "definition": "Classification"
+                },
+                {
+                    "character": "利用",
+                    "pinyin": "li4 yong4",
+                    "definition": "To make use of"
+                },
+                {
+                    "character": "紙",
+                    "pinyin": "zhi3",
+                    "definition": "Paper"
+                },
+                {
+                    "character": "瓶子",
+                    "pinyin": "ping2 zi",
+                    "definition": "Bottle"
+                },
+                {
+                    "character": "塑膠",
+                    "pinyin": "su4 jiao1",
+                    "definition": "Plastic"
+                },
+                {
+                    "character": "資源",
+                    "pinyin": "zi1 yuan2",
+                    "definition": "Resource"
+                },
+                {
+                    "character": "回收桶",
+                    "pinyin": "hui2 shou1 tong3",
+                    "definition": "Recycling bin"
+                },
+                {
+                    "character": "城市",
+                    "pinyin": "cheng2 shi4",
+                    "definition": "City"
+                },
+                {
+                    "character": "聽見",
+                    "pinyin": "ting1 jian4",
+                    "definition": "To hear, to have heard"
+                },
+                {
+                    "character": "開過來",
+                    "pinyin": "kai1 guo4 lai2",
+                    "definition": "To drive over"
+                },
+                {
+                    "character": "走過去",
+                    "pinyin": "zou3 guo4 qu4",
+                    "definition": "To walk over"
+                },
+                {
+                    "character": "丟進去",
+                    "pinyin": "diu1 jin4 qu4",
+                    "definition": "To throw into"
+                },
+                {
+                    "character": "路上",
+                    "pinyin": "lu4 shang4",
+                    "definition": "On the street"
+                }
+
+            ]
+        },
+        {
             "setName": "注音符號練習",
             "words": [
                 {

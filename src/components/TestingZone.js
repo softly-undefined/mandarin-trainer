@@ -190,7 +190,7 @@ export default function Menu(props) {
 
             //we don't setAnswer here because not sure if want to leave persons answer in the textbox
             if (answer === key || (event === answerPlacement)) {
-                if(isMultipleChoice) { 
+                if(isMultipleChoice) {
                     setAnswer1("CORRECT!");
                     setAnswer2("CORRECT!");
                     setAnswer3("CORRECT!");
@@ -212,10 +212,10 @@ export default function Menu(props) {
                 //interact with the algorithm
             } else {
                 if(isMultipleChoice) { 
-                    setAnswer1("INCORRECT");
-                    setAnswer2("INCORRECT!");
-                    setAnswer3("INCORRECT!");
-                    setAnswer4("INCORRECT");
+                    setAnswer1("CORRECT!");
+                    setAnswer2("CORRECT!");
+                    setAnswer3("CORRECT!");
+                    setAnswer4("CORRECT!");
                 }
                 setIsCorrect(false);
                 setFormColor("red");
