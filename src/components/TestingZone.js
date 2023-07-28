@@ -18,7 +18,9 @@ export default function Menu(props) {
         setSetChoice,
         goToPage,
         isMultipleChoice,
-        setIsMultipleChoice
+        setIsMultipleChoice,
+        responseCounts,
+        setResponseCounts
     } = props; //should probably change this to get only given, want, and set because we dont need to change them
 
     const [term, setTerm] = useState(""); //change this initial value
@@ -60,6 +62,8 @@ export default function Menu(props) {
 
     const [answerCounts, setAnswerCounts] = useState({});
     const [wrongCounts, setWrongCounts] = useState({});
+
+    
 
     const [answer1, setAnswer1] = useState(false);
     const [answer2, setAnswer2] = useState(false);
@@ -120,6 +124,7 @@ export default function Menu(props) {
             setRemainingSet(shuffled);
         } else {
             goToPage("finishPage");
+            console.log(responseCounts);
             console.log("DONE!");
             //maybe have a command to render the graph objects here? bc exit conidition
         }
@@ -165,7 +170,6 @@ export default function Menu(props) {
     }, [trainingSet]);
 
     const handleSubmit = (event) => {
-        console.log("isMultipleChoice", isMultipleChoice);
         if(!isMultipleChoice){
             event.preventDefault();
         }
@@ -188,6 +192,7 @@ export default function Menu(props) {
             setTerm("");
             setIsSubmitting(true);
 
+
             //we don't setAnswer here because not sure if want to leave persons answer in the textbox
             if (answer === key || (event === answerPlacement)) {
                 if(isMultipleChoice) {
@@ -201,6 +206,8 @@ export default function Menu(props) {
                 setButtonState("success");
                 setButtonText("CORRECT!");
 
+                responseCounts.push(1);
+
                 //if the person got it right
                 setAnswerCounts((answerCounts) => {
                     let newAnswerCounts = { ...answerCounts };
@@ -212,24 +219,25 @@ export default function Menu(props) {
                 //interact with the algorithm
             } else {
                 if(isMultipleChoice) { 
-                    setAnswer1("CORRECT!");
-                    setAnswer2("CORRECT!");
-                    setAnswer3("CORRECT!");
-                    setAnswer4("CORRECT!");
+                    setAnswer1("INCORRECT!");
+                    setAnswer2("INCORRECT!");
+                    setAnswer3("INCORRECT!");
+                    setAnswer4("INCORRECT!");
                 }
                 setIsCorrect(false);
                 setFormColor("red");
                 setButtonState("danger");
                 setButtonText("INCORRECT");
-                //if the person got it wrong
 
+                responseCounts.push(0);
+
+                //if the person got it wrong
                 setWrongCounts((answerCounts) => {
                     let newAnswerCounts = { ...answerCounts };
                     newAnswerCounts[key] = (newAnswerCounts[key] || 0) + 1;
                     console.log("WRONG", newAnswerCounts);
                     return newAnswerCounts;
                 });
-                //interact with the algorithm
             }
         }
         setSubmissionNum((submissionNum) => submissionNum + 1); //increments the counter which alternates the stuff it does
@@ -272,6 +280,7 @@ export default function Menu(props) {
                                 {term}
                             </Form.Label>
                             <Form.Label
+                                
                                 style={{
                                     fontSize:
                                         "25px" /*same here but less necessary*/,

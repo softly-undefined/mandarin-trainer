@@ -10,7 +10,7 @@ import Settings from "./components/Settings";
 function App() {
     const [given, setGiven] = useState("");
     const [want, setWant] = useState("");
-    const [setChoice, setSetChoice] = useState("");
+    const [setChoice, setSetChoice] = useState(""); //which dataset
     const [isMultipleChoice, setIsMultipleChoice] = useState(false);
     const [value, setValue] = useState([2]);
 
@@ -20,6 +20,8 @@ function App() {
     const [showTestingZone, setShowTestingZone] = useState(false);
     const [showFinishPage, setShowFinishPage] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
+
+    const [responseCounts, setResponseCounts] = useState([]); // creates an array of 1's and 0's based on right/wrong
 
     function goToPage(pageName) {
         setShowMenu(false);
@@ -73,6 +75,8 @@ function App() {
                         setSetChoice={setSetChoice}
                         goToPage={goToPage}
                         isMultipleChoice={isMultipleChoice}
+                        responseCounts={responseCounts}
+                        setResponseCounts={setResponseCounts}
                     />
                 )}
 
@@ -88,6 +92,8 @@ function App() {
                     <FinishPage 
                         setChoice={setChoice} 
                         goToPage={goToPage} 
+                        responseCounts={responseCounts}
+                        setResponseCounts={setResponseCounts}
                     />
                 )}
 

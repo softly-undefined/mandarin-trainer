@@ -12,7 +12,34 @@ import {
 } from "react-bootstrap";
 
 export default function Menu(props) {
-    const { setChoice, goToPage } = props;
+    const { 
+        setChoice, 
+        goToPage,
+        responseCounts,
+        setResponseCounts
+    } = props;
+
+    const [rightCount, setRightCount] = useState(0);
+    const [wrongCount, setWrongCount] = useState(0);
+
+
+    useEffect( () => {
+        getRightWrong(responseCounts);
+        console.log("IS THIS EVER WRITING");
+    }, [responseCounts]);
+
+    const getRightWrong = (array) => {
+        if(array.length > 0){
+            array.forEach((value) => {
+                if(value === 0){
+                    setWrongCount(wrongCount + 1);
+                }else {
+                    setRightCount(rightCount + 1);
+                }
+            });
+        } 
+    }
+
 
     return (
         <Card body style={{ width: "400px" }}>
@@ -29,7 +56,24 @@ export default function Menu(props) {
 
             <Stack gap='3'>
 
-                !Work in progress: going to have statistics here about how many you got right and wrong later!
+                !This is going to be where the graph is located !
+
+                <Stack
+                    direction='horizontal'
+                    style={{
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                        gap: "5px",
+                    }}
+                >
+                    <Stack>
+                        {rightCount}
+                    </Stack>
+                    <Stack>
+                        {wrongCount}
+                    </Stack>
+
+                </Stack>
 
                 <Button
                     variant='success'
