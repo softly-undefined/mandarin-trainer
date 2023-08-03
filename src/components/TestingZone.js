@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import {
     Stack,
     Card,
@@ -20,7 +20,8 @@ export default function Menu(props) {
         isMultipleChoice,
         setIsMultipleChoice,
         responseCounts,
-        setResponseCounts
+        setResponseCounts,
+        ProgressBar
     } = props; //should probably change this to get only given, want, and set because we dont need to change them
 
     const [term, setTerm] = useState(""); //change this initial value
@@ -42,9 +43,6 @@ export default function Menu(props) {
     const [buttonState, setButtonState] = useState("primary");
     const [buttonText, setButtonText] = useState("SUBMIT");
 
-    //multiple choice variables
-    // const [isMultipleChoice, setIsMultipleChoice] = useState(true);
-    const [mcButtonSize, setMCButtonSize] = useState(10); //rn i just hardwired the button minwidth but it should be variable around cardsize eventually
 
 
     const [cardWidth, setCardWidth] = useState(400); //doesn't change right now but can add functionality eventually
@@ -63,15 +61,48 @@ export default function Menu(props) {
     const [answerCounts, setAnswerCounts] = useState({});
     const [wrongCounts, setWrongCounts] = useState({});
 
-    
+    //progress bar
+    //const [remainingSetLength, setRemainingSetLength] = useState(0);
 
-    const [answer1, setAnswer1] = useState(false);
-    const [answer2, setAnswer2] = useState(false);
-    const [answer3, setAnswer3] = useState(false);
-    const [answer4, setAnswer4] = useState(false);
+    
+    //multiple choice related variables
+
+    const [answer1, setAnswer1] = useState("");
+    const [answer2, setAnswer2] = useState("");
+    const [answer3, setAnswer3] = useState("");
+    const [answer4, setAnswer4] = useState("");
+
+    const button1Ref = useRef()
+    const button2Ref = useRef()
+    const button3Ref = useRef()
+    const button4Ref = useRef()
+
+
     const [mcAnswerChoice, setMCAnswerChoice] = useState(4);
     const [answerPlacement, setAnswerPlacement] = useState(4);
     const [mcCorrect, setMCCorrect] = useState(false);
+    const [mcButtonSize, setMCButtonSize] = useState(10); //rn i just hardwired the button minwidth but it should be variable around cardsize eventually
+
+    const handleButton1 = (event) => {
+        if(event.keyCode === 49) {
+            button1Ref.current.click();
+        }
+    }
+    const handleButton2 = (event) => {
+        if(event.keyCode === 50) {
+            button2Ref.current.click();
+        }
+    }
+    const handleButton3 = (event) => {
+        if(event.keyCode === 51) {
+            button3Ref.current.click();
+        }
+    }
+    const handleButton4 = (event) => {
+        if(event.keyCode === 52) {
+            button4Ref.current.click();
+        }
+    }
 
     const assignMC = (currAns) => {
         const answerLocation = Math.floor(Math.random() * 4);
@@ -110,6 +141,7 @@ export default function Menu(props) {
         if(trainingSet.words.length > 4) {
             const randomIndex = Math.floor(Math.random() * trainingSet.words.length);
             return trainingSet.words[randomIndex][want] === currAns ? selectRandomAnswer(currAns) : trainingSet.words[randomIndex][want];
+            //right now two of the dumb answers could be in the multiple choice answers
         }
     }
 
@@ -157,6 +189,7 @@ export default function Menu(props) {
             });
             console.log(newTrainingSet);
             shuffle(newTrainingSet);
+            //boop
         }
     }, [want, remainingSet, answerCounts, trainingSet, presentNext]);
 
@@ -168,6 +201,19 @@ export default function Menu(props) {
         // shuffle the set
         shuffle(trainingSet);
     }, [trainingSet]);
+
+    useEffect(() => {
+        document.addEventListener('keydown', handleButton1);
+        document.addEventListener('keydown', handleButton2);
+        document.addEventListener('keydown', handleButton3);
+        document.addEventListener('keydown', handleButton4);
+        return () => {
+            document.removeEventListener('keydown', handleButton1);
+            document.removeEventListener('keydown', handleButton2);
+            document.removeEventListener('keydown', handleButton3);
+            document.removeEventListener('keydown', handleButton4);
+        };
+    }, []);
 
     const handleSubmit = (event) => {
         if(!isMultipleChoice){
@@ -196,10 +242,23 @@ export default function Menu(props) {
             //we don't setAnswer here because not sure if want to leave persons answer in the textbox
             if (answer === key || (event === answerPlacement)) {
                 if(isMultipleChoice) {
-                    setAnswer1("CORRECT!");
-                    setAnswer2("CORRECT!");
-                    setAnswer3("CORRECT!");
-                    setAnswer4("CORRECT!");
+                    if(answerPlacement === 0) {
+                        setAnswer2("CORRECT!");
+                        setAnswer3("CORRECT!");
+                        setAnswer4("CORRECT!");
+                    }else if (answerPlacement === 1) {
+                        setAnswer1("CORRECT!");
+                        setAnswer3("CORRECT!");
+                        setAnswer4("CORRECT!");
+                    }else if (answerPlacement === 2) {
+                        setAnswer1("CORRECT!");
+                        setAnswer2("CORRECT!");
+                        setAnswer4("CORRECT!");
+                    }else if (answerPlacement === 3) {
+                        setAnswer1("CORRECT!");
+                        setAnswer2("CORRECT!");
+                        setAnswer3("CORRECT!");
+                    }
                 }
                 setIsCorrect(true);
                 setFormColor("green");
@@ -218,11 +277,22 @@ export default function Menu(props) {
 
                 //interact with the algorithm
             } else {
-                if(isMultipleChoice) { 
-                    setAnswer1("INCORRECT!");
+                if(answerPlacement === 0) {
                     setAnswer2("INCORRECT!");
                     setAnswer3("INCORRECT!");
                     setAnswer4("INCORRECT!");
+                }else if (answerPlacement === 1) {
+                    setAnswer1("INCORRECT!");
+                    setAnswer3("INCORRECT!");
+                    setAnswer4("INCORRECT!");
+                }else if (answerPlacement === 2) {
+                    setAnswer1("INCORRECT!");
+                    setAnswer2("INCORRECT!");
+                    setAnswer4("INCORRECT!");
+                }else if (answerPlacement === 3) {
+                    setAnswer1("INCORRECT!");
+                    setAnswer2("INCORRECT!");
+                    setAnswer3("INCORRECT!");
                 }
                 setIsCorrect(false);
                 setFormColor("red");
@@ -332,12 +402,8 @@ export default function Menu(props) {
                                     alignItems: "center",
                             }}
                             >       
-                                <Button style={{fontSize:'20px', minWidth: '165px'}} variant={buttonState} onClick={() => {
-                                    handleSubmit(0);
-                                }}>{answer1}</Button>
-                                <Button style={{fontSize:'20px', minWidth: '165px'}} variant={buttonState} onClick={() => {
-                                    handleSubmit(1);
-                                }}>{answer2}</Button>
+                                <Button style={{fontSize:'20px', minWidth: '165px'}} variant={buttonState} ref={button1Ref} onClick={() => {handleSubmit(0) }}>{answer1}</Button>
+                                <Button style={{fontSize:'20px', minWidth: '165px'}} variant={buttonState} ref={button3Ref} onClick={() => {handleSubmit(1) }}>{answer2}</Button>
                             </Stack>
                             <Stack
                                 direction='vertical'
@@ -347,15 +413,14 @@ export default function Menu(props) {
                                     alignItems: "center",
                             }}
                             >       
-                                <Button style={{fontSize:'20px', minWidth: '165px'}} variant={buttonState} onClick={() => {
-                                    handleSubmit(2);
-                                }}>{answer3}</Button>
-                                <Button style={{fontSize:'20px', minWidth: '165px'}} variant={buttonState} onClick={() => {
-                                    handleSubmit(3);
-                                }}>{answer4}</Button>
+                                <Button style={{fontSize:'20px', minWidth: '165px'}} variant={buttonState} ref={button2Ref} onClick={() => {handleSubmit(2) }}>{answer3}</Button>
+                                <Button style={{fontSize:'20px', minWidth: '165px'}} variant={buttonState} ref={button4Ref} onClick={() => {handleSubmit(3) }}>{answer4}</Button>
                             </Stack>
                         </Stack>
+                        
                         }
+                        
+                        
                         
                     </Stack>
                 </Form>
