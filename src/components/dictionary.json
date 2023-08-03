@@ -682,7 +682,7 @@
             ]
         },
         {
-            "setName": "Chapter 7 Part 1",
+            "setName": "Chapter 7",
             "words": [
                 {
                     "character": "垃圾",
@@ -778,12 +778,7 @@
                     "character": "怎麼辦",
                     "pinyin": "zen3 me ban4",
                     "definition": "What now?"
-                }
-            ]
-        },
-        {
-            "setName": "Chapter 7 Part 2",
-            "words": [
+                },
                 {
                     "character": "聊",
                     "pinyin": "liao2",
@@ -1114,6 +1109,196 @@
                     "character": "˙",
                     "pinyin": "5",
                     "definition": "ㄅㄚ˙"
+                }
+            ]
+        },
+        {
+            "setName": "Chapter 8 part 1",
+            "words": [
+                {
+                    "character": "功夫",
+                    "pinyin": "gong1 fu1",
+                    "definition": "Kungfu, martial arts"
+                },
+                {
+                    "character": "叫",
+                    "pinyin": "jiao4",
+                    "definition": "To call"
+                },
+                {
+                    "character": "見",
+                    "pinyin": "jian4",
+                    "definition": "Accomplishment complete (in perception)"
+                },
+                {
+                    "character": "推",
+                    "pinyin": "tui1",
+                    "definition": "To push"
+                },
+                {
+                    "character": "體育館",
+                    "pinyin": "ti3 yu4 guan3",
+                    "definition": "Gym"
+                },
+                {
+                    "character": "太極拳",
+                    "pinyin": "tai4 ji2 quan2",
+                    "definition": "Tai Chi"
+                },
+                {
+                    "character": "師父",
+                    "pinyin": "shi1 fu4",
+                    "definition": "Master"
+                },
+                {
+                    "character": "天分",
+                    "pinyin": "tian1 fen4",
+                    "definition": "Gift, talent"
+                },
+                {
+                    "character": "懂",
+                    "pinyin": "dong3",
+                    "definition": "To understand, comprehend"
+                },
+                {
+                    "character": "起來",
+                    "pinyin": "qi3 lai2",
+                    "definition": "To wake up"
+                },
+                {
+                    "character": "動作",
+                    "pinyin": "dong4 zuo4",
+                    "definition": "Movement"
+                },
+                {
+                    "character": "輕",
+                    "pinyin": "qing1",
+                    "definition": "Light, effortless, gentle"
+                },
+                {
+                    "character": "腿",
+                    "pinyin": "tui3",
+                    "definition": "Leg"
+                },
+                {
+                    "character": "了",
+                    "pinyin": "liao3",
+                    "definition": "Capability complement"
+                },
+                {
+                    "character": "下去",
+                    "pinyin": "xia4 qu4",
+                    "definition": "Temporal particle meaning to continue with an action"
+                },
+                {
+                    "character": "興趣",
+                    "pinyin": "xing4 qu4",
+                    "definition": "Interest"
+                },
+                {
+                    "character": "借",
+                    "pinyin": "jie4",
+                    "definition": "To borrow"
+                },
+                {
+                    "character": "有天分",
+                    "pinyin": "you3 tian1 fen4",
+                    "definition": "To be gifted, talented"
+                },
+                {
+                    "character": "學會",
+                    "pinyin": "xue2 hui4",
+                    "definition": "To learn, master"
+                },
+                {
+                    "character": "起不來",
+                    "pinyin": "qi3 bu4 lai2",
+                    "definition": "Can't get up (from bed)"
+                },
+                {
+                    "character": "走不了路",
+                    "pinyin": "zou3 bu4 liao3 lu4",
+                    "definition": "Can't walk"
+                }
+            ]
+        },
+        {
+            "setName": "Chapter 8 part 2",
+            "words": [
+                {
+                    "character": "好處",
+                    "pinyin": "hao3 chu4",
+                    "definition": "Benefit"
+                },
+                {
+                    "character": "抱怨",
+                    "pinyin": "bao4 yuan4",
+                    "definition": "To complain"
+                },
+                {
+                    "character": "公尺",
+                    "pinyin": "gong1 chi3",
+                    "definition": "Meter"
+                },
+                {
+                    "character": "總是",
+                    "pinyin": "zong3 shi4",
+                    "definition": "Always, invariably"
+                },
+                {
+                    "character": "完",
+                    "pinyin": "wan2",
+                    "definition": "Phase marker for completion, to finish"
+                },
+                {
+                    "character": "體力",
+                    "pinyin": "ti3 li4",
+                    "definition": "Physical strength"
+                },
+                {
+                    "character": "整天",
+                    "pinyin": "zheng3 tian1",
+                    "definition": "An entire day"
+                },
+                {
+                    "character": "精神",
+                    "pinyin": "jing1 shen2",
+                    "definition": "Spirit, energy"
+                },
+                {
+                    "character": "本來",
+                    "pinyin": "ben3 lai2",
+                    "definition": "Originally"
+                },
+                {
+                    "character": "可能",
+                    "pinyin": "ke3 neng2",
+                    "definition": "Maybe, probably"
+                },
+                {
+                    "character": "回",
+                    "pinyin": "hui2",
+                    "definition": "To return to"
+                },
+                {
+                    "character": "影響",
+                    "pinyin": "ying3 xiang3",
+                    "definition": "To influence, interfere with"
+                },
+                {
+                    "character": "身體",
+                    "pinyin": "shen1 ti3",
+                    "definition": "Body"
+                },
+                {
+                    "character": "練",
+                    "pinyin": "lian4",
+                    "definition": "To practice, to train, to drill"
+                },
+                {
+                    "character": "想起",
+                    "pinyin": "xiang3 qi3",
+                    "definition": "To recall"
                 }
             ]
         },
