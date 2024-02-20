@@ -215,7 +215,7 @@
                 },
                 {
                     "character": "沒想到",
-                    "pinyin": "mei2 xiang3 dao4",
+                    "pinyin": "mei2 xiyang2 li4",
                     "definition": "Unexpectedly, didn't expect"
                 }
             ]
@@ -500,7 +500,7 @@
                 },
                 {
                     "character": "到期",
-                    "pinyin": "dao4 qi2",
+                    "pinyin": "dao4 qi1",
                     "definition": "To expire"
                 },
                 {
@@ -640,7 +640,7 @@
                 },
                 {
                     "character": "長",
-                    "pinyin": "chang2",
+                    "pinyin": "zhang3",
                     "definition": "Long"
                 },
                 {
@@ -691,7 +691,7 @@
                 },
                 {
                     "character": "倒",
-                    "pinyin": "dao4",
+                    "pinyin": "dao",
                     "definition": "To throw out"
                 },
                 {
@@ -1113,7 +1113,7 @@
             ]
         },
         {
-            "setName": "Chapter 8 part 1",
+            "setName": "Chapter 8",
             "words": [
                 {
                     "character": "功夫",
@@ -1213,18 +1213,13 @@
                 {
                     "character": "起不來",
                     "pinyin": "qi3 bu4 lai2",
-                    "definition": "Can't get up (from bed)"
+                    "definition": "Ancient't get up (from bed)"
                 },
                 {
                     "character": "走不了路",
                     "pinyin": "zou3 bu4 liao3 lu4",
-                    "definition": "Can't walk"
-                }
-            ]
-        },
-        {
-            "setName": "Chapter 8 part 2",
-            "words": [
+                    "definition": "Ancient't walk"
+                },
                 {
                     "character": "好處",
                     "pinyin": "hao3 chu4",
@@ -1303,6 +1298,221 @@
             ]
         },
         {
+            "setName": "Chapter 9 part 1",
+            "words": [
+                {
+                    "character": "春假",
+                    "pinyin": "chun1 jia4",
+                    "definition": "Spring Break"
+                },
+                {
+                    "character": "好",
+                    "pinyin": "hao3",
+                    "definition": "Indicates completion"
+                },
+                {
+                    "character": "到",
+                    "pinyin": "dao4",
+                    "definition": "Indicates successful completion"
+                },
+                {
+                    "character": "特色",
+                    "pinyin": "te4 se4",
+                    "definition": "Unique features"
+                },
+                {
+                    "character": "夠",
+                    "pinyin": "gou4",
+                    "definition": "Enough"
+                },
+                {
+                    "character": "顏色",
+                    "pinyin": "yan2 se4",
+                    "definition": "Color"
+                },
+                {
+                    "character": "秒",
+                    "pinyin": "miao4",
+                    "definition": "Temple"
+                },
+                {
+                    "character": "像",
+                    "pinyin": "xiang4",
+                    "definition": "Similar to"
+                },
+                {
+                    "character": "教堂",
+                    "pinyin": "jiao4 tang2",
+                    "definition": "Church, cathedral"
+                },
+                {
+                    "character": "南部",
+                    "pinyin": "nan2 bu4",
+                    "definition": "Southern Region"
+                },
+                {
+                    "character": "潛水",
+                    "pinyin": "qian2 shui3",
+                    "definition": "To dive"
+                },
+                {
+                    "character": "各",
+                    "pinyin": "ge4",
+                    "definition": "Various"
+                },
+                {
+                    "character": "魚",
+                    "pinyin": "yu2",
+                    "definition": "Fish"
+                },
+                {
+                    "character": "酸",
+                    "pinyin": "suan1",
+                    "definition": "Sour"
+                },
+                {
+                    "character": "檸檬",
+                    "pinyin": "ning2 meng2",
+                    "definition": "Lemon/Lime"
+                },
+                {
+                    "character": "味道",
+                    "pinyin": "yang2 li4",
+                    "definition": "Taste, flavor"
+                },
+                {
+                    "character": "泰國",
+                    "pinyin": "tai4 guo2",
+                    "definition": "Thailand"
+                },
+                {
+                    "character": "比起來",
+                    "pinyin": "bi3 qi3 lai2",
+                    "definition": "Compared to"
+                },
+                {
+                    "character": "極了",
+                    "pinyin": "ji2 le",
+                    "definition": "Extremely"
+                },
+                {
+                    "character": "忘不了",
+                    "pinyin": "wang4 bu4 liao3",
+                    "definition": "Unforgettable"
+                },
+                {
+                    "character": "鄉下",
+                    "pinyin": "xiang1 xia4",
+                    "definition": "Countryside"
+                },
+                {
+                    "character": "氣氛",
+                    "pinyin": "qi4 fen1",
+                    "definition": "Atmosphere"
+                },
+                {
+                    "character": "鎮",
+                    "pinyin": "zhen4",
+                    "definition": "Rural Town"
+                },
+                {
+                    "character": "不同",
+                    "pinyin": "bu4 tong2",
+                    "definition": "Different"
+                },
+                {
+                    "character": "現代",
+                    "pinyin": "xian4 dai4",
+                    "definition": "Modern"
+                },
+                {
+                    "character": "公寓",
+                    "pinyin": "gong1 yu4",
+                    "definition": "Apartment"
+                },
+                {
+                    "character": "馬路",
+                    "pinyin": "ma3 lu4",
+                    "definition": "Street"
+                },
+                {
+                    "character": "寬",
+                    "pinyin": "kuan1",
+                    "definition": "Wide"
+                },
+                {
+                    "character": "汽車",
+                    "pinyin": "qi4 che1",
+                    "definition": "Car"
+                },
+                {
+                    "character": "建築",
+                    "pinyin": "jian4 zhu2",
+                    "definition": "Buildings"
+                },
+                {
+                    "character": "老",
+                    "pinyin": "lao3",
+                    "definition": "Old"
+                },
+                {
+                    "character": "層",
+                    "pinyin": "ceng2",
+                    "definition": "Measure word for houses"
+                },
+                {
+                    "character": "北部",
+                    "pinyin": "bei3 bu4",
+                    "definition": "The north"
+                },
+                {
+                    "character": "熱情",
+                    "pinyin": "re4 qing2",
+                    "definition": "Hospitable, welcoming"
+                },
+                {
+                    "character": "擠",
+                    "pinyin": "ji3",
+                    "definition": "Crowded"
+                },
+                {
+                    "character": "飲料",
+                    "pinyin": "yin3 liao4",
+                    "definition": "Beverage"
+                },
+                {
+                    "character": "巴黎",
+                    "pinyin": "ba1 li2",
+                    "definition": "Paris"
+                },
+                {
+                    "character": "高雄市",
+                    "pinyin": "gao1 xiong2 shi4",
+                    "definition": "Kaohsiung"
+                },
+                {
+                    "character": "中南部",
+                    "pinyin": "zhong1 nan2 bu4",
+                    "definition": "Central and southern regions"
+                },
+                {
+                    "character": "買得起",
+                    "pinyin": "mai3 de qi3",
+                    "definition": "Afford"
+                },
+                {
+                    "character": "百貨公司",
+                    "pinyin": "bai3 huo4 gong1 si1",
+                    "definition": "Department store"
+                },
+                {
+                    "character": "越來越",
+                    "pinyin": "yue4 lai2 yue4",
+                    "definition": "More and more"
+                }
+            ]    
+        },
+        {
             "setName": "Easy Word Set",
             "words": [
                 {
@@ -1313,7 +1523,7 @@
                 {
                     "character": "很",
                     "pinyin": "hen3",
-                    "definition": "Very"
+                    "definition": "Festival"
                 },
                 {
                     "character": "你",
@@ -1331,29 +1541,951 @@
                     "definition": "To"
                 },
                 {
-                    "character": "知道",
-                    "pinyin": "zhi1 dao4",
-                    "definition": "Know"
+                    "character": "陽曆",
+                    "pinyin": "yang2 li4",
+                    "definition": "Solar "
                 },
                 {
-                    "character": "可以",
-                    "pinyin": "ke3 yi3",
-                    "definition": "Can"
+                    "character": "古老",
+                    "pinyin": "gu3 lao3",
+                    "definition": "Ancient"
                 },
                 {
                     "character": "真",
-                    "pinyin": "zhen1",
-                    "definition": "Very"
+                    "pinyin": "jie2 ri4",
+                    "definition": "Festival"
                 },
                 {
                     "character": "們",
-                    "pinyin": "men",
-                    "definition": "Plural"
+                    "pinyin": "an4 zhao4",
+                    "definition": "According to"
                 },
                 {
-                    "character": "非常",
-                    "pinyin": "fei1 chang2",
-                    "definition": "extremely"
+                    "character": "算法",
+                    "pinyin": "suan4 fa3",
+                    "definition": "Calculation"
+                }
+            ]
+        },
+        {
+            "setName": "START CHIN205---------",
+            "words": [
+                {
+                }
+            ]
+        },
+        {
+            "setName": "第十課",
+            "words": [
+                {
+                    "character": "春節",
+                    "pinyin": "chun1 jie2",
+                    "definition": "Spring Festival"
+                },
+                {
+                    "character": "過年",
+                    "pinyin": "guo4 nian2",
+                    "definition": "Celebrate new year"
+                },
+                {
+                    "character": "裝飾",
+                    "pinyin": "zhuang1 shi4",
+                    "definition": "To decorate"
+                },
+                {
+                    "character": "曆",
+                    "pinyin": "li4",
+                    "definition": "Type of "
+                },
+                {
+                    "character": "陰曆",
+                    "pinyin": "yin1 li4",
+                    "definition": ""
+                },
+                {
+                    "character": "陽曆",
+                    "pinyin": "yang2 li4",
+                    "definition": "Solar "
+                },
+                {
+                    "character": "古老",
+                    "pinyin": "gu3 lao3",
+                    "definition": "Ancient"
+                },
+                {
+                    "character": "節日",
+                    "pinyin": "jie2 ri4",
+                    "definition": "Festival"
+                },
+                {
+                    "character": "按照",
+                    "pinyin": "an4 zhao4",
+                    "definition": "According to"
+                },
+                {
+                    "character": "算法",
+                    "pinyin": "suan4 fa3",
+                    "definition": "Calculation"
+                },
+                {
+                    "character": "入",
+                    "pinyin": "ru4",
+                    "definition": "To enter (literary)"
+                },
+                {
+                    "character": "進入",
+                    "pinyin": "jin4 ru4",
+                    "definition": "To enter (compound)"
+                },
+                {
+                    "character": "期間",
+                    "pinyin": "qi1 jian1",
+                    "definition": "During a period of time"
+                },
+                {
+                    "character": "傳統",
+                    "pinyin": "chuan2 tong3",
+                    "definition": "Tradition"
+                },
+                {
+                    "character": "風俗",
+                    "pinyin": "feng1 su2",
+                    "definition": "Convention"
+                },
+                {
+                    "character": "慶祝",
+                    "pinyin": "qing4 zhu4",
+                    "definition": "Celebrate"
+                },
+                {
+                    "character": "活動",
+                    "pinyin": "huo2 dong4",
+                    "definition": "Activity"
+                },
+                {
+                    "character": "如",
+                    "pinyin": "ru2",
+                    "definition": "Such as"
+                },
+                {
+                    "character": "對聯",
+                    "pinyin": "dui4 lian2",
+                    "definition": "Poetic Couplets"
+                },
+                {
+                    "character": "放",
+                    "pinyin": "fang4",
+                    "definition": "To release"
+                },
+                {
+                    "character": "鞭炮",
+                    "pinyin": "bian1 pao4",
+                    "definition": "Firecrackers"
+                },
+                {
+                    "character": "拜年",
+                    "pinyin": "bai4 nian2",
+                    "definition": "To pay New Year's tribute"
+                },
+                {
+                    "character": "迷信",
+                    "pinyin": "mi2 xin4",
+                    "definition": "Superstition"
+                },
+                {
+                    "character": "鬼",
+                    "pinyin": "gui3",
+                    "definition": "Ghosts"
+                },
+                {
+                    "character": "神",
+                    "pinyin": "shen2",
+                    "definition": "Gods"
+                },
+                {
+                    "character": "被",
+                    "pinyin": "bei4",
+                    "definition": "Introduces action/doer of action"
+                },
+                {
+                    "character": "打",
+                    "pinyin": "da3",
+                    "definition": "To hit"
+                },
+                {
+                    "character": "跑",
+                    "pinyin": "pao3",
+                    "definition": "Run"
+                },
+                {
+                    "character": "聲音",
+                    "pinyin": "sheng1 yin",
+                    "definition": "Sound"
+                },
+                {
+                    "character": "大多數",
+                    "pinyin": "da4 duo1 shu4",
+                    "definition": "Majority, most, mostly"
+                },
+                {
+                    "character": "響",
+                    "pinyin": "xiang3",
+                    "definition": "To make a sound, loud"
+                },
+                {
+                    "character": "問候",
+                    "pinyin": "wen4 hou4",
+                    "definition": "To greet"
+                },
+                {
+                    "character": "到來",
+                    "pinyin": "dao4 lai2",
+                    "definition": "To arrive"
+                },
+                {
+                    "character": "恭喜",
+                    "pinyin": "gong1 xi3",
+                    "definition": "Congratulate"
+                },
+                {
+                    "character": "發財",
+                    "pinyin": "fa1 cai2",
+                    "definition": "To make a fortune"
+                },
+                {
+                    "character": "長輩",
+                    "pinyin": "zhang3 bei4",
+                    "definition": "Elders"
+                },
+                {
+                    "character": "紅包",
+                    "pinyin": "hong2 bao1",
+                    "definition": "Red envelope"
+                },
+                {
+                    "character": "除了以外",
+                    "pinyin": "chu2 le yi3 wai4",
+                    "definition": "Aside from"
+                },
+                {
+                    "character": "表演",
+                    "pinyin": "biao3 yan3",
+                    "definition": "Performance"
+                },
+                {
+                    "character": "劉東",
+                    "pinyin": "liu2 dong1",
+                    "definition": "Liu Dong"
+                },
+                {
+                    "character": "餃子",
+                    "pinyin": "jiao3 zi",
+                    "definition": "Dumpling"
+                },
+                {
+                    "character": "既然",
+                    "pinyin": "ji4 ran2",
+                    "definition": "Since..."
+                }
+            ]
+        },
+        {
+            "setName": "第十一課",
+            "words": [
+                {
+                    "character": "禮",
+                    "pinyin": "li3",
+                    "definition": "Rite, etiquette"
+                },
+                {
+                    "character": "禮多人不怪",
+                    "pinyin": "li3 duo1 ren2 bu2 guai4",
+                    "definition": "'You can't be too polite'"
+                },
+                {
+                    "character": "做客",
+                    "pinyin": "zuo4 ke4",
+                    "definition": "Visit invited guest"
+                },
+                {
+                    "character": "應邀",
+                    "pinyin": "ying4 yao1",
+                    "definition": "Respond to invitation"
+                },
+                {
+                    "character": "說明",
+                    "pinyin": "shuo1 ming2",
+                    "definition": "To indicate"
+                },
+                {
+                    "character": "禮貌",
+                    "pinyin": "li3 mao4",
+                    "definition": "Courtesy, manners"
+                },
+                {
+                    "character": "社交",
+                    "pinyin": "she4 jiao1",
+                    "definition": "Socialize"
+                },
+                {
+                    "character": "規矩",
+                    "pinyin": "gui1 ju",
+                    "definition": "Norms, unwritten rules"
+                },
+                {
+                    "character": "了解",
+                    "pinyin": "liao3 jie3",
+                    "definition": "To learn about/know well"
+                },
+                {
+                    "character": "的話",
+                    "pinyin": "de hua4",
+                    "definition": "If..."
+                },
+                {
+                    "character": "異性",
+                    "pinyin": "yi4 xing4",
+                    "definition": "The opposite sex"
+                },
+                {
+                    "character": "千萬",
+                    "pinyin": "qian1 wan4",
+                    "definition": "By any means"
+                },
+                {
+                    "character": "靠",
+                    "pinyin": "kao4",
+                    "definition": "To depend on"
+                },
+                {
+                    "character": "靠近",
+                    "pinyin": "kao4 jin4",
+                    "definition": "To get close to"
+                },
+                {
+                    "character": "擁抱",
+                    "pinyin": "yong1 bao4",
+                    "definition": "To embrace"
+                },
+                {
+                    "character": "親吻",
+                    "pinyin": "qin1 wen3",
+                    "definition": "To kiss"
+                },
+                {
+                    "character": "尊敬",
+                    "pinyin": "zun1 jing4",
+                    "definition": "To respect"
+                },
+                {
+                    "character": "稱呼",
+                    "pinyin": "cheng1 hu1",
+                    "definition": "To address/call"
+                },
+                {
+                    "character": "其他",
+                    "pinyin": "qi2 ta1",
+                    "definition": "Other"
+                },
+                {
+                    "character": "棒",
+                    "pinyin": "bang4",
+                    "definition": "Super, excellent"
+                },
+                {
+                    "character": "聽起來",
+                    "pinyin": "ting1 qi3 lai2",
+                    "definition": "Sounds like"
+                },
+                {
+                    "character": "原來",
+                    "pinyin": "yuan2 lai2",
+                    "definition": "As it turned out"
+                },
+                {
+                    "character": "架子",
+                    "pinyin": "jia4 zi",
+                    "definition": "Haughty manner"
+                },
+                {
+                    "character": "架子大",
+                    "pinyin": "jia4 zi da4",
+                    "definition": "Overbearing"
+                },
+                {
+                    "character": "準時",
+                    "pinyin": "zhun3 shi2",
+                    "definition": "Punctual"
+                },
+                {
+                    "character": "熟",
+                    "pinyin": "shou2",
+                    "definition": "Ripe, cooked, familiar"
+                },
+                {
+                    "character": "開心",
+                    "pinyin": "kai1 xin1",
+                    "definition": "Happy"
+                },
+                {
+                    "character": "怠慢",
+                    "pinyin": "dai4 man4",
+                    "definition": "To neglect"
+                },
+                {
+                    "character": "詞",
+                    "pinyin": "ci2",
+                    "definition": "Word, term"
+                }
+            ]
+        },
+        {
+            "setName": "第十和十一課",
+            "words": [
+                {
+                    "character": "禮",
+                    "pinyin": "li3",
+                    "definition": "Rite, etiquette"
+                },
+                {
+                    "character": "禮多人不怪",
+                    "pinyin": "li3 duo1 ren2 bu2 guai4",
+                    "definition": "'You can't be too polite'"
+                },
+                {
+                    "character": "做客",
+                    "pinyin": "zuo4 ke4",
+                    "definition": "Visit invited guest"
+                },
+                {
+                    "character": "應邀",
+                    "pinyin": "ying4 yao1",
+                    "definition": "Respond to invitation"
+                },
+                {
+                    "character": "說明",
+                    "pinyin": "shuo1 ming2",
+                    "definition": "To indicate"
+                },
+                {
+                    "character": "禮貌",
+                    "pinyin": "li3 mao4",
+                    "definition": "Courtesy, manners"
+                },
+                {
+                    "character": "社交",
+                    "pinyin": "she4 jiao1",
+                    "definition": "Socialize"
+                },
+                {
+                    "character": "規矩",
+                    "pinyin": "gui1 ju",
+                    "definition": "Norms, unwritten rules"
+                },
+                {
+                    "character": "了解",
+                    "pinyin": "liao3 jie3",
+                    "definition": "To learn about/know well"
+                },
+                {
+                    "character": "的話",
+                    "pinyin": "de hua4",
+                    "definition": "If..."
+                },
+                {
+                    "character": "異性",
+                    "pinyin": "yi4 xing4",
+                    "definition": "The opposite sex"
+                },
+                {
+                    "character": "千萬",
+                    "pinyin": "qian1 wan4",
+                    "definition": "By any means"
+                },
+                {
+                    "character": "靠",
+                    "pinyin": "kao4",
+                    "definition": "To depend on"
+                },
+                {
+                    "character": "靠近",
+                    "pinyin": "kao4 jin4",
+                    "definition": "To get close to"
+                },
+                {
+                    "character": "擁抱",
+                    "pinyin": "yong1 bao4",
+                    "definition": "To embrace"
+                },
+                {
+                    "character": "親吻",
+                    "pinyin": "qin1 wen3",
+                    "definition": "To kiss"
+                },
+                {
+                    "character": "尊敬",
+                    "pinyin": "zun1 jing4",
+                    "definition": "To respect"
+                },
+                {
+                    "character": "稱呼",
+                    "pinyin": "cheng1 hu1",
+                    "definition": "To address/call"
+                },
+                {
+                    "character": "其他",
+                    "pinyin": "qi2 ta1",
+                    "definition": "Other"
+                },
+                {
+                    "character": "棒",
+                    "pinyin": "bang4",
+                    "definition": "Super, excellent"
+                },
+                {
+                    "character": "聽起來",
+                    "pinyin": "ting1 qi3 lai2",
+                    "definition": "Sounds like"
+                },
+                {
+                    "character": "原來",
+                    "pinyin": "yuan2 lai2",
+                    "definition": "As it turned out"
+                },
+                {
+                    "character": "架子",
+                    "pinyin": "jia4 zi",
+                    "definition": "Haughty manner"
+                },
+                {
+                    "character": "架子大",
+                    "pinyin": "jia4 zi da4",
+                    "definition": "Overbearing"
+                },
+                {
+                    "character": "準時",
+                    "pinyin": "zhun3 shi2",
+                    "definition": "Punctual"
+                },
+                {
+                    "character": "熟",
+                    "pinyin": "shou2",
+                    "definition": "Ripe, cooked, familiar"
+                },
+                {
+                    "character": "開心",
+                    "pinyin": "kai1 xin1",
+                    "definition": "Happy"
+                },
+                {
+                    "character": "怠慢",
+                    "pinyin": "dai4 man4",
+                    "definition": "To neglect"
+                },
+                {
+                    "character": "詞",
+                    "pinyin": "ci2",
+                    "definition": "Word, term"
+                },
+                {
+                    "character": "春節",
+                    "pinyin": "chun1 jie2",
+                    "definition": "Spring Festival"
+                },
+                {
+                    "character": "過年",
+                    "pinyin": "guo4 nian2",
+                    "definition": "Celebrate new year"
+                },
+                {
+                    "character": "裝飾",
+                    "pinyin": "zhuang1 shi4",
+                    "definition": "To decorate"
+                },
+                {
+                    "character": "曆",
+                    "pinyin": "li4",
+                    "definition": "Type of "
+                },
+                {
+                    "character": "陰曆",
+                    "pinyin": "yin1 li4",
+                    "definition": ""
+                },
+                {
+                    "character": "陽曆",
+                    "pinyin": "yang2 li4",
+                    "definition": "Solar "
+                },
+                {
+                    "character": "古老",
+                    "pinyin": "gu3 lao3",
+                    "definition": "Ancient"
+                },
+                {
+                    "character": "節日",
+                    "pinyin": "jie2 ri4",
+                    "definition": "Festival"
+                },
+                {
+                    "character": "按照",
+                    "pinyin": "an4 zhao4",
+                    "definition": "According to"
+                },
+                {
+                    "character": "算法",
+                    "pinyin": "suan4 fa3",
+                    "definition": "Calculation"
+                },
+                {
+                    "character": "入",
+                    "pinyin": "ru4",
+                    "definition": "To enter (literary)"
+                },
+                {
+                    "character": "進入",
+                    "pinyin": "jin4 ru4",
+                    "definition": "To enter (compound)"
+                },
+                {
+                    "character": "期間",
+                    "pinyin": "qi1 jian1",
+                    "definition": "During a period of time"
+                },
+                {
+                    "character": "傳統",
+                    "pinyin": "chuan2 tong3",
+                    "definition": "Tradition"
+                },
+                {
+                    "character": "風俗",
+                    "pinyin": "feng1 su2",
+                    "definition": "Convention"
+                },
+                {
+                    "character": "慶祝",
+                    "pinyin": "qing4 zhu4",
+                    "definition": "Celebrate"
+                },
+                {
+                    "character": "活動",
+                    "pinyin": "huo2 dong4",
+                    "definition": "Activity"
+                },
+                {
+                    "character": "如",
+                    "pinyin": "ru2",
+                    "definition": "Such as"
+                },
+                {
+                    "character": "對聯",
+                    "pinyin": "dui4 lian2",
+                    "definition": "Poetic Couplets"
+                },
+                {
+                    "character": "放",
+                    "pinyin": "fang4",
+                    "definition": "To release"
+                },
+                {
+                    "character": "鞭炮",
+                    "pinyin": "bian1 pao4",
+                    "definition": "Firecrackers"
+                },
+                {
+                    "character": "拜年",
+                    "pinyin": "bai4 nian2",
+                    "definition": "To pay New Year's tribute"
+                },
+                {
+                    "character": "迷信",
+                    "pinyin": "mi2 xin4",
+                    "definition": "Superstition"
+                },
+                {
+                    "character": "鬼",
+                    "pinyin": "gui3",
+                    "definition": "Ghosts"
+                },
+                {
+                    "character": "神",
+                    "pinyin": "shen2",
+                    "definition": "Gods"
+                },
+                {
+                    "character": "被",
+                    "pinyin": "bei4",
+                    "definition": "Introduces action/doer of action"
+                },
+                {
+                    "character": "打",
+                    "pinyin": "da3",
+                    "definition": "To hit"
+                },
+                {
+                    "character": "跑",
+                    "pinyin": "pao3",
+                    "definition": "Run"
+                },
+                {
+                    "character": "聲音",
+                    "pinyin": "sheng1 yin",
+                    "definition": "Sound"
+                },
+                {
+                    "character": "大多數",
+                    "pinyin": "da4 duo1 shu4",
+                    "definition": "Majority, most, mostly"
+                },
+                {
+                    "character": "響",
+                    "pinyin": "xiang3",
+                    "definition": "To make a sound, loud"
+                },
+                {
+                    "character": "問候",
+                    "pinyin": "wen4 hou4",
+                    "definition": "To greet"
+                },
+                {
+                    "character": "到來",
+                    "pinyin": "dao4 lai2",
+                    "definition": "To arrive"
+                },
+                {
+                    "character": "恭喜",
+                    "pinyin": "gong1 xi3",
+                    "definition": "Congratulate"
+                },
+                {
+                    "character": "發財",
+                    "pinyin": "fa1 cai2",
+                    "definition": "To make a fortune"
+                },
+                {
+                    "character": "長輩",
+                    "pinyin": "zhang3 bei4",
+                    "definition": "Elders"
+                },
+                {
+                    "character": "紅包",
+                    "pinyin": "hong2 bao1",
+                    "definition": "Red envelope"
+                },
+                {
+                    "character": "除了以外",
+                    "pinyin": "chu2 le yi3 wai4",
+                    "definition": "Aside from"
+                },
+                {
+                    "character": "表演",
+                    "pinyin": "biao3 yan3",
+                    "definition": "Performance"
+                },
+                {
+                    "character": "劉東",
+                    "pinyin": "liu2 dong1",
+                    "definition": "Liu Dong"
+                },
+                {
+                    "character": "餃子",
+                    "pinyin": "jiao3 zi",
+                    "definition": "Dumpling"
+                },
+                {
+                    "character": "既然",
+                    "pinyin": "ji4 ran2",
+                    "definition": "Since..."
+                }
+            ]
+        },
+        {
+            "setName": "第十二課",
+            "words": [
+                {
+                    "character": "趙",
+                    "pinyin": "zhao4",
+                    "definition": "Chinese surname"
+                },
+                {
+                    "character": "趙德生",
+                    "pinyin": "zhao4 de2 sheng1",
+                    "definition": "Name of a person"
+                },
+                {
+                    "character": "心事",
+                    "pinyin": "xin1 shi4",
+                    "definition": "Something weighing on one's mind"
+                },
+                {
+                    "character": "門當戶對",
+                    "pinyin": "men2 dang1 hu4 dui4",
+                    "definition": "Perfect match in social status"
+                },
+                {
+                    "character": "談得來",
+                    "pinyin": "tan2 de lai2",
+                    "definition": "Share common interest"
+                },
+                {
+                    "character": "都",
+                    "pinyin": "dou1",
+                    "definition": "Already"
+                },
+                {
+                    "character": "讀",
+                    "pinyin": "du2",
+                    "definition": "To read/study"
+                },
+                {
+                    "character": "抱",
+                    "pinyin": "bao4",
+                    "definition": "To embrace"
+                },
+                {
+                    "character": "孫子",
+                    "pinyin": "sun1 zi",
+                    "definition": "Grandchild"
+                },
+                {
+                    "character": "姪女",
+                    "pinyin": "zhi2 nv",
+                    "definition": "Niece"
+                },
+                {
+                    "character": "蠻",
+                    "pinyin": "man2",
+                    "definition": "Quite, rather, pretty"
+                },
+                {
+                    "character": "配",
+                    "pinyin": "pei4",
+                    "definition": "To match"
+                },
+                {
+                    "character": "事業",
+                    "pinyin": "shi4 ye4",
+                    "definition": "Career, pursuit"
+                },
+                {
+                    "character": "事業心",
+                    "pinyin": "shi4 ye4 xin1",
+                    "definition": "Ambition"
+                },
+                {
+                    "character": "研究所",
+                    "pinyin": "yan2 jiu1 suo3",
+                    "definition": "Graduate school"
+                },
+                {
+                    "character": "來不及",
+                    "pinyin": "lai2 bu ji2",
+                    "definition": "Cannot make it in time"
+                },
+                {
+                    "character": "照顧",
+                    "pinyin": "zhao4 gu4",
+                    "definition": "To attend to"
+                },
+                {
+                    "character": "丈夫",
+                    "pinyin": "zhang4 fu",
+                    "definition": "Husband"
+                },
+                {
+                    "character": "家庭",
+                    "pinyin": "jia1 ting2",
+                    "definition": "Family"
+                },
+                {
+                    "character": "更別活",
+                    "pinyin": "geng4 bie2 shuo1",
+                    "definition": "Let alone"
+                },
+                {
+                    "character": "帶孩子",
+                    "pinyin": "dai4 hai2 zi",
+                    "definition": "Look after a child"
+                },
+                {
+                    "character": "對了",
+                    "pinyin": "dui4 le",
+                    "definition": "By the way..."
+                },
+                {
+                    "character": "萬萬",
+                    "pinyin": "wan4 wan4",
+                    "definition": "By any means"
+                },
+                {
+                    "character": "再說",
+                    "pinyin": "zai4 shuo1",
+                    "definition": "Furthermore"
+                },
+                {
+                    "character": "動不動就",
+                    "pinyin": "dong4 bu dong4 jiu4",
+                    "definition": "Too easily/frequently, always"
+                },
+                {
+                    "character": "擺",
+                    "pinyin": "bai3",
+                    "definition": "To display/arrange"
+                },
+                {
+                    "character": "受不了",
+                    "pinyin": "shou4 bu liao3",
+                    "definition": "Can't tolerate or stand"
+                },
+                {
+                    "character": "兒媳婦",
+                    "pinyin": "er2 xi2 fu",
+                    "definition": "Daughter-in-law"
+                },
+                {
+                    "character": "十全十美",
+                    "pinyin": "shi2 quan2 shi2 mei3",
+                    "definition": "Perfect, good in every aspect"
+                },
+                {
+                    "character": "想像",
+                    "pinyin": "xiang3 xiang4",
+                    "definition": "To imagine, imagination"
+                },
+                {
+                    "character": "可",
+                    "pinyin": "ke3",
+                    "definition": "-able"
+                },
+                {
+                    "character": "可愛",
+                    "pinyin": "ke3 ai4",
+                    "definition": "Cute"
+                },
+                {
+                    "character": "通情達理",
+                    "pinyin": "tong1 qing2 da2 li3",
+                    "definition": "Understanding/reasonable"
+                },
+                {
+                    "character": "多事",
+                    "pinyin": "duo1 shi4",
+                    "definition": "Meddlesome"
+                },
+                {
+                    "character": "何必",
+                    "pinyin": "he2 bi4",
+                    "definition": "What's the point...?"
+                },
+                {
+                    "character": "非不可",
+                    "pinyin": "fei1 bu4 ke3",
+                    "definition": "Must, insist on"
+                },
+                {
+                    "character": "好感",
+                    "pinyin": "hao3 gan3",
+                    "definition": "Good impression/feelings"
                 }
             ]
         }

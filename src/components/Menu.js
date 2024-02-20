@@ -47,7 +47,7 @@ export default function Menu(props) {
                         gap: "5px",
                     }}
                 >
-                    <Card.Title>Mandarin Trainer BETA兩</Card.Title>
+                    <Card.Title>Mandarin Trainer BETA</Card.Title>
                     <Button 
                         style={{
                             backgroundColor: "transparent",

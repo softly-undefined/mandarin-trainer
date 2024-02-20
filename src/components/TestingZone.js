@@ -74,14 +74,16 @@ export default function Menu(props) {
     const [mcButtonSize, setMCButtonSize] = useState(10); //rn i just hardwired the button minwidth but it should be variable around cardsize eventually
 
     const handleButton = (event) => {
-        if (event.keyCode === 49) {
-            button1Ref.current.click();
-        } else if (event.keyCode === 50) {
-            button2Ref.current.click();
-        } else if (event.keyCode === 51) {
-            button3Ref.current.click();
-        } else if (event.keyCode === 52) {
-            button4Ref.current.click();
+        if (isMultipleChoice){
+            if (event.keyCode === 49) {
+                button1Ref.current.click();
+            } else if (event.keyCode === 50) {
+                button2Ref.current.click();
+            } else if (event.keyCode === 51) {
+                button3Ref.current.click();
+            } else if (event.keyCode === 52) {
+                button4Ref.current.click();
+            }
         }
     };
 
