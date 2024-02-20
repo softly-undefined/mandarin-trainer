@@ -11,8 +11,14 @@ function App() {
     const [given, setGiven] = useState("");
     const [want, setWant] = useState("");
     const [setChoice, setSetChoice] = useState(""); //which dataset
+
+    //Code for the Multiple Choice in Settings
     const [isMultipleChoice, setIsMultipleChoice] = useState(false);
-    const [value, setValue] = useState([2]);
+    const [multipleChoiceValue, setMultipleChoiceValue] = useState([2]);
+
+    //Code for Traditional in Settings
+    const [isTraditional, setIsTraditional] = useState(false);
+    const [traditionalValue, setTraditionalValue] = useState([2]);
 
     //to show or not to show each of the pages
     const [showMenu, setShowMenu] = useState(true);
@@ -99,11 +105,19 @@ function App() {
 
                 {showSettings && (
                     <Settings
+                        goToPage={goToPage}
+                    
                         isMultipleChoice={isMultipleChoice}
                         setIsMultipleChoice={setIsMultipleChoice}
-                        goToPage={goToPage}
-                        value={value}
-                        setValue={setValue}
+                        multipleChoiceValue={multipleChoiceValue}
+                        setMultipleChoiceValue={setMultipleChoiceValue}
+
+                        isTraditional={isTraditional}
+                        setIsTraditional={setIsTraditional}
+                        traditionalValue={traditionalValue}
+                        setTraditionalValue={setTraditionalValue}
+
+                        
                     />
                 )}
             </Stack>

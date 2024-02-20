@@ -13,14 +13,35 @@ import {
 } from "react-bootstrap";
 
 export default function Menu(props) {
-    const { goToPage, isMultipleChoice, setIsMultipleChoice, value, setValue } = props;
+    const { goToPage, 
 
-    const handleChange = (val) => {
-        setValue(val);
+            isMultipleChoice, 
+            setIsMultipleChoice, 
+            multipleChoiceValue, 
+            setMultipleChoiceValue,
+
+            isTraditional,
+            setIsTraditional,
+            traditionalValue,
+            setTraditionalValue
+
+            
+    } = props;
+
+    const handleMCChange = (val) => {
+        setMultipleChoiceValue(val);
         if(val === 1) {
             setIsMultipleChoice(true);
         }else {
             setIsMultipleChoice(false);
+        }
+    };
+    const handleTraditionalChange = (val) => {
+        setTraditionalValue(val);
+        if(val === 1) {
+            setIsTraditional(true);
+        }else {
+            setIsTraditional(false);
         }
     };
 
@@ -51,11 +72,29 @@ export default function Menu(props) {
                     }}
                 >
                     <Card.Title>Multiple Choice: </Card.Title>
-                    <ToggleButtonGroup type="radio" name="mcToggle" value={value} onChange={handleChange}>
-                        <ToggleButton id="tbg-btn-1" value={1}>
+                    <ToggleButtonGroup type="radio" name="mcToggle" value={multipleChoiceValue} onChange={handleMCChange}>
+                        <ToggleButton id="mc-tbg-btn-1" value={1}>
                             ON
                         </ToggleButton>
-                        <ToggleButton id="tbg-btn-2" value={2}>
+                        <ToggleButton id="mc-tbg-btn-2" value={2}>
+                            OFF
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+                </Stack>
+                <Stack
+                    direction='horizontal'
+                    style={{
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                        gap: "5px",
+                    }}
+                >
+                    <Card.Title>Traditional Characters </Card.Title>
+                    <ToggleButtonGroup type="radio" name="tcToggle" value={traditionalValue} onChange={handleTraditionalChange}>
+                        <ToggleButton id="tc-tbg-btn-1" value={1}>
+                            ON
+                        </ToggleButton>
+                        <ToggleButton id="tc-tbg-btn-2" value={2}>
                             OFF
                         </ToggleButton>
                     </ToggleButtonGroup>
