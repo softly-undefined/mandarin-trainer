@@ -2486,6 +2486,316 @@
                     "character": "好感",
                     "pinyin": "hao3 gan3",
                     "definition": "Good impression/feelings"
+                },
+                {
+                    "character": "原來",
+                    "pinyin": "yuan2 lai2",
+                    "definition": "Original, initial"
+                },
+                {
+                    "character": "眼睛",
+                    "pinyin": "yan3 jing4",
+                    "definition": "Glasses"
+                },
+                {
+                    "character": "瓶",
+                    "pinyin": "ping2",
+                    "definition": "Bottle, jar"
+                },
+                {
+                    "character": "厚",
+                    "pinyin": "hou4",
+                    "definition": "Thick"
+                },
+                {
+                    "character": "書呆子",
+                    "pinyin": "shu1 dai1 zi",
+                    "definition": "Nerd"
+                },
+                {
+                    "character": "根本",
+                    "pinyin": "gen1 ben3",
+                    "definition": "Fundamentally"
+                },
+                {
+                    "character": "有趣",
+                    "pinyin": "you3 qu4",
+                    "definition": "Interesting"
+                },
+                {
+                    "character": "學問",
+                    "pinyin": "xue2 wen4",
+                    "definition": "Knowledge"
+                },
+                {
+                    "character": "體貼",
+                    "pinyin": "ti3 tie1",
+                    "definition": "Considerate"
+                }
+            ]
+        },
+        {
+            "setName": "第十三課",
+            "words": [
+                {
+                    "character": "味道",
+                    "pinyin": "wei4 dao",
+                    "definition": "Flavor"
+                },
+                {
+                    "character": "化學",
+                    "pinyin": "hua4 xue2",
+                    "definition": "Chemistry"
+                },
+                {
+                    "character": "平常",
+                    "pinyin": "ping2 chang2",
+                    "definition": "Often"
+                },
+                {
+                    "character": "比如說",
+                    "pinyin": "bi3 ru2 shuo1",
+                    "definition": "For example"
+                },
+                {
+                    "character": "內行",
+                    "pinyin": "nei4 hang2",
+                    "definition": "Expert"
+                },
+                {
+                    "character": "外行",
+                    "pinyin": "wai4 hang2",
+                    "definition": "Amateur"
+                },
+                {
+                    "character": "炒",
+                    "pinyin": "chao3",
+                    "definition": "Stir-fried"
+                },
+                {
+                    "character": "煮",
+                    "pinyin": "zhu3",
+                    "definition": "To boil"
+                },
+                {
+                    "character": "性",
+                    "pinyin": "xing4",
+                    "definition": "-natured, -ness"
+                },
+                {
+                    "character": "涼性",
+                    "pinyin": "liang2 xing4",
+                    "definition": "Cool-natured"
+                },
+                {
+                    "character": "胃",
+                    "pinyin": "wei4",
+                    "definition": "Stomach"
+                },
+                {
+                    "character": "上火",
+                    "pinyin": "shang4 huo3",
+                    "definition": "Suffer from too much internal heat"
+                },
+                {
+                    "character": "飲食",
+                    "pinyin": "yin3 shi2",
+                    "definition": "Diet"
+                },
+                {
+                    "character": "四川",
+                    "pinyin": "si4 chuan1",
+                    "definition": "Province in China (Szechuan)"
+                },
+                {
+                    "character": "比較",
+                    "pinyin": "bi3 jiao4",
+                    "definition": "Comparatively"
+                },
+                {
+                    "character": "辣",
+                    "pinyin": "la4",
+                    "definition": "Spicy"
+                },
+                {
+                    "character": "而",
+                    "pinyin": "er2",
+                    "definition": "Whereas, but"
+                },
+                {
+                    "character": "却",
+                    "pinyin": "que4",
+                    "definition": "But, however"
+                },
+                {
+                    "character": "廣東",
+                    "pinyin": "guang3 dong1",
+                    "definition": "Province in China (in East)"
+                },
+                {
+                    "character": "溫和",
+                    "pinyin": "wen1 he2",
+                    "definition": "Mild"
+                },
+                {
+                    "character": "參",
+                    "pinyin": "shen1",
+                    "definition": "Ginseng"
+                },
+                {
+                    "character": "營養",
+                    "pinyin": "ying2 yang3",
+                    "definition": "Nutrition"
+                },
+                {
+                    "character": "也就是說",
+                    "pinyin": "ye3 jiu4 shi4 shuo1",
+                    "definition": "That is to say,"
+                },
+                {
+                    "character": "香",
+                    "pinyin": "xiang1",
+                    "definition": "Aroma"
+                },
+                {
+                    "character": "聞",
+                    "pinyin": "wen2",
+                    "definition": "To smell"
+                },
+                {
+                    "character": "計劃",
+                    "pinyin": "ji4 hua4",
+                    "definition": "To plan"
+                },
+                {
+                    "character": "葷",
+                    "pinyin": "hun1",
+                    "definition": "Cooked food containing protein"
+                },
+                {
+                    "character": "素",
+                    "pinyin": "su4",
+                    "definition": "Vegetarian food"
+                },
+                {
+                    "character": "隨你便",
+                    "pinyin": "sui2 ni3 bian4",
+                    "definition": "Do as you please"
+                },
+                {
+                    "character": "紅燒",
+                    "pinyin": "hong2 shao1",
+                    "definition": "To stew with soy sauce"
+                },
+                {
+                    "character": "豆腐",
+                    "pinyin": "dou4 fu",
+                    "definition": "Tofu"
+                },
+                {
+                    "character": "涼拌",
+                    "pinyin": "liang2 ban4",
+                    "definition": "To make a cold dish mixing vegetable and sauce"
+                },
+                {
+                    "character": "黃瓜",
+                    "pinyin": "huang2 gua1",
+                    "definition": "Cucumber"
+                },
+                {
+                    "character": "酸",
+                    "pinyin": "suan1",
+                    "definition": "Sour"
+                },
+                {
+                    "character": "炸",
+                    "pinyin": "zha2",
+                    "definition": "To deep-fry"
+                },
+                {
+                    "character": "鍋",
+                    "pinyin": "guo1",
+                    "definition": "Pot, pan"
+                },
+                {
+                    "character": "醬",
+                    "pinyin": "jiang4",
+                    "definition": "Thick sauce"
+                },
+                {
+                    "character": "蔥",
+                    "pinyin": "cong1",
+                    "definition": "Scallion"
+                },
+                {
+                    "character": "薑",
+                    "pinyin": "jiang1",
+                    "definition": "Onion"
+                },
+                {
+                    "character": "蒜",
+                    "pinyin": "suan4",
+                    "definition": "Garlic"
+                },
+                {
+                    "character": "作料",
+                    "pinyin": "zuo2 liao4",
+                    "definition": "Seasoning"
+                },
+                {
+                    "character": "切",
+                    "pinyin": "qie1",
+                    "definition": "To slice"
+                },
+                {
+                    "character": "糟了",
+                    "pinyin": "zao1 le",
+                    "definition": "Darn it"
+                },
+                {
+                    "character": "醋",
+                    "pinyin": "cu4",
+                    "definition": "Vinegar"
+                },
+                {
+                    "character": "當作",
+                    "pinyin": "dang4 zuo4",
+                    "definition": "To treat something/body as"
+                },
+                {
+                    "character": "醬油",
+                    "pinyin": "jiang4 you2",
+                    "definition": "Soysauce"
+                },
+                {
+                    "character": "嚐",
+                    "pinyin": "chang2",
+                    "definition": "To taste"
+                },
+                {
+                    "character": "怎麼辦",
+                    "pinyin": "zen3 me ban4",
+                    "definition": "What to do?"
+                },
+                {
+                    "character": "急",
+                    "pinyin": "ji2",
+                    "definition": "Anxious, worried"
+                },
+                {
+                    "character": "糖",
+                    "pinyin": "tang2",
+                    "definition": "Candy"
+                },
+                {
+                    "character": "小心",
+                    "pinyin": "xiao3 xin1",
+                    "definition": "Caution"
+                },
+                {
+                    "character": "鹽",
+                    "pinyin": "yan2",
+                    "definition": "Salt"
                 }
             ]
         }
