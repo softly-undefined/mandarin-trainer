@@ -146,7 +146,7 @@ export default function Menu(props) {
                         disabled={!setChoice || !given || !want}
                         onClick={() => {
                             //kicks off the testing zone
-                            if (setChoice != "select a learning set") {
+                            if (setChoice != "select a set") {
                                 goToPage("testingZone");
                             }
                             //set off the algorithm (how do that)
