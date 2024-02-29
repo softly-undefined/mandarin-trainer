@@ -2538,6 +2538,281 @@
             "setName": "第十三課",
             "words": [
                 {
+                    "character": "討論",
+                    "pinyin": "tao3 lun4",
+                    "definition": "Discuss"
+                },
+                {
+                    "character": "龍",
+                    "pinyin": "long2",
+                    "definition": "Dragon"
+                },
+                {
+                    "character": "神話",
+                    "pinyin": "shen2 hua4",
+                    "definition": "Legend/myth"
+                },
+                {
+                    "character": "參觀",
+                    "pinyin": "can1 guan1",
+                    "definition": "To visit"
+                },
+                {
+                    "character": "博物館",
+                    "pinyin": "bo2 wu4 guan3",
+                    "definition": "Museum"
+                },
+                {
+                    "character": "印象",
+                    "pinyin": "yin4 xiang4",
+                    "definition": "Impression"
+                },
+                {
+                    "character": "深",
+                    "pinyin": "shen1",
+                    "definition": "Deep"
+                },
+                {
+                    "character": "崇拜",
+                    "pinyin": "chong2 bai4",
+                    "definition": "Worship"
+                },
+                {
+                    "character": "無",
+                    "pinyin": "wu2",
+                    "definition": "沒有"
+                },
+                {
+                    "character": "動物",
+                    "pinyin": "dong4 wu4",
+                    "definition": "Animal"
+                },
+                {
+                    "character": "形象",
+                    "pinyin": "xing2 xiang4",
+                    "definition": "Image"
+                },
+                {
+                    "character": "據",
+                    "pinyin": "ju4",
+                    "definition": "According to"
+                },
+                {
+                    "character": "據所知",
+                    "pinyin": "ju4 suo3 zhi1",
+                    "definition": "According to what someone says"
+                },
+                {
+                    "character": "界",
+                    "pinyin": "jie4",
+                    "definition": "-world, field, circle"
+                },
+                {
+                    "character": "恐龍",
+                    "pinyin": "kong3 long2",
+                    "definition": "Dinosaur"
+                },
+                {
+                    "character": "複雜",
+                    "pinyin": "fu4 za2 ",
+                    "definition": "Complex"
+                },
+                {
+                    "character": "學者",
+                    "pinyin": "xue2 zhe3",
+                    "definition": "Scholar"
+                },
+                {
+                    "character": "統一",
+                    "pinyin": "tong3 yi1",
+                    "definition": "Unification"
+                },
+                {
+                    "character": "閃電",
+                    "pinyin": "shan3 dian4",
+                    "definition": "Lightning"
+                },
+                {
+                    "character": "相似",
+                    "pinyin": "xiang1 si4",
+                    "definition": "Similar"
+                },
+                {
+                    "character": "古代",
+                    "pinyin": "gu3 dai4",
+                    "definition": "Ancient times"
+                },
+                {
+                    "character": "現象",
+                    "pinyin": "xian4 xiang4",
+                    "definition": "Phenomenon"
+                },
+                {
+                    "character": "雷",
+                    "pinyin": "lei2",
+                    "definition": "Thunder"
+                },
+                {
+                    "character": "打雷",
+                    "pinyin": "da3 lei2",
+                    "definition": "To thunder"
+                },
+                {
+                    "character": "發大水",
+                    "pinyin": "fa1 da4 shui3",
+                    "definition": "To flood"
+                },
+                {
+                    "character": "出現",
+                    "pinyin": "chu1 xian4",
+                    "definition": "To appear/emerge"
+                },
+                {
+                    "character": "同意",
+                    "pinyin": "tong2 yi4",
+                    "definition": "To agree"
+                },
+                {
+                    "character": "另外",
+                    "pinyin": "Ling4 wai4",
+                    "definition": "Another"
+                },
+                {
+                    "character": "道理",
+                    "pinyin": "dao4 li3",
+                    "definition": "Reason, logic"
+                },
+                {
+                    "character": "有道理",
+                    "pinyin": "you3 dao4 li3",
+                    "definition": "To make sense"
+                },
+                {
+                    "character": "部落",
+                    "pinyin": "bu4 luo4",
+                    "definition": "Tribe"
+                },
+                {
+                    "character": "象徵",
+                    "pinyin": "xiang4 zheng1",
+                    "definition": "Symbol"
+                },
+                {
+                    "character": "蛇",
+                    "pinyin": "she2",
+                    "definition": "Snake"
+                },
+                {
+                    "character": "鹿",
+                    "pinyin": "lu4",
+                    "definition": "Deer"
+                },
+                {
+                    "character": "鳥",
+                    "pinyin": "niao3",
+                    "definition": "Bird"
+                },
+                {
+                    "character": "當以後",
+                    "pinyin": "dang1 yi3 hou4",
+                    "definition": "After"
+                },
+                {
+                    "character": "特點",
+                    "pinyin": "te4 dian3",
+                    "definition": "Characteristics"
+                },
+                {
+                    "character": "集中",
+                    "pinyin": "ji2 zhong1",
+                    "definition": "Concentrate"
+                },
+                {
+                    "character": "鷹",
+                    "pinyin": "ying1",
+                    "definition": "Eagle"
+                },
+                {
+                    "character": "爪",
+                    "pinyin": "zhua3",
+                    "definition": "Paw"
+                },
+                {
+                    "character": "角",
+                    "pinyin": "jiao3",
+                    "definition": "Horn"
+                },
+                {
+                    "character": "游",
+                    "pinyin": "you2",
+                    "definition": "To swim"
+                },
+                {
+                    "character": "緣故",
+                    "pinyin": "yuan2 gu4",
+                    "definition": "Reason, case"
+                },
+                {
+                    "character": "由於",
+                    "pinyin": "you2 yu2",
+                    "definition": "Due to"
+                },
+                {
+                    "character": "權力",
+                    "pinyin": "quan2 li4",
+                    "definition": "Authority"
+                },
+                {
+                    "character": "朝代",
+                    "pinyin": "chao2 dai4",
+                    "definition": "Dynasty"
+                },
+                {
+                    "character": "夏朝",
+                    "pinyin": "xia4 chao2",
+                    "definition": "Xia Dynasty"
+                },
+                {
+                    "character": "皇帝",
+                    "pinyin": "huang2 di4",
+                    "definition": "Emperor"
+                },
+                {
+                    "character": "子孫",
+                    "pinyin": "zi3 sun1",
+                    "definition": "Offspring"
+                },
+                {
+                    "character": "望子成龍",
+                    "pinyin": "wang4 zi3 cheng2 long2",
+                    "definition": "To hope one's child will amount to something"
+                },
+                {
+                    "character": "成為",
+                    "pinyin": "cheng2 wei2",
+                    "definition": "To become"
+                },
+                {
+                    "character": "成語",
+                    "pinyin": "cheng2 yu3",
+                    "definition": "Four character idiom"
+                },
+                {
+                    "character": "西方",
+                    "pinyin": "xi1 fang1",
+                    "definition": "the West"
+                },
+                {
+                    "character": "題目",
+                    "pinyin": "ti2 mu4",
+                    "definition": "Topic"
+                }
+            ]
+        },
+        {
+            "setName": "第十四課",
+            "words": [
+                {
                     "character": "味道",
                     "pinyin": "wei4 dao",
                     "definition": "Flavor"
