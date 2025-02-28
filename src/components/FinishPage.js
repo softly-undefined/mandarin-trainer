@@ -56,7 +56,7 @@ export default function Menu(props) {
 
             <Stack gap='3'>
 
-                !This is going to be where the graph is located !
+                !You finished! Go you!
 
                 <Stack
                     direction='horizontal'
