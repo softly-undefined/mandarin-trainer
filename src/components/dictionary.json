@@ -1,6 +1,50 @@
 {
     "sets": [
-
+        {
+            "setName": "Easy Word Set",
+            "words": [
+                {
+                    "character": "我",
+                    "pinyin": "wo3",
+                    "definition": "I, me"
+                },
+                {
+                    "character": "很",
+                    "pinyin": "hen3",
+                    "definition": "Very"
+                },
+                {
+                    "character": "你",
+                    "pinyin": "ni3",
+                    "definition": "You"
+                },
+                {
+                    "character": "想",
+                    "pinyin": "xiang3",
+                    "definition": "Think/miss"
+                },
+                {
+                    "character": "到",
+                    "pinyin": "dao4",
+                    "definition": "To"
+                },
+                {
+                    "character": "節日",
+                    "pinyin": "jie2 ri4",
+                    "definition": "Festival"
+                },
+                {
+                    "character": "按照",
+                    "pinyin": "an4 zhao4",
+                    "definition": "According to"
+                },
+                {
+                    "character": "算法",
+                    "pinyin": "suan4 fa3",
+                    "definition": "Calculation"
+                }
+            ]
+        },
         {
             "setName": "Practical AV華語-3:1",
             "words": [
@@ -135,6 +179,11 @@
                     "definition": "Geography"
                 },
                 {
+                    "character": "雜誌",
+                    "pinyin": "za2 zhi4",
+                    "definition": "Magazine"
+                },
+                {
                     "character": "篇",
                     "pinyin": "pian1",
                     "definition": "MW papers"
@@ -170,6 +219,286 @@
                     "definition": "To select"
                 }
             ]
-        }
+        },
+        {
+            "setName": "Practical AV華語-3:2",
+            "words": [
+                {
+                    "character": "服務員",
+                    "pinyin": "fu2 wu4 yuan2",
+                    "definition": "Waiter"
+                },
+                {
+                    "character": "客滿",
+                    "pinyin": "ke4 man3",
+                    "definition": "Sold Out"
+                },
+                {
+                    "character": "菜單",
+                    "pinyin": "cai4 dan1",
+                    "definition": "Menu"
+                },
+                {
+                    "character": "特餐",
+                    "pinyin": "te4 can1",
+                    "definition": "Special dish"
+                },
+                {
+                    "character": "套餐",
+                    "pinyin": "tao1 can1",
+                    "definition": "Combo meal"
+                },
+                {
+                    "character": "紅燒",
+                    "pinyin": "hong2 shao1",
+                    "definition": "To braise in soy sauce"
+                },
+                {
+                    "character": "豬肉",
+                    "pinyin": "zhu1 rou4",
+                    "definition": "Pork"
+                },
+                {
+                    "character": "青豆",
+                    "pinyin": "qing1 dou4",
+                    "definition": "Green peas"
+                },
+                {
+                    "character": "蝦仁",
+                    "pinyin": "xia1 ren2",
+                    "definition": "Shelled Shrimp"
+                },
+                {
+                    "character":"蝦",
+                    "pinyin": "xia1",
+                    "definition": "Shrimp"
+                },
+                {
+                    "character": "辣",
+                    "pinyin": "la4",
+                    "definition": "Spicy"
+                },
+                {
+                    "character": "青花菜",
+                    "pinyin": "qing1 hua1 cai4",
+                    "definition": "Broccoli"
+                },
+                {
+                    "character": "紅蘿蔔",
+                    "pinyin": "hong2 luo2 bo5",
+                    "definition": "Carrot"
+                },
+                {
+                    "character": "敢",
+                    "pinyin": "gan3",
+                    "definition": "To dare"
+                },
+                {
+                    "character": "糖醋",
+                    "pinyin": "tang2 cu4",
+                    "definition": "Sweet and Sour"
+                },
+                {
+                    "character": "排骨",
+                    "pinyin": "pai2 gu3",
+                    "definition": "Spare ribs"
+                },
+                {
+                    "character": "留學",
+                    "pinyin": "liu2 xue2",
+                    "definition": "Study abroad"
+                },
+                {
+                    "character": "口味",
+                    "pinyin": "kou3 wei4",
+                    "definition": "Taste"
+                },
+                {
+                    "character": "而且",
+                    "pinyin": "er2 qie3",
+                    "definition": "Furthermore"
+                },
+                {
+                    "character": "不過",
+                    "pinyin": "bu2 guo4",
+                    "definition": "However,"
+                },
+                {
+                    "character": "餐廳",
+                    "pinyin": "can1 ting1",
+                    "definition": "Restaurant"
+                },
+                {
+                    "character": "大鍋菜",
+                    "pinyin": "da4 guo1 cai4",
+                    "definition": "Food made in big pot"
+                },
+                {
+                    "character": "膩",
+                    "pinyin": "ni4",
+                    "definition": "Bored of"
+                },
+                {
+                    "character": "連。。。都",
+                    "pinyin": "lian2...dou1",
+                    "definition": "Even (連自己的名字都忘了）"
+                },
+                {
+                    "character": "半夜",
+                    "pinyin": "ban4 ye4",
+                    "definition": "Midnight"
+                },
+                {
+                    "character": "小吃",
+                    "pinyin": "xiao3 chi1",
+                    "definition": "Snack"
+                },
+                {
+                    "character": "速食",
+                    "pinyin": "su4 shi2",
+                    "definition": "Fast food"
+                },
+                {
+                    "character": "大餐",
+                    "pinyin": "da4 can1",
+                    "definition": "Large/special meal"
+                },
+                {
+                    "character": "水餃",
+                    "pinyin": "shui3 jiao3",
+                    "definition": "Boiled dumpling"
+                },
+                {
+                    "character": "烤鴨",
+                    "pinyin": "kao3 ya1",
+                    "definition": "Roast duck"
+                },
+                {
+                    "character": "算帳",
+                    "pinyin": "suan4 zhang4",
+                    "definition": "Figure out bill"
+                },
+                {
+                    "character": "姑姑",
+                    "pinyin": "gu1 gu5",
+                    "definition": "Aunt (father's side)"
+                },
+                {
+                    "character": "機會",
+                    "pinyin": "ji1 hui4",
+                    "definition": "Opportunity"
+                },
+                {
+                    "character": "甜點",
+                    "pinyin": "tian2 dian3",
+                    "definition": "Dessert"
+                },
+                {
+                    "character": "習慣",
+                    "pinyin": "xi2 guan4",
+                    "definition": "Accustomed/custom"
+                },
+                {
+                    "character": "手機",
+                    "pinyin": "shou3 ji1",
+                    "definition": "Cellphone"
+                }
+            ]
+        },
+        {
+            "setName": "Practical AV華語-3:3",
+            "words": [
+              {"character": "敲", "pinyin": "qiao1", "definition": "To knock"},
+              {"character": "辦公室", "pinyin": "ban4 gong1 shi4", "definition": "Office"},
+              {"character": "教授", "pinyin": "jiao4 shou4", "definition": "Professor"},
+              {"character": "約", "pinyin": "yue1", "definition": "To make an appointment"},
+              {"character": "請教", "pinyin": "qing3 jiao4", "definition": "To consult"},
+              {"character": "環境", "pinyin": "huan2 jing4", "definition": "Environment"},
+              {"character": "交換", "pinyin": "jiao1 huan4", "definition": "To exchange"},
+              {"character": "計畫", "pinyin": "ji4 hua4", "definition": "Plan"},
+              {"character": "暑期班", "pinyin": "shu3 qi2 ban1", "definition": "Summer class"},
+              {"character": "資料", "pinyin": "zi1 liao4", "definition": "Data; material"},
+              {"character": "網站", "pinyin": "wang3 zhan4", "definition": "Website"},
+              {"character": "申請表", "pinyin": "shen1 qing3 biao3", "definition": "Application form"},
+              {"character": "下載", "pinyin": "xia4 zai4", "definition": "To download"},
+              {"character": "填", "pinyin": "tian2", "definition": "To fill in"},
+              {"character": "成績", "pinyin": "cheng2 ji1", "definition": "Grade"},
+              {"character": "學習", "pinyin": "xue2 xi2", "definition": "To study; learn"},
+              {"character": "推薦信", "pinyin": "tui1 jian4 xin4", "definition": "Letter of recommendation"},
+              {"character": "訂", "pinyin": "ding4", "definition": "To reserve; book"},
+              {"character": "獎學金", "pinyin": "jiang3 xue2 jin1", "definition": "Scholarship"},
+              {"character": "補習班", "pinyin": "bu3 xi2 ban1", "definition": "Cram school"},
+              {"character": "請", "pinyin": "qing3", "definition": "To hire"},
+              {"character": "困難", "pinyin": "kun4 nan2", "definition": "Difficulty"},
+              {"character": "學分", "pinyin": "xue2 fen1", "definition": "Academic credit"},
+              {"character": "學費", "pinyin": "xue2 fei4", "definition": "Tuition"},
+              {"character": "所有的", "pinyin": "suo3 you3 de5", "definition": "All"},
+              {"character": "明白", "pinyin": "ming2 bai2", "definition": "To understand"},
+              {"character": "碰見", "pinyin": "peng4 jian4", "definition": "To run into"},
+              {"character": "美容院", "pinyin": "mei3 rong2 yuan4", "definition": "Beauty salon"},
+              {"character": "剪頭髮", "pinyin": "jian3 tou2 fa3", "definition": "Get a haircut"},
+              {"character": "物價", "pinyin": "wu4 jia4", "definition": "Price (of goods)"},
+              {"character": "生活", "pinyin": "sheng1 huo2", "definition": "Life; to live"},
+              {"character": "付", "pinyin": "fu4", "definition": "To pay"},
+              {"character": "房租", "pinyin": "fang2 zu1", "definition": "Rent"},
+              {"character": "公寓", "pinyin": "gong1 yu4", "definition": "Apartment"},
+              {"character": "房東", "pinyin": "fang2 dong1", "definition": "Landlord"},
+              {"character": "交通", "pinyin": "jiao1 tong1", "definition": "Traffic"},
+              {"character": "計程車", "pinyin": "ji4 cheng2 che1", "definition": "Taxi"},
+              {"character": "來不及", "pinyin": "lai2 bu4 ji2", "definition": "Too late"}
+            ]
+          },
+          {
+            "setName": "Practical AV華語-4:4",
+            "words": [
+                {"character": "包裹", "pinyin": "bao1 guo3", "definition": "Package"},                
+                {"character": "收到", "pinyin": "shou1 dao4", "definition": "To receive"},    
+                {"character": "簡訊", "pinyin": "jian3 xun4", "definition": "Text message"},           
+                {"character": "掛號", "pinyin": "gua4 hao4", "definition": "To register"},             
+                {"character": "原來", "pinyin": "yuan2 lai2", "definition": "Originally"},  
+                {"character": "郵票", "pinyin": "you2 piao4", "definition": "Postage stamp"},          
+                {"character": "指", "pinyin": "zhi3", "definition": "To point"},                       
+                {"character": "博物館", "pinyin": "bo2 wu4 guan3", "definition": "Museum"},            
+                {"character": "參觀", "pinyin": "can1 guan1", "definition": "To visit"},
+                {"character": "以為", "pinyin": "yi3 wei2", "definition": "To mistakenly think"},      
+                {"character": "島", "pinyin": "dao3", "definition": "Island"},                         
+                {"character": "除了。。。以外", "pinyin": "chu2 le...yi3 wai4", "definition": "Other than"},
+                {"character": "平原", "pinyin": "ping2 yuan2", "definition": "Plains"},                
+                {"character": "人口", "pinyin": "ren2 kou3", "definition": "Population"},             
+                {"character": "颱風", "pinyin": "tai2 feng1", "definition": "Typhoon"},                
+                {"character": "地震", "pinyin": "di4 zhen4", "definition": "Earthquake"},              
+                {"character": "相反", "pinyin": "xiang1 fan3", "definition": "Opposite"},             
+                {"character": "發展", "pinyin": "fa1 zhan3", "definition": "To develop"},             
+                {"character": "沙漠", "pinyin": "sha1 mo4", "definition": "Desert"},                   
+                {"character": "適合", "pinyin": "shi4 he2", "definition": "Suitable"},           
+                {"character": "政府", "pinyin": "zheng4 fu3", "definition": "Government"},             
+                {"character": "年輕人", "pinyin": "nian2 qing1 ren2", "definition": "Young person"},   
+                {"character": "開路", "pinyin": "kai1 lu4", "definition": "To open up a road"},         
+                {"character": "辛苦", "pinyin": "xin1 ku3", "definition": "Exhausting"}, 
+                {"character": "雖然", "pinyin": "sui1 ran2", "definition": "Although"},                
+                {"character": "值得", "pinyin": "zhi2 de2", "definition": "To be worth it"},           
+                {"character": "不但", "pinyin": "bu2 dan4", "definition": "Not only"},                 
+                {"character": "欣賞", "pinyin": "xin1 shang3", "definition": "To admire"},         
+                {"character": "峽谷", "pinyin": "xia2 gu3", "definition": "Canyon"},                   
+                {"character": "流", "pinyin": "liu2", "definition": "To flow"},                       
+                {"character": "幫助", "pinyin": "bang1 zhu4", "definition": "To help"},    
+                {"character": "農業", "pinyin": "nong2 ye4", "definition": "Agriculture"},             
+                {"character": "國家公園", "pinyin": "guo2 jia1 gong1 yuan2", "definition": "National park"},
+                {"character": "海灘", "pinyin": "hai3 tan1", "definition": "Seashore"},         
+                {"character": "高速公路", "pinyin": "gao1 su4 gong1 lu4", "definition": "Freeway"},     
+                {"character": "鐵路", "pinyin": "tie3 lu4", "definition": "Railroad"},                
+                {"character": "另外", "pinyin": "ling4 wai4", "definition": "In addition"} 
+                ]
+          },
+          {
+                "setName": "TEST",
+                "words": [
+                    {"character": "包裹", "pinyin": "bao1 guo3", "definition": "Package"},                
+                    {"character": "收到", "pinyin": "shou1 dao4", "definition": "To receive"},    
+                    {"character": "簡訊", "pinyin": "jian3 xun4", "definition": "Text message"},           
+                    {"character": "掛號", "pinyin": "gua4 hao4", "definition": "To register"},             
+                    {"character": "原來", "pinyin": "yuan2 lai2", "definition": "Originally"} 
+                    ]
+          }    
     ]
 }

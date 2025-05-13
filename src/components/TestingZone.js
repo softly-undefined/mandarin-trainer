@@ -1,80 +1,336 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Button, Card, CloseButton, Form, Stack } from "react-bootstrap";
-import data from "./dictionary.json";
+import { Button, Card, CloseButton, Form, Stack, ProgressBar } from "react-bootstrap";
+import { getUserVocabSets } from "../services/vocabSetService";
+import { useAuth } from "../contexts/AuthContext";
+import dictionary from "./dictionary.json";
 
-export default function Menu(props) {
+export default function TestingZone(props) {
     const {
         given,
-        setGiven,
         want,
-        setWant,
         setChoice,
-        setSetChoice,
         goToPage,
         isMultipleChoice,
-        setIsMultipleChoice,
         responseCounts,
         setResponseCounts,
-        ProgressBar,
-    } = props; //should probably change this to get only given, want, and set because we dont need to change them
+        learnedOverTime,
+        setLearnedOverTime,
+        currentSetName
+    } = props;
 
-    const [term, setTerm] = useState(""); //change this initial value
-    const [key, setKey] = useState(""); //change this initial value
+    const { currentUser } = useAuth();
+    const [currentSet, setCurrentSet] = useState(null);
+    const [term, setTerm] = useState("");
+    const [key, setKey] = useState("");
     const [answer, setAnswer] = useState("");
     const [keyText, setKeyText] = useState(false);
-
-    const [submissionNum, setSubmissionNum] = useState(1); //does the alternating intermediary state
+    const [submissionNum, setSubmissionNum] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
     const [isCorrect, setIsCorrect] = useState(false);
-    const [formColor, setFormColor] = useState("black"); //sets color of wrongright
-
-    //used for displaying correct info after person answers
+    const [formColor, setFormColor] = useState("black");
     const [currChar, setCurrChar] = useState("");
     const [currPinyin, setCurrPinyin] = useState("");
     const [currDefinition, setCurrDefinition] = useState("");
-
     const [buttonState, setButtonState] = useState("primary");
     const [buttonText, setButtonText] = useState("SUBMIT");
+    const [cardWidth] = useState(400);
 
-    const [cardWidth, setCardWidth] = useState(400); //doesn't change right now but can add functionality eventually
-
-    const formStyle = {
-        color: formColor,
-    };
-
-    const trainingSet = useMemo(() => {
-        return data.sets.find((set) => set.setName === setChoice);
-    }, [setChoice]);
-
-    const [shuffledSet, setShuffledSet] = useState([]);
-    const [remainingSet, setRemainingSet] = useState([]);
-
-    const [answerCounts, setAnswerCounts] = useState({});
-    const [wrongCounts, setWrongCounts] = useState({});
-
-    //progress bar
-    //const [remainingSetLength, setRemainingSetLength] = useState(0);
-
-    //multiple choice related variables
-
+    // Multiple choice related variables
     const [answer1, setAnswer1] = useState("");
     const [answer2, setAnswer2] = useState("");
     const [answer3, setAnswer3] = useState("");
     const [answer4, setAnswer4] = useState("");
+    const [answerPlacement, setAnswerPlacement] = useState(4);
 
     const button1Ref = useRef();
     const button2Ref = useRef();
     const button3Ref = useRef();
     const button4Ref = useRef();
+    const learnedWordsRef = useRef(0);
 
-    const [mcAnswerChoice, setMCAnswerChoice] = useState(4);
-    const [answerPlacement, setAnswerPlacement] = useState(4);
-    const [mcCorrect, setMCCorrect] = useState(false);
-    const [mcButtonSize, setMCButtonSize] = useState(10); //rn i just hardwired the button minwidth but it should be variable around cardsize eventually
+    const [shuffledSet, setShuffledSet] = useState([]);
+    const [remainingSet, setRemainingSet] = useState([]);
+    const [answerCounts, setAnswerCounts] = useState({});
+    const [wrongCounts, setWrongCounts] = useState({});
+    const [totalWords, setTotalWords] = useState(0);
+    const [learnedWords, setLearnedWords] = useState(0);
+    const [learnedSet, setLearnedSet] = useState(new Set());
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const loadSet = async () => {
+            if (!setChoice) {
+                console.log("No set selected");
+                return;
+            }
+
+            // Reset all state first
+            setCurrentSet(null);
+            setTerm("");
+            setKey("");
+            setAnswer("");
+            setKeyText(false);
+            setSubmissionNum(1);
+            setIsSubmitting(false);
+            setCurrChar("");
+            setCurrPinyin("");
+            setCurrDefinition("");
+            setButtonState("primary");
+            setButtonText("SUBMIT");
+            setLearnedOverTime([]);
+            setLearnedWords(0);
+            setResponseCounts([]);
+            setAnswerCounts({});
+            setWrongCounts({});
+            setLearnedSet(new Set());
+            setTotalWords(0);
+            setShuffledSet([]);
+            setRemainingSet([]);
+            // Reset multiple choice states
+            setAnswer1("");
+            setAnswer2("");
+            setAnswer3("");
+            setAnswer4("");
+            setAnswerPlacement(4);
+
+            console.log("Loading set with choice:", setChoice);
+            const setId = setChoice.replace('custom_', '');
+            console.log("Looking for set with ID:", setId);
+            
+            const sets = await getUserVocabSets(currentUser.uid);
+            console.log("Available sets:", sets);
+            
+            const selectedSet = sets.find(set => set.id === setId);
+            console.log("Found selected set:", selectedSet);
+            
+            if (!selectedSet) {
+                console.error("Selected set not found");
+                return;
+            }
+
+            if (!selectedSet.vocabItems || !Array.isArray(selectedSet.vocabItems)) {
+                console.error("Selected set has invalid vocabItems:", selectedSet);
+                return;
+            }
+
+            if (isMounted) {
+                // Transform the vocabItems into the expected format and filter out empty/invalid words
+                const validWords = selectedSet.vocabItems
+                    .filter(item => 
+                        item && 
+                        item.character && 
+                        item.pinyin && 
+                        item.definition &&
+                        item.character.trim() !== '' &&
+                        item.pinyin.trim() !== '' &&
+                        item.definition.trim() !== ''
+                    )
+                    .map(item => ({
+                        character: item.character,
+                        pinyin: item.pinyin,
+                        definition: item.definition
+                    }));
+
+                if (validWords.length === 0) {
+                    console.error("No valid words found in set");
+                    return;
+                }
+
+                const transformedSet = { words: validWords };
+                console.log("Transformed set:", transformedSet);
+                setCurrentSet(transformedSet);
+                setTotalWords(validWords.length);
+
+                // Shuffle and set up the first word immediately
+                let shuffled = validWords
+                    .map((value) => ({ value, sort: Math.random() }))
+                    .sort((a, b) => a.sort - b.sort)
+                    .map(({ value }) => value);
+                
+                console.log("Shuffled words:", shuffled);
+                setShuffledSet(shuffled);
+                setRemainingSet(shuffled);
+                setLearnedWords(0);
+
+                // Set up the first word
+                if (shuffled.length > 0) {
+                    const firstWord = shuffled[0];
+                    if (isMultipleChoice) {
+                        // Set up multiple choice first
+                        const answerLocation = Math.floor(Math.random() * 4);
+                        const options = [];
+                        
+                        // Get three random wrong answers
+                        for (let i = 0; i < 3; i++) {
+                            let randomWord;
+                            do {
+                                const randomIndex = Math.floor(Math.random() * validWords.length);
+                                randomWord = validWords[randomIndex][want];
+                            } while (randomWord === firstWord[want] || options.includes(randomWord));
+                            options.push(randomWord);
+                        }
+                        
+                        // Insert the correct answer at random position
+                        options.splice(answerLocation, 0, firstWord[want]);
+                        
+                        setAnswer1(options[0]);
+                        setAnswer2(options[1]);
+                        setAnswer3(options[2]);
+                        setAnswer4(options[3]);
+                        setAnswerPlacement(answerLocation);
+                    }
+                    
+                    setTerm(firstWord[given]);
+                    setKey(firstWord[want]);
+                    setCurrChar(firstWord.character);
+                    setCurrPinyin(firstWord.pinyin);
+                    setCurrDefinition(firstWord.definition);
+                    
+                    // Remove the first word from remaining set
+                    setRemainingSet(shuffled.slice(1));
+                }
+            }
+        };
+
+        loadSet();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [setChoice, currentUser]);
+
+    const shuffle = (set) => {
+        console.log("Shuffling set:", set);
+        if (!set || !set.words || !Array.isArray(set.words) || set.words.length === 0) {
+            console.error("Invalid set structure in shuffle:", set);
+            return;
+        }
+
+        let shuffled = set.words
+            .map((value) => ({ value, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({ value }) => value);
+        
+        console.log("Shuffled words:", shuffled);
+        setShuffledSet(shuffled);
+        setRemainingSet(shuffled);
+        setLearnedWords(0);
+        
+        // Present the first word after shuffling
+        presentNext();
+    };
+
+    const presentNext = () => {
+        console.log("Presenting next word. Current state:", {
+            remainingSet,
+            currentSet,
+            answerCounts,
+            wrongCounts
+        });
+
+        if (!remainingSet || remainingSet.length === 0) {
+            console.log("No words remaining, preparing next set");
+            prepareNext();
+            return;
+        }
+
+        let nextSet = [...remainingSet];
+        let next = nextSet.pop();
+        
+        // Validate the next word before setting it
+        if (!next || !next[given] || !next[want] || !next.character || !next.pinyin || !next.definition) {
+            console.error("Invalid word data:", next);
+            prepareNext();
+            return;
+        }
+
+        console.log("Setting next word:", next);
+        setRemainingSet(nextSet);
+        setTerm(next[given]);
+        setKey(next[want]);
+        setCurrChar(next.character);
+        setCurrPinyin(next.pinyin);
+        setCurrDefinition(next.definition);
+        
+        if (isMultipleChoice) {
+            assignMC(next[want]);
+        }
+    };
+
+    const prepareNext = () => {
+        console.log("Preparing next word. Current state:", {
+            remainingSet,
+            currentSet,
+            answerCounts,
+            wrongCounts
+        });
+
+        if (!currentSet || !currentSet.words || currentSet.words.length === 0) {
+            console.error("No valid set to train with");
+            return;
+        }
+
+        // Filter words that still need practice
+        let newTrainingSet = { ...currentSet };
+        newTrainingSet.words = newTrainingSet.words.filter((word) => {
+            const correctCount = answerCounts[word[want]] || 0;
+            const wrongCount = wrongCounts[word[want]] || 0;
+            const keep = correctCount < 3 && !(correctCount >= 2 && wrongCount === 0);
+            console.log("Filtering word:", word, "correctCount:", correctCount, "wrongCount:", wrongCount, "keep:", keep);
+            return keep;
+        });
+        
+        console.log("Filtered training set:", newTrainingSet);
+        
+        if (newTrainingSet.words.length > 0) {
+            // Shuffle the remaining words
+            let shuffled = newTrainingSet.words
+                .map((value) => ({ value, sort: Math.random() }))
+                .sort((a, b) => a.sort - b.sort)
+                .map(({ value }) => value);
+            
+            console.log("Shuffled remaining words:", shuffled);
+            setShuffledSet(shuffled);
+            setRemainingSet(shuffled);
+            
+            // Present the first word from the new set
+            if (shuffled.length > 0) {
+                const firstWord = shuffled[0];
+                setTerm(firstWord[given]);
+                setKey(firstWord[want]);
+                setCurrChar(firstWord.character);
+                setCurrPinyin(firstWord.pinyin);
+                setCurrDefinition(firstWord.definition);
+                if (isMultipleChoice) {
+                    assignMC(firstWord[want]);
+                }
+                // Remove the first word from remaining set
+                setRemainingSet(shuffled.slice(1));
+            }
+        } else {
+            console.log("No words left to train, going to finish page");
+            goToPage("finishPage");
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("keydown", handleButton);
+        return () => {
+            document.removeEventListener("keydown", handleButton);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (responseCounts.length === 0) return;
+        setLearnedOverTime((prev) => [
+            ...prev,
+            { trial: responseCounts.length, learned: learnedWordsRef.current },
+        ]);
+    }, [responseCounts]);
 
     const handleButton = (event) => {
-        if (isMultipleChoice){
+        if (isMultipleChoice) {
             if (event.keyCode === 49) {
                 button1Ref.current.click();
             } else if (event.keyCode === 50) {
@@ -87,15 +343,32 @@ export default function Menu(props) {
         }
     };
 
+    const selectRandomAnswer = (currAns) => {
+        if (!currentSet?.words || currentSet.words.length <= 4) {
+            return "Option";
+        }
+        
+        let randomWord;
+        do {
+            const randomIndex = Math.floor(Math.random() * currentSet.words.length);
+            randomWord = currentSet.words[randomIndex][want];
+        } while (randomWord === currAns);
+        
+        return randomWord;
+    };
+
     const assignMC = (currAns) => {
+        if (!currentSet?.words || currentSet.words.length === 0) {
+            console.error("No valid words available for multiple choice");
+            return;
+        }
+
         const answerLocation = Math.floor(Math.random() * 4);
-        console.log("CURRENT KEY", currAns);
         setAnswer1(selectRandomAnswer(currAns));
         setAnswer2(selectRandomAnswer(currAns));
         setAnswer3(selectRandomAnswer(currAns));
         setAnswer4(selectRandomAnswer(currAns));
-        // console.log(answerLocation); //debuggywuggy tools
-        // console.log(currAns);
+
         if (answerLocation === 0) {
             setAnswer1(currAns);
             setAnswerPlacement(0);
@@ -111,117 +384,24 @@ export default function Menu(props) {
         }
     };
 
-    // const getMCButtonStyle = (length) => {
-    //     //do some calculations here about length
-    //     setMCButtonSize(cardWidth / 4);
-    //     minWidth: mcButtonSize,
-    // }
-    const getFontSize = (length) => {
-        return length > 5 ? "25px" : "50px";
-    };
-
-    const selectRandomAnswer = (currAns) => {
-        if (trainingSet.words.length > 4) {
-            const randomIndex = Math.floor(Math.random() * trainingSet.words.length);
-            return trainingSet.words[randomIndex][want] === currAns
-                ? selectRandomAnswer(currAns)
-                : trainingSet.words[randomIndex][want];
-            //right now two of the dumb answers could be in the multiple choice answers
-        }
-    };
-
-    const shuffle = (set) => {
-        //takes an array and shuffles the stuff inside
-        if (set.words.length > 0) {
-            let shuffled = set.words
-                .map((value) => ({ value, sort: Math.random() }))
-                .sort((a, b) => a.sort - b.sort)
-                .map(({ value }) => value);
-            console.log(shuffled);
-            setShuffledSet(shuffled);
-            setRemainingSet(shuffled);
-        } else {
-            goToPage("finishPage");
-            console.log(responseCounts);
-            console.log("DONE!");
-            //maybe have a command to render the graph objects here? bc exit conidition
-        }
-    };
-
-    const presentNext = useCallback(() => {
-        let nextSet = [...remainingSet]; //makes a deep copy
-        let next = nextSet.pop();
-        setRemainingSet(nextSet);
-        setTerm(next[given]);
-        setKey(next[want]);
-        if (isMultipleChoice) {
-            assignMC(next[want]); //assigns the multiple choice answers/questions
-        }
-        setCurrChar(next["character"]);
-        setCurrPinyin(next["pinyin"]);
-        setCurrDefinition(next["definition"]);
-    }, [given, remainingSet, want]);
-
-    const prepareNext = useCallback(() => {
-        if (remainingSet.length > 0) {
-            presentNext();
-        } else {
-            console.log("filtering!");
-            // filter out the ones that have been answered correctly 3 times
-            let newTrainingSet = { ...trainingSet };
-            newTrainingSet.words = newTrainingSet.words.filter((word) => {
-                //this area iterates through the set adding ones in that shouldnt be removed
-                return (
-                    (answerCounts[word[want]] || 0) < 3 &&
-                    !((answerCounts[word[want]] || 0) >= 2 && (wrongCounts[word[want]] || 0) === 0)
-                );
-            });
-            console.log(newTrainingSet);
-            shuffle(newTrainingSet);
-            //boop
-        }
-    }, [want, remainingSet, answerCounts, trainingSet, presentNext]);
-
-    useEffect(() => {
-        prepareNext();
-    }, [shuffledSet]);
-
-    useEffect(() => {
-        // shuffle the set
-        shuffle(trainingSet);
-    }, [trainingSet]);
-
-    useEffect(() => {
-        document.addEventListener("keydown", handleButton);
-        return () => {
-            document.removeEventListener("keydown", handleButton);
-        };
-    }, []);
-
     const handleSubmit = (event) => {
         if (!isMultipleChoice) {
             event.preventDefault();
         }
-        //when this happens {answer} will be set to the persons answer so here is where handle a "submission"
+
         if (submissionNum % 2 === 0) {
-            //the "answering" part of submission (here is where you input answer)
-            setKeyText(false); //resets the correct answer which is displayed after submission
-            setAnswer(""); //resets the submission box holding the answer
+            setKeyText(false);
+            setAnswer("");
             setFormColor("black");
             setButtonState("primary");
             setButtonText("SUBMIT");
-
             setIsSubmitting(false);
-            //reassigns the value of {answer} based on the algorithm
-            //reassigns the value of {term} based on the algorithm
             prepareNext();
         } else {
-            //below is the intermediary state of submission (here is where displays right/wrong)
             setKeyText(true);
             setTerm("");
             setIsSubmitting(true);
 
-            //we don't setAnswer here because not sure if want to leave persons answer in the textbox
             if (answer === key || event === answerPlacement) {
                 if (isMultipleChoice) {
                     if (answerPlacement === 0) {
@@ -246,57 +426,84 @@ export default function Menu(props) {
                 setFormColor("green");
                 setButtonState("success");
                 setButtonText("CORRECT!");
+                setResponseCounts((prev) => [...prev, 1]);
 
-                responseCounts.push(1);
+                setAnswerCounts((prevCounts) => {
+                    const newCounts = { ...prevCounts };
+                    newCounts[key] = (newCounts[key] || 0) + 1;
 
-                //if the person got it right
-                setAnswerCounts((answerCounts) => {
-                    let newAnswerCounts = { ...answerCounts };
-                    newAnswerCounts[key] = (newAnswerCounts[key] || 0) + 1;
-                    console.log("RIGHT", newAnswerCounts);
-                    return newAnswerCounts;
+                    const correctCount = newCounts[key];
+                    const wrongCount = wrongCounts[key] || 0;
+
+                    setLearnedSet((prevSet) => {
+                        const safeSet = prevSet ?? new Set();
+
+                        if (
+                            !safeSet.has(key) &&
+                            learnedWords < totalWords &&
+                            (correctCount === 3 || (correctCount === 2 && wrongCount === 0))
+                        ) {
+                            const newSet = new Set(safeSet);
+                            newSet.add(key);
+                            const newCount = learnedWords + 1;
+                            setLearnedWords(newCount);
+                            learnedWordsRef.current = newCount;
+                            return newSet;
+                        }
+                        return safeSet;
+                    });
+
+                    return newCounts;
                 });
-
-                //interact with the algorithm
             } else {
-                if (answerPlacement === 0) {
-                    setAnswer2("INCORRECT!");
-                    setAnswer3("INCORRECT!");
-                    setAnswer4("INCORRECT!");
-                } else if (answerPlacement === 1) {
-                    setAnswer1("INCORRECT!");
-                    setAnswer3("INCORRECT!");
-                    setAnswer4("INCORRECT!");
-                } else if (answerPlacement === 2) {
-                    setAnswer1("INCORRECT!");
-                    setAnswer2("INCORRECT!");
-                    setAnswer4("INCORRECT!");
-                } else if (answerPlacement === 3) {
-                    setAnswer1("INCORRECT!");
-                    setAnswer2("INCORRECT!");
-                    setAnswer3("INCORRECT!");
+                if (isMultipleChoice) {
+                    if (answerPlacement === 0) {
+                        setAnswer2("INCORRECT!");
+                        setAnswer3("INCORRECT!");
+                        setAnswer4("INCORRECT!");
+                    } else if (answerPlacement === 1) {
+                        setAnswer1("INCORRECT!");
+                        setAnswer3("INCORRECT!");
+                        setAnswer4("INCORRECT!");
+                    } else if (answerPlacement === 2) {
+                        setAnswer1("INCORRECT!");
+                        setAnswer2("INCORRECT!");
+                        setAnswer4("INCORRECT!");
+                    } else if (answerPlacement === 3) {
+                        setAnswer1("INCORRECT!");
+                        setAnswer2("INCORRECT!");
+                        setAnswer3("INCORRECT!");
+                    }
                 }
                 setIsCorrect(false);
                 setFormColor("red");
                 setButtonState("danger");
                 setButtonText("INCORRECT");
+                setResponseCounts((prev) => [...prev, 0]);
 
-                responseCounts.push(0);
-
-                //if the person got it wrong
                 setWrongCounts((answerCounts) => {
                     let newAnswerCounts = { ...answerCounts };
                     newAnswerCounts[key] = (newAnswerCounts[key] || 0) + 1;
-                    console.log("WRONG", newAnswerCounts);
                     return newAnswerCounts;
                 });
             }
         }
-        setSubmissionNum((submissionNum) => submissionNum + 1); //increments the counter which alternates the stuff it does
+        setSubmissionNum((submissionNum) => submissionNum + 1);
+    };
+
+    const getFontSize = (length) => {
+        return length > 5 ? "25px" : "50px";
     };
 
     return (
         <Card body style={{ width: cardWidth }}>
+            <Stack gap={1} className="mb-3">
+                <div>Progress: {learnedWords}/{totalWords} words learned</div>
+                <ProgressBar 
+                    now={totalWords > 0 ? (learnedWords / totalWords) * 100 : 0} 
+                    label={totalWords > 0 ? `${Math.round((learnedWords / totalWords) * 100)}%` : '0%'} 
+                />
+            </Stack>
             <Stack
                 direction='horizontal'
                 style={{
@@ -308,15 +515,11 @@ export default function Menu(props) {
                     <Card.Title>
                         Testing {want} given {given}
                     </Card.Title>
-                    <Card.Title>{setChoice}</Card.Title>
+                    <Card.Title>{currentSetName}</Card.Title>
                 </Stack>
-
                 <CloseButton
                     onClick={() => {
                         goToPage("menu");
-                        //anything it needs to do to 'reset' this page?
-                        //like what if you quit in the middle of the intermediary stage
-                        //also interactions with the algorithm
                     }}
                 />
             </Stack>
@@ -326,14 +529,14 @@ export default function Menu(props) {
                         <Stack gap={2}>
                             <Form.Label
                                 style={{
-                                    fontSize: getFontSize(term.length) /*would love to make this font size variable*/,
+                                    fontSize: getFontSize(term.length),
                                 }}
                             >
                                 {term}
                             </Form.Label>
                             <Form.Label
                                 style={{
-                                    fontSize: "25px" /*same here but less necessary*/,
+                                    fontSize: "25px",
                                 }}
                             >
                                 {keyText && (
@@ -347,7 +550,7 @@ export default function Menu(props) {
 
                             {!isMultipleChoice && (
                                 <Form.Control
-                                    style={formStyle}
+                                    style={{ color: formColor }}
                                     spellCheck='false'
                                     placeholder='Answer'
                                     id='responseArea'

@@ -1,16 +1,25 @@
 import { useState, useEffect } from "react";
 import { Stack } from "react-bootstrap";
+import { AuthProvider } from "./contexts/AuthContext";
+import { useAuth } from "./contexts/AuthContext";
 
 import Menu from "./components/Menu";
 import TestingZone from "./components/TestingZone";
 import ReviewSet from "./components/ReviewSet";
 import FinishPage from "./components/FinishPage";
 import Settings from "./components/Settings";
+import SignIn from "./components/SignIn";
+import MySets from "./components/MySets";
+import Home from "./components/Home";
+import StartLearning from "./components/StartLearning";
 
-function App() {
+
+function AppContent() {
+    const { currentUser } = useAuth();
     const [given, setGiven] = useState("");
     const [want, setWant] = useState("");
     const [setChoice, setSetChoice] = useState(""); //which dataset
+    const [currentSetName, setCurrentSetName] = useState("");
 
     //Code for the Multiple Choice in Settings
     const [isMultipleChoice, setIsMultipleChoice] = useState(false);
@@ -21,22 +30,34 @@ function App() {
     const [traditionalValue, setTraditionalValue] = useState([2]);
 
     //to show or not to show each of the pages
-    const [showMenu, setShowMenu] = useState(true);
+    const [showHome, setShowHome] = useState(true);
     const [showReviewSet, setShowReviewSet] = useState(false);
     const [showTestingZone, setShowTestingZone] = useState(false);
     const [showFinishPage, setShowFinishPage] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
+    const [showStartLearning, setShowStartLearning] = useState(false);
+    const [showMySets, setShowMySets] = useState(false);
+    const [learningSet, setLearningSet] = useState(null);
 
     const [responseCounts, setResponseCounts] = useState([]); // creates an array of 1's and 0's based on right/wrong
 
+    const [learnedOverTime, setLearnedOverTime] = useState([]); //This has to deal with the graph in FinishPage
+
+    if (!currentUser) {
+        return <SignIn />;
+    }
+
     function goToPage(pageName) {
-        setShowMenu(false);
+        setShowHome(false);
         setShowReviewSet(false);
         setShowTestingZone(false);
         setShowFinishPage(false);
         setShowSettings(false);
-        if (pageName === "menu") {
-            setShowMenu(true);
+        setShowMySets(false);
+        setShowStartLearning(false);
+        
+        if (pageName === "home" || pageName === "menu" || pageName === "mySets") {
+            setShowHome(true); // redirect both old routes to home
             console.log("isMultipleChoice", isMultipleChoice);
         } else if (pageName === "reviewSet") {
             setShowReviewSet(true);
@@ -46,6 +67,11 @@ function App() {
             setShowFinishPage(true);
         } else if (pageName === "settings") {
             setShowSettings(true);
+        } else if (pageName === "mySets") {
+            setShowMySets(true);
+        } else if (pageName === "startLearning") {
+            setLearningSet(arguments[1]); // second argument is the set passed
+            setShowStartLearning(true);
         }
     }
 
@@ -59,17 +85,14 @@ function App() {
                     alignItems: "center",
                 }}
             >
-                {showMenu && (
-                    <Menu
-                        given={given}
-                        setGiven={setGiven}
-                        want={want}
-                        setWant={setWant}
-                        setChoice={setChoice}
-                        setSetChoice={setSetChoice}
-                        goToPage={goToPage}
-                    />
+                {showHome && (
+                    <Home goToPage={goToPage} />
                 )}
+
+
+                {/* {showMySets && (
+                    <MySets goToPage={goToPage} />
+                )} */}
 
                 {showTestingZone && (
                     <TestingZone
@@ -83,6 +106,9 @@ function App() {
                         isMultipleChoice={isMultipleChoice}
                         responseCounts={responseCounts}
                         setResponseCounts={setResponseCounts}
+                        learnedOverTime={learnedOverTime}
+                        setLearnedOverTime={setLearnedOverTime}
+                        currentSetName={currentSetName}
                     />
                 )}
 
@@ -100,6 +126,8 @@ function App() {
                         goToPage={goToPage} 
                         responseCounts={responseCounts}
                         setResponseCounts={setResponseCounts}
+                        learnedOverTime={learnedOverTime}
+                        currentSetName={currentSetName}
                     />
                 )}
 
@@ -120,8 +148,31 @@ function App() {
                         
                     />
                 )}
+
+                {showStartLearning && (
+                    <StartLearning
+                        set={learningSet}
+                        goToPage={goToPage}
+                        given={given}
+                        want={want}
+                        setGiven={setGiven}
+                        setWant={setWant}
+                        setSetChoice={setSetChoice}
+                        setCurrentSetName={setCurrentSetName}
+                        setResponseCounts={setResponseCounts}
+                        setLearnedOverTime={setLearnedOverTime}
+                    />
+                )}
             </Stack>
         </div>
+    );
+}
+
+function App() {
+    return (
+        <AuthProvider>
+            <AppContent />
+        </AuthProvider>
     );
 }
 
