@@ -14,6 +14,9 @@ import data from "./dictionary.json";
 
 export default function Menu(props) {
     const { setChoice, setSetChoice, goToPage } = props;
+    const selectedSet = data.sets.find((set) => set.setName === setChoice);
+    const wordCount = selectedSet ? selectedSet.words.length : 0;
+
     return (
         <Card style={{ width: "400px", maxHeight: "90%" }}>
             <Card.Body style={{ height: "100%", overflow: "hidden" }}>
@@ -26,6 +29,9 @@ export default function Menu(props) {
                     }}
                 >
                     <Card.Title>{setChoice}</Card.Title>
+                    <div style={{ fontSize: "14px", marginTop: "5px", color: "gray" }}>
+                        {wordCount} words
+                    </div>
                     <CloseButton
                         onClick={() => {
                             goToPage("menu");
