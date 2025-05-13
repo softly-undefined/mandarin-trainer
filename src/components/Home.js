@@ -3,6 +3,8 @@ import { useAuth } from "../contexts/AuthContext";
 import { Button, Card, Container, Row, Col, Stack } from "react-bootstrap";
 import { getUserVocabSets } from "../services/vocabSetService";
 import VocabSetEditor from "./VocabSetEditor";
+import { FaCog } from 'react-icons/fa';
+
 
 export default function Home(props) {
     const {
@@ -50,10 +52,23 @@ export default function Home(props) {
 
     return (
         <Container className="py-4" style={{ overflowY: "auto", maxHeight: "100vh" }}>
-            <Row className="mb-4">
+            <Row className="mb-4" style={{ alignItems: "center" }}>
                 <Col><h2>Your Vocabulary Sets</h2></Col>
                 <Col xs="auto">
-                    <Button variant="secondary" onClick={() => setIsCreating(true)}>Create New Set</Button>
+                    <Stack direction="horizontal" gap={2}>
+                        <Button variant="secondary" onClick={() => setIsCreating(true)}>Create New Set</Button>
+                        <Button
+                            style={{
+                                backgroundColor: "transparent",
+                                border: "none",
+                                padding: 0
+                            }}
+                            variant="light"
+                            onClick={() => goToPage("settings")}
+                        >
+                            <FaCog size={20} />
+                        </Button>
+                    </Stack>
                 </Col>
             </Row>
     
