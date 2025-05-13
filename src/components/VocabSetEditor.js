@@ -1,30 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Button, Card, Container, Row, Col, Form, Table, Alert } from 'react-bootstrap';
 import { createVocabSet, updateVocabSet, deleteVocabSet } from '../services/vocabSetService';
 
-export default function VocabSetEditor({ set, goToPage }) {
+export default function VocabSetEditor({ set, goToPage, onSetUpdated = () => goToPage('mySets') }) {
     const { currentUser } = useAuth();
     const [setName, setSetName] = useState(set?.setName || '');
     const [vocabItems, setVocabItems] = useState(set?.vocabItems || []);
-    const [newItem, setNewItem] = useState({
-        character: '',
-        pinyin: '',
-        definition: ''
-    });
+    const [newItem, setNewItem] = useState({ character: '', pinyin: '', definition: '' });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [editingIndex, setEditingIndex] = useState(null);
 
-
     const handleAddItem = (e) => {
         e.preventDefault();
         if (!newItem.character || !newItem.pinyin || !newItem.definition) return;
-    
+
         const updated = [...vocabItems];
-    
+
         if (editingIndex !== null) {
-            // Replace the word at the edit index
             updated[editingIndex] = newItem;
             setEditingIndex(null);
         } else {
@@ -34,12 +28,11 @@ export default function VocabSetEditor({ set, goToPage }) {
             }
             updated.push(newItem);
         }
-    
+
         setVocabItems(updated);
         setNewItem({ character: '', pinyin: '', definition: '' });
         setError('');
     };
-    
 
     const handleDeleteItem = (index) => {
         const updatedItems = [...vocabItems];
@@ -60,24 +53,25 @@ export default function VocabSetEditor({ set, goToPage }) {
                 await createVocabSet(currentUser.uid, setName, vocabItems);
             }
             setSuccess('Set saved successfully!');
-            setTimeout(() => goToPage('mySets'), 1000);
+            setTimeout(onSetUpdated, 500); // Always call onSetUpdated
         } catch (error) {
             console.error("Error saving set:", error);
             setError(error.message);
         }
     };
-
+    
     const handleDeleteSet = async () => {
         if (window.confirm('Are you sure you want to delete this set? This action cannot be undone.')) {
             try {
                 await deleteVocabSet(set.id);
-                goToPage('mySets');
+                onSetUpdated(); // Always call onSetUpdated
             } catch (error) {
                 console.error("Error deleting set:", error);
                 setError(error.message);
             }
         }
     };
+    
 
     const handleBack = () => {
         goToPage('mySets');
@@ -85,7 +79,6 @@ export default function VocabSetEditor({ set, goToPage }) {
 
     return (
         <div style={{ maxHeight: "100vh", overflowY: "auto", padding: "1rem" }}>
-    
             <Container className="py-4">
                 <Row className="mb-4">
                     <Col>
@@ -123,7 +116,7 @@ export default function VocabSetEditor({ set, goToPage }) {
                                         type="text"
                                         placeholder="字"
                                         value={newItem.character}
-                                        onChange={(e) => setNewItem({...newItem, character: e.target.value})}
+                                        onChange={(e) => setNewItem({ ...newItem, character: e.target.value })}
                                     />
                                 </Col>
                                 <Col>
@@ -131,7 +124,7 @@ export default function VocabSetEditor({ set, goToPage }) {
                                         type="text"
                                         placeholder="Pinyin"
                                         value={newItem.pinyin}
-                                        onChange={(e) => setNewItem({...newItem, pinyin: e.target.value})}
+                                        onChange={(e) => setNewItem({ ...newItem, pinyin: e.target.value })}
                                     />
                                 </Col>
                                 <Col>
@@ -139,12 +132,12 @@ export default function VocabSetEditor({ set, goToPage }) {
                                         type="text"
                                         placeholder="Definition"
                                         value={newItem.definition}
-                                        onChange={(e) => setNewItem({...newItem, definition: e.target.value})}
+                                        onChange={(e) => setNewItem({ ...newItem, definition: e.target.value })}
                                     />
                                 </Col>
                                 <Col xs="auto">
                                     <Button type="submit" variant="primary">
-                                        Add
+                                        {editingIndex !== null ? "Update" : "Add"}
                                     </Button>
                                 </Col>
                             </Row>
@@ -152,9 +145,7 @@ export default function VocabSetEditor({ set, goToPage }) {
                     </Card.Body>
                 </Card>
 
-                <h5 className="mb-2">
-                    Set Length: {vocabItems.length} 
-                </h5>
+                <h5 className="mb-2">Set Length: {vocabItems.length}</h5>
 
                 <div style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '1rem' }}>
                     <Table striped bordered hover>
@@ -173,24 +164,24 @@ export default function VocabSetEditor({ set, goToPage }) {
                                     <td>{item.pinyin}</td>
                                     <td>{item.definition}</td>
                                     <td>
-                                    <Button
-                                        variant="outline-secondary"
-                                        size="sm"
-                                        className="me-2"
-                                        onClick={() => {
-                                            setNewItem(vocabItems[index]);
-                                            setEditingIndex(index);
-                                        }}
-                                    >
-                                        Edit
-                                    </Button>
-                                    <Button
-                                        variant="outline-danger"
-                                        size="sm"
-                                        onClick={() => handleDeleteItem(index)}
-                                    >
-                                        Delete
-                                    </Button>
+                                        <Button
+                                            variant="outline-secondary"
+                                            size="sm"
+                                            className="me-2"
+                                            onClick={() => {
+                                                setNewItem(item);
+                                                setEditingIndex(index);
+                                            }}
+                                        >
+                                            Edit
+                                        </Button>
+                                        <Button
+                                            variant="outline-danger"
+                                            size="sm"
+                                            onClick={() => handleDeleteItem(index)}
+                                        >
+                                            Delete
+                                        </Button>
                                     </td>
                                 </tr>
                             ))}
@@ -199,18 +190,18 @@ export default function VocabSetEditor({ set, goToPage }) {
                 </div>
 
                 <div className="d-grid gap-2">
-                    <Button 
-                        variant="primary" 
-                        size="lg" 
+                    <Button
+                        variant="primary"
+                        size="lg"
                         onClick={handleSave}
                         disabled={!setName || vocabItems.length === 0}
                     >
                         Save Set
                     </Button>
                     {set && (
-                        <Button 
-                            variant="danger" 
-                            size="lg" 
+                        <Button
+                            variant="danger"
+                            size="lg"
                             onClick={handleDeleteSet}
                         >
                             Delete Set
@@ -220,4 +211,4 @@ export default function VocabSetEditor({ set, goToPage }) {
             </Container>
         </div>
     );
-} 
+}

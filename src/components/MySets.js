@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Button, Card, Container, Row, Col, Form } from 'react-bootstrap';
-import { createVocabSet, getUserVocabSets } from '../services/vocabSetService';
+import { Button, Card, Container, Row, Col } from 'react-bootstrap';
+import { getUserVocabSets } from '../services/vocabSetService';
 import VocabSetEditor from './VocabSetEditor';
 
 export default function MySets({ goToPage }) {
@@ -12,21 +12,21 @@ export default function MySets({ goToPage }) {
     const [isCreating, setIsCreating] = useState(false);
 
     useEffect(() => {
-        loadSets();
-    }, [currentUser]);
-
-    async function loadSets() {
-        if (currentUser) {
-            try {
-                const userSets = await getUserVocabSets(currentUser.uid);
-                setSets(userSets);
-            } catch (error) {
-                console.error("Error loading sets:", error);
-            } finally {
-                setLoading(false);
+        async function loadSets() {
+            if (currentUser) {
+                try {
+                    const userSets = await getUserVocabSets(currentUser.uid);
+                    setSets(userSets);
+                } catch (error) {
+                    console.error("Error loading sets:", error);
+                } finally {
+                    setLoading(false);
+                }
             }
         }
-    }
+        loadSets();
+    }, [currentUser]);
+    
 
     const handleCreateSet = () => {
         setIsCreating(true);
@@ -38,22 +38,34 @@ export default function MySets({ goToPage }) {
         setIsCreating(false);
     };
 
-    const handleBack = () => {
+    const handleSetUpdated = async () => {
         setEditingSet(null);
         setIsCreating(false);
-        loadSets(); // Reload sets to show any changes
+    
+        // Repeat the loadSets logic here
+        if (currentUser) {
+            try {
+                const userSets = await getUserVocabSets(currentUser.uid);
+                setSets(userSets);
+            } catch (error) {
+                console.error("Error loading sets:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
     };
+    
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
+    if (loading) return <div>Loading...</div>;
 
     if (editingSet || isCreating) {
         return (
             <VocabSetEditor 
-                set={editingSet} 
-                goToPage={handleBack}
+                set={isCreating ? undefined : editingSet} 
+                goToPage={goToPage}
+                onSetUpdated={handleSetUpdated}
             />
+
         );
     }
 
@@ -70,8 +82,8 @@ export default function MySets({ goToPage }) {
                 </Col>
             </Row>
 
-            <Button 
-                variant="primary" 
+            <Button
+                variant="primary"
                 className="mb-4"
                 onClick={handleCreateSet}
             >
@@ -84,11 +96,9 @@ export default function MySets({ goToPage }) {
                         <Card>
                             <Card.Body>
                                 <Card.Title>{set.setName}</Card.Title>
-                                <Card.Text>
-                                    {set.vocabItems?.length || 0} items
-                                </Card.Text>
-                                <Button 
-                                    variant="outline-primary" 
+                                <Card.Text>{set.vocabItems?.length || 0} items</Card.Text>
+                                <Button
+                                    variant="outline-primary"
                                     onClick={() => handleEditSet(set)}
                                 >
                                     Edit
@@ -100,4 +110,4 @@ export default function MySets({ goToPage }) {
             </Row>
         </Container>
     );
-} 
+}
