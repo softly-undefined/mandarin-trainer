@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Button, Card, Container, Row, Col, Form, Table, Alert } from 'react-bootstrap';
 import { createVocabSet, updateVocabSet, deleteVocabSet } from '../services/vocabSetService';
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
     const { currentUser } = useAuth();
+    const { isDarkMode } = useTheme();
     const [setName, setSetName] = useState(set?.setName || '');
     const [vocabItems, setVocabItems] = useState(set?.vocabItems || []);
     const [newItem, setNewItem] = useState({ character: '', pinyin: '', definition: '' });
@@ -53,13 +55,9 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                 await createVocabSet(currentUser.uid, setName, vocabItems);
             }
             setSuccess('Set saved successfully!');
-            
-            // Call onSetUpdated first to refresh the sets list
             if (onSetUpdated) {
                 await onSetUpdated();
             }
-            
-            // Then navigate back to home
             setTimeout(() => goToPage('home'), 500);
         } catch (error) {
             console.error("Error saving set:", error);
@@ -86,15 +84,33 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
         goToPage('home');
     };
 
+    const cardStyle = isDarkMode
+        ? { backgroundColor: '#23272b', color: '#fff', borderColor: '#444' }
+        : {};
+    const inputStyle = isDarkMode
+        ? { backgroundColor: '#181a1b', color: '#fff', border: '1px solid #444' }
+        : {};
+    const thStyle = isDarkMode
+        ? { backgroundColor: '#181a1b', color: '#fff' }
+        : {};
+
     return (
-        <div style={{ maxHeight: "100vh", overflowY: "auto", padding: "1rem" }}>
+        <div style={{ maxHeight: "100vh", overflowY: "auto", padding: "1rem", background: isDarkMode ? '#181a1b' : undefined }}>
+            {isDarkMode && (
+                <style>{`
+                    .vocab-darkmode-input::placeholder {
+                        color: #b0b0b0 !important;
+                        opacity: 1 !important;
+                    }
+                `}</style>
+            )}
             <Container className="py-4">
                 <Row className="mb-4">
                     <Col>
-                        <h2>{set ? 'Edit Set' : 'Create New Set'}</h2>
+                        <h2 style={{ color: isDarkMode ? '#fff' : undefined }}>{set ? 'Edit Set' : 'Create New Set'}</h2>
                     </Col>
                     <Col xs="auto">
-                        <Button variant="outline-secondary" onClick={handleBack}>
+                        <Button variant={isDarkMode ? "outline-light" : "outline-secondary"} onClick={handleBack}>
                             Back to My Sets
                         </Button>
                     </Col>
@@ -105,19 +121,21 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
 
                 <Form className="mb-4">
                     <Form.Group className="mb-3">
-                        <Form.Label>Set Name</Form.Label>
+                        <Form.Label style={{ color: isDarkMode ? '#fff' : undefined }}>Set Name</Form.Label>
                         <Form.Control
                             type="text"
                             value={setName}
                             onChange={(e) => setSetName(e.target.value)}
                             placeholder="Enter set name"
+                            style={inputStyle}
+                            className={isDarkMode ? 'vocab-darkmode-input' : ''}
                         />
                     </Form.Group>
                 </Form>
 
-                <Card className="mb-4">
+                <Card className="mb-4" style={cardStyle}>
                     <Card.Body>
-                        <Card.Title>Add New Vocabulary Item</Card.Title>
+                        <Card.Title style={{ color: isDarkMode ? '#fff' : undefined }}>Add New Vocabulary Item</Card.Title>
                         <Form onSubmit={handleAddItem}>
                             <Row>
                                 <Col>
@@ -126,6 +144,8 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                                         placeholder="字"
                                         value={newItem.character}
                                         onChange={(e) => setNewItem({ ...newItem, character: e.target.value })}
+                                        style={inputStyle}
+                                        className={isDarkMode ? 'vocab-darkmode-input' : ''}
                                     />
                                 </Col>
                                 <Col>
@@ -134,6 +154,8 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                                         placeholder="Pinyin"
                                         value={newItem.pinyin}
                                         onChange={(e) => setNewItem({ ...newItem, pinyin: e.target.value })}
+                                        style={inputStyle}
+                                        className={isDarkMode ? 'vocab-darkmode-input' : ''}
                                     />
                                 </Col>
                                 <Col>
@@ -142,10 +164,12 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                                         placeholder="Definition"
                                         value={newItem.definition}
                                         onChange={(e) => setNewItem({ ...newItem, definition: e.target.value })}
+                                        style={inputStyle}
+                                        className={isDarkMode ? 'vocab-darkmode-input' : ''}
                                     />
                                 </Col>
                                 <Col xs="auto">
-                                    <Button type="submit" variant="primary">
+                                    <Button type="submit" variant={isDarkMode ? "outline-light" : "primary"}>
                                         {editingIndex !== null ? "Update" : "Add"}
                                     </Button>
                                 </Col>
@@ -154,16 +178,16 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                     </Card.Body>
                 </Card>
 
-                <h5 className="mb-2">Set Length: {vocabItems.length}</h5>
+                <h5 className="mb-2" style={{ color: isDarkMode ? '#fff' : undefined }}>Set Length: {vocabItems.length}</h5>
 
                 <div style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '1rem' }}>
                     <Table striped bordered hover>
-                        <thead style={{ position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 1 }}>
+                        <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}>
                             <tr>
-                                <th>Character</th>
-                                <th>Pinyin</th>
-                                <th>Definition</th>
-                                <th>Actions</th>
+                                <th style={thStyle}>Character</th>
+                                <th style={thStyle}>Pinyin</th>
+                                <th style={thStyle}>Definition</th>
+                                <th style={thStyle}>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -174,7 +198,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                                     <td>{item.definition}</td>
                                     <td>
                                         <Button
-                                            variant="outline-secondary"
+                                            variant={isDarkMode ? "outline-light" : "outline-secondary"}
                                             size="sm"
                                             className="me-2"
                                             onClick={() => {
@@ -185,7 +209,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                                             Edit
                                         </Button>
                                         <Button
-                                            variant="outline-danger"
+                                            variant={isDarkMode ? "outline-danger" : "outline-danger"}
                                             size="sm"
                                             onClick={() => handleDeleteItem(index)}
                                         >
@@ -200,7 +224,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
 
                 <div className="d-grid gap-2">
                     <Button
-                        variant="primary"
+                        variant={isDarkMode ? "outline-light" : "primary"}
                         size="lg"
                         onClick={handleSave}
                         disabled={!setName || vocabItems.length === 0}
@@ -209,7 +233,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                     </Button>
                     {set && (
                         <Button
-                            variant="danger"
+                            variant={isDarkMode ? "outline-danger" : "danger"}
                             size="lg"
                             onClick={handleDeleteSet}
                         >
