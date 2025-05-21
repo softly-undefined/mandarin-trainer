@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Stack } from "react-bootstrap";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import { useAuth } from "./contexts/AuthContext";
 
 import Menu from "./components/Menu";
@@ -162,12 +163,12 @@ function AppContent() {
     );
 }
 
-function App() {
+export default function App() {
     return (
         <AuthProvider>
-            <AppContent />
+            <ThemeProvider>
+                <AppContent />
+            </ThemeProvider>
         </AuthProvider>
     );
 }
-
-export default App;

@@ -17,6 +17,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import { useTheme } from "../contexts/ThemeContext";
 
 ChartJS.register(
   CategoryScale,
@@ -36,6 +37,7 @@ export default function FinishPage(props) {
         currentSetName
     } = props;
 
+    const { isDarkMode } = useTheme();
     const [rightCount, setRightCount] = useState(0);
     const [wrongCount, setWrongCount] = useState(0);
 
@@ -50,8 +52,58 @@ export default function FinishPage(props) {
         setWrongCount(wrong);
     };
 
+    const cardStyle = isDarkMode
+        ? { backgroundColor: "#23272b", color: "#fff", borderColor: "#444" }
+        : {};
+    const headerStyle = isDarkMode ? { color: "#fff" } : {};
+    const alertStyle = isDarkMode
+        ? { backgroundColor: "#181a1b", color: "#fff", border: "1px solid #444" }
+        : {};
+    const chartOptions = {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            title: {
+                display: true,
+                text: 'Words Learned Over Time',
+                color: isDarkMode ? '#fff' : undefined,
+            },
+        },
+        scales: {
+            x: {
+                min: 0,
+                title: {
+                    display: true,
+                    text: 'Number of Trials',
+                    color: isDarkMode ? '#fff' : undefined,
+                },
+                ticks: {
+                    color: isDarkMode ? '#fff' : undefined,
+                },
+                grid: {
+                    color: isDarkMode ? '#444' : undefined,
+                },
+            },
+            y: {
+                min: 0,
+                title: {
+                    display: true,
+                    text: 'Words Learned',
+                    color: isDarkMode ? '#fff' : undefined,
+                },
+                beginAtZero: true,
+                ticks: {
+                    color: isDarkMode ? '#fff' : undefined,
+                },
+                grid: {
+                    color: isDarkMode ? '#444' : undefined,
+                },
+            },
+        },
+    };
+
     return (
-        <Card body style={{ width: "400px" }}>
+        <Card body style={{ width: "400px", ...cardStyle }}>
             <Stack
                 direction='horizontal'
                 style={{
@@ -59,12 +111,12 @@ export default function FinishPage(props) {
                     alignItems: "flex-start",
                 }}
             >
-                <Card.Title style={{ flexGrow: 1 }}>Finished Testing {currentSetName}</Card.Title>
+                <Card.Title style={{ flexGrow: 1, ...headerStyle }}>Finished Testing {currentSetName}</Card.Title>
                 <CloseButton onClick={() => goToPage("menu")} />
             </Stack>
 
             <Stack gap='3'>
-                <Alert variant="success">
+                <Alert variant="success" style={alertStyle}>
                     <div>Correct Answers: {rightCount}</div>
                     <div>Incorrect Answers: {wrongCount}</div>
                     <div>Accuracy: {rightCount + wrongCount > 0 ? 
@@ -85,33 +137,7 @@ export default function FinishPage(props) {
                                 },
                             ],
                         }}
-                        options={{
-                            responsive: true,
-                            plugins: {
-                                legend: { display: false },
-                                title: {
-                                    display: true,
-                                    text: 'Words Learned Over Time',
-                                },
-                            },
-                            scales: {
-                                x: {
-                                    min: 0,
-                                    title: {
-                                        display: true,
-                                        text: 'Number of Trials',
-                                    },
-                                },
-                                y: {
-                                    min: 0,
-                                    title: {
-                                        display: true,
-                                        text: 'Words Learned',
-                                    },
-                                    beginAtZero: true,
-                                },
-                            },
-                        }}
+                        options={chartOptions}
                     />
                 )}
 

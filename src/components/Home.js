@@ -4,6 +4,7 @@ import { Button, Card, Container, Row, Col, Stack } from "react-bootstrap";
 import { getUserVocabSets } from "../services/vocabSetService";
 import VocabSetEditor from "./VocabSetEditor";
 import { FaCog } from 'react-icons/fa';
+import { useTheme } from "../contexts/ThemeContext";
 
 export default function Home(props) {
     const {
@@ -11,6 +12,7 @@ export default function Home(props) {
     } = props;
 
     const { currentUser } = useAuth();
+    const { isDarkMode } = useTheme();
 
     const [sets, setSets] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -65,12 +67,18 @@ export default function Home(props) {
                 <Col><h2>Your Vocabulary Sets</h2></Col>
                 <Col xs="auto">
                     <Stack direction="horizontal" gap={2}>
-                        <Button variant="secondary" onClick={() => setIsCreating(true)}>Create New Set</Button>
+                        <Button 
+                            variant={isDarkMode ? "outline-light" : "secondary"} 
+                            onClick={() => setIsCreating(true)}
+                        >
+                            Create New Set
+                        </Button>
                         <Button
                             style={{
                                 backgroundColor: "transparent",
                                 border: "none",
-                                padding: 0
+                                padding: 0,
+                                color: isDarkMode ? "#ffffff" : "#000000"
                             }}
                             variant="light"
                             onClick={() => goToPage("settings")}
@@ -84,13 +92,32 @@ export default function Home(props) {
             <Row xs={1} md={2} lg={3} className="g-4">
                 {sets.map((set) => (
                     <Col key={set.id}>
-                        <Card>
+                        <Card 
+                            style={{ 
+                                backgroundColor: isDarkMode ? "#2d2d2d" : "#ffffff",
+                                borderColor: isDarkMode ? "#404040" : "#dee2e6"
+                            }}
+                        >
                             <Card.Body>
-                                <Card.Title>{set.setName}</Card.Title>
-                                <Card.Text>{set.vocabItems?.length || 0} items</Card.Text>
+                                <Card.Title style={{ color: isDarkMode ? "#ffffff" : "#000000" }}>
+                                    {set.setName}
+                                </Card.Title>
+                                <Card.Text style={{ color: isDarkMode ? "#cccccc" : "#6c757d" }}>
+                                    {set.vocabItems?.length || 0} items
+                                </Card.Text>
                                 <Stack direction="horizontal" gap={2}>
-                                    <Button variant="outline-primary" onClick={() => setEditingSet(set)}>Edit</Button>
-                                    <Button variant="success" onClick={() => handleStartLearning(set)}>Learn</Button>
+                                    <Button 
+                                        variant={isDarkMode ? "outline-light" : "outline-primary"} 
+                                        onClick={() => setEditingSet(set)}
+                                    >
+                                        Edit
+                                    </Button>
+                                    <Button 
+                                        variant={isDarkMode ? "outline-success" : "success"} 
+                                        onClick={() => handleStartLearning(set)}
+                                    >
+                                        Learn
+                                    </Button>
                                 </Stack>
                             </Card.Body>
                         </Card>
