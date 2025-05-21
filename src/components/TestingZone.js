@@ -504,6 +504,9 @@ export default function TestingZone(props) {
                         color: #b0b0b0 !important;
                         opacity: 1 !important;
                     }
+                    .testingzone-darkmode-close .btn-close {
+                        filter: invert(1) brightness(2);
+                    }
                 `}</style>
             )}
             <Card body style={{ width: cardWidth, ...cardStyle }}>
@@ -529,11 +532,13 @@ export default function TestingZone(props) {
                         </Card.Title>
                         <Card.Title style={headerStyle}>{currentSetName}</Card.Title>
                     </Stack>
-                    <CloseButton
-                        onClick={() => {
-                            goToPage("menu");
-                        }}
-                    />
+                    <div className={isDarkMode ? "testingzone-darkmode-close" : undefined}>
+                        <CloseButton
+                            onClick={() => {
+                                goToPage("menu");
+                            }}
+                        />
+                    </div>
                 </Stack>
                 <Card.Body>
                     <Form onSubmit={handleSubmit}>
