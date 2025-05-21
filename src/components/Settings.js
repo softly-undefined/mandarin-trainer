@@ -1,15 +1,16 @@
-import { useState } from "react";
-import { Button, Card, Stack, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
+import { Button, Card, Stack } from "react-bootstrap";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Settings(props) {
-    const { goToPage, isMultipleChoice, setIsMultipleChoice, multipleChoiceValue, setMultipleChoiceValue } = props;
+    const { goToPage } = props;
+    const { logout } = useAuth();
 
-    const handleMCChange = (val) => {
-        setMultipleChoiceValue(val);
-        if(val === 1) {
-            setIsMultipleChoice(true);
-        } else {
-            setIsMultipleChoice(false);
+    const handleLogout = async () => {
+        try {
+            await logout();
+            // The AuthContext will automatically redirect to SignIn
+        } catch (error) {
+            console.error("Failed to log out:", error);
         }
     };
 
@@ -32,25 +33,15 @@ export default function Settings(props) {
                         Back to Menu
                     </Button>
                 </Stack>
+
                 <Stack gap={3} style={{ marginTop: "20px" }}>
-                    <Stack
-                        direction='horizontal'
-                        style={{
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
-                            gap: "5px",
-                        }}
+                    <Button 
+                        variant="danger" 
+                        onClick={handleLogout}
+                        style={{ marginTop: "20px" }}
                     >
-                        <Card.Title>Multiple Choice</Card.Title>
-                        <ToggleButtonGroup type="radio" name="mcToggle" value={multipleChoiceValue} onChange={handleMCChange}>
-                            <ToggleButton id="mc-tbg-btn-1" value={1}>
-                                ON
-                            </ToggleButton>
-                            <ToggleButton id="mc-tbg-btn-2" value={2}>
-                                OFF
-                            </ToggleButton>
-                        </ToggleButtonGroup>
-                    </Stack>
+                        Log Out
+                    </Button>
                 </Stack>
             </Card.Body>
         </Card>

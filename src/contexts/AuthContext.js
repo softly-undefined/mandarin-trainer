@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { auth } from '../firebase';
-import { onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { getUserVocabSets, createVocabSet } from '../services/vocabSetService';
 
 const AuthContext = createContext();
@@ -16,6 +16,15 @@ export function AuthProvider({ children }) {
     function signInWithGoogle() {
         const provider = new GoogleAuthProvider();
         return signInWithPopup(auth, provider);
+    }
+
+    async function logout() {
+        try {
+            await signOut(auth);
+        } catch (error) {
+            console.error("Failed to log out:", error);
+            throw error;
+        }
     }
 
     useEffect(() => {
@@ -34,7 +43,8 @@ export function AuthProvider({ children }) {
 
     const value = {
         currentUser,
-        signInWithGoogle
+        signInWithGoogle,
+        logout
     };
 
     return (

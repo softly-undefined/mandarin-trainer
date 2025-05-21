@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, ToggleButton, Card, Stack } from "react-bootstrap";
+import { Button, ButtonGroup, ToggleButton, Card, Stack, Form } from "react-bootstrap";
 
 export default function StartLearning({
     set,
@@ -10,7 +10,9 @@ export default function StartLearning({
     setSetChoice,
     setCurrentSetName,
     setResponseCounts,
-    setLearnedOverTime
+    setLearnedOverTime,
+    isMultipleChoice,
+    setIsMultipleChoice
 }) {
     const answerTypes = [
         { name: "Pinyin", value: "pinyin" },
@@ -29,8 +31,6 @@ export default function StartLearning({
                 padding: "1.5rem" 
             }}
             >
-
-
             <Stack gap={3}>
                 <div style={{ textAlign: "center" }}>
                     <h5 style={{ marginBottom: "0.5rem" }}>Select Learning Mode</h5>
@@ -84,6 +84,34 @@ export default function StartLearning({
                                 </ToggleButton>
                             ))}
                         </ButtonGroup>
+                    </Stack>
+                </Stack>
+
+                <Stack style={{ alignItems: "center" }}>
+                    {/* <h6 style={{ textAlign: "center", marginBottom: "10px" }}>Mode</h6> */}
+                    <Stack direction="horizontal" gap={2} style={{ justifyContent: "center" }}>
+                        <Button
+                            variant={!isMultipleChoice ? "primary" : "outline-primary"}
+                            onClick={() => setIsMultipleChoice(false)}
+                            style={{ 
+                                border: "none", 
+                                minWidth: "140px",
+                                fontSize: "1rem"
+                            }}
+                        >
+                            Free Response
+                        </Button>
+                        <Button
+                            variant={isMultipleChoice ? "primary" : "outline-primary"}
+                            onClick={() => setIsMultipleChoice(true)}
+                            style={{ 
+                                border: "none", 
+                                minWidth: "140px",
+                                fontSize: "1rem"
+                            }}
+                        >
+                            Multiple Choice
+                        </Button>
                     </Stack>
                 </Stack>
 

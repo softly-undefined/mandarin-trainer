@@ -32,8 +32,9 @@ export default function TestingZone(props) {
     const [currPinyin, setCurrPinyin] = useState("");
     const [currDefinition, setCurrDefinition] = useState("");
     const [buttonState, setButtonState] = useState("primary");
-    const [buttonText, setButtonText] = useState("SUBMIT");
+    const [buttonText, setButtonText] = useState("Submit");
     const [cardWidth] = useState(400);
+    const [selectedAnswer, setSelectedAnswer] = useState(null);
 
     // Multiple choice related variables
     const [answer1, setAnswer1] = useState("");
@@ -55,6 +56,7 @@ export default function TestingZone(props) {
     const [totalWords, setTotalWords] = useState(0);
     const [learnedWords, setLearnedWords] = useState(0);
     const [learnedSet, setLearnedSet] = useState(new Set());
+    const [lastWord, setLastWord] = useState(null);
 
     useEffect(() => {
         let isMounted = true;
@@ -77,7 +79,7 @@ export default function TestingZone(props) {
             setCurrPinyin("");
             setCurrDefinition("");
             setButtonState("primary");
-            setButtonText("SUBMIT");
+            setButtonText("Submit");
             setLearnedOverTime([]);
             setLearnedWords(0);
             setResponseCounts([]);
@@ -152,6 +154,7 @@ export default function TestingZone(props) {
                 setShuffledSet(shuffled);
                 setRemainingSet(shuffled);
                 setLearnedWords(0);
+                setLastWord(null);
 
                 // Set up the first word
                 if (shuffled.length > 0) {
@@ -181,6 +184,7 @@ export default function TestingZone(props) {
                         setAnswerPlacement(answerLocation);
                     }
                     
+                    setLastWord(firstWord);
                     setTerm(firstWord[given]);
                     setKey(firstWord[want]);
                     setCurrChar(firstWord.character);
@@ -245,7 +249,14 @@ export default function TestingZone(props) {
             return;
         }
 
+        // If the next word is the same as the last word shown, get a different word
+        if (lastWord && next[want] === lastWord[want] && nextSet.length > 0) {
+            const randomIndex = Math.floor(Math.random() * nextSet.length);
+            [next, nextSet[randomIndex]] = [nextSet[randomIndex], next];
+        }
+
         console.log("Setting next word:", next);
+        setLastWord(next);
         setRemainingSet(nextSet);
         setTerm(next[given]);
         setKey(next[want]);
@@ -290,6 +301,12 @@ export default function TestingZone(props) {
                 .sort((a, b) => a.sort - b.sort)
                 .map(({ value }) => value);
             
+            // If the first word is the same as the last word shown, swap it with another word
+            if (lastWord && shuffled.length > 1 && shuffled[0][want] === lastWord[want]) {
+                const randomIndex = Math.floor(Math.random() * (shuffled.length - 1)) + 1;
+                [shuffled[0], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[0]];
+            }
+            
             console.log("Shuffled remaining words:", shuffled);
             setShuffledSet(shuffled);
             setRemainingSet(shuffled);
@@ -297,6 +314,7 @@ export default function TestingZone(props) {
             // Present the first word from the new set
             if (shuffled.length > 0) {
                 const firstWord = shuffled[0];
+                setLastWord(firstWord);
                 setTerm(firstWord[given]);
                 setKey(firstWord[want]);
                 setCurrChar(firstWord.character);
@@ -389,104 +407,74 @@ export default function TestingZone(props) {
             event.preventDefault();
         }
 
-        if (submissionNum % 2 === 0) {
+        // If we're already showing the answer, move to next question
+        if (isSubmitting) {
             setKeyText(false);
             setAnswer("");
             setFormColor("black");
             setButtonState("primary");
-            setButtonText("SUBMIT");
+            setButtonText("Submit");
             setIsSubmitting(false);
+            setSelectedAnswer(null);
             prepareNext();
+            return;
+        }
+
+        // Otherwise, show the answer feedback
+        setKeyText(true);
+        setTerm("");
+        setIsSubmitting(true);
+
+        // Normalize both answers by converting to lowercase and removing spaces
+        const normalizedAnswer = answer.toLowerCase().replace(/\s+/g, '');
+        const normalizedKey = key.toLowerCase().replace(/\s+/g, '');
+
+        if (normalizedAnswer === normalizedKey || event === answerPlacement) {
+            setIsCorrect(true);
+            setFormColor("#2E972E");
+            setButtonState("success");
+            setButtonText("Next ->");
+            setResponseCounts((prev) => [...prev, 1]);
+
+            setAnswerCounts((prevCounts) => {
+                const newCounts = { ...prevCounts };
+                newCounts[key] = (newCounts[key] || 0) + 1;
+
+                const correctCount = newCounts[key];
+                const wrongCount = wrongCounts[key] || 0;
+
+                setLearnedSet((prevSet) => {
+                    const safeSet = prevSet ?? new Set();
+
+                    if (
+                        !safeSet.has(key) &&
+                        learnedWords < totalWords &&
+                        (correctCount === 3 || (correctCount === 2 && wrongCount === 0))
+                    ) {
+                        const newSet = new Set(safeSet);
+                        newSet.add(key);
+                        const newCount = learnedWords + 1;
+                        setLearnedWords(newCount);
+                        learnedWordsRef.current = newCount;
+                        return newSet;
+                    }
+                    return safeSet;
+                });
+
+                return newCounts;
+            });
         } else {
-            setKeyText(true);
-            setTerm("");
-            setIsSubmitting(true);
+            setIsCorrect(false);
+            setFormColor("#DD4F4F");
+            setButtonState("danger");
+            setButtonText("Next Term ->");
+            setResponseCounts((prev) => [...prev, 0]);
 
-            if (answer === key || event === answerPlacement) {
-                if (isMultipleChoice) {
-                    if (answerPlacement === 0) {
-                        setAnswer2("CORRECT!");
-                        setAnswer3("CORRECT!");
-                        setAnswer4("CORRECT!");
-                    } else if (answerPlacement === 1) {
-                        setAnswer1("CORRECT!");
-                        setAnswer3("CORRECT!");
-                        setAnswer4("CORRECT!");
-                    } else if (answerPlacement === 2) {
-                        setAnswer1("CORRECT!");
-                        setAnswer2("CORRECT!");
-                        setAnswer4("CORRECT!");
-                    } else if (answerPlacement === 3) {
-                        setAnswer1("CORRECT!");
-                        setAnswer2("CORRECT!");
-                        setAnswer3("CORRECT!");
-                    }
-                }
-                setIsCorrect(true);
-                setFormColor("green");
-                setButtonState("success");
-                setButtonText("CORRECT!");
-                setResponseCounts((prev) => [...prev, 1]);
-
-                setAnswerCounts((prevCounts) => {
-                    const newCounts = { ...prevCounts };
-                    newCounts[key] = (newCounts[key] || 0) + 1;
-
-                    const correctCount = newCounts[key];
-                    const wrongCount = wrongCounts[key] || 0;
-
-                    setLearnedSet((prevSet) => {
-                        const safeSet = prevSet ?? new Set();
-
-                        if (
-                            !safeSet.has(key) &&
-                            learnedWords < totalWords &&
-                            (correctCount === 3 || (correctCount === 2 && wrongCount === 0))
-                        ) {
-                            const newSet = new Set(safeSet);
-                            newSet.add(key);
-                            const newCount = learnedWords + 1;
-                            setLearnedWords(newCount);
-                            learnedWordsRef.current = newCount;
-                            return newSet;
-                        }
-                        return safeSet;
-                    });
-
-                    return newCounts;
-                });
-            } else {
-                if (isMultipleChoice) {
-                    if (answerPlacement === 0) {
-                        setAnswer2("INCORRECT!");
-                        setAnswer3("INCORRECT!");
-                        setAnswer4("INCORRECT!");
-                    } else if (answerPlacement === 1) {
-                        setAnswer1("INCORRECT!");
-                        setAnswer3("INCORRECT!");
-                        setAnswer4("INCORRECT!");
-                    } else if (answerPlacement === 2) {
-                        setAnswer1("INCORRECT!");
-                        setAnswer2("INCORRECT!");
-                        setAnswer4("INCORRECT!");
-                    } else if (answerPlacement === 3) {
-                        setAnswer1("INCORRECT!");
-                        setAnswer2("INCORRECT!");
-                        setAnswer3("INCORRECT!");
-                    }
-                }
-                setIsCorrect(false);
-                setFormColor("red");
-                setButtonState("danger");
-                setButtonText("INCORRECT");
-                setResponseCounts((prev) => [...prev, 0]);
-
-                setWrongCounts((answerCounts) => {
-                    let newAnswerCounts = { ...answerCounts };
-                    newAnswerCounts[key] = (newAnswerCounts[key] || 0) + 1;
-                    return newAnswerCounts;
-                });
-            }
+            setWrongCounts((answerCounts) => {
+                let newAnswerCounts = { ...answerCounts };
+                newAnswerCounts[key] = (newAnswerCounts[key] || 0) + 1;
+                return newAnswerCounts;
+            });
         }
         setSubmissionNum((submissionNum) => submissionNum + 1);
     };
@@ -567,72 +555,153 @@ export default function TestingZone(props) {
                             </Button>
                         )}
                         {isMultipleChoice && (
-                            <Stack
-                                direction='horizontal'
-                                gap={1}
-                                style={{
-                                    justifyContent: "flex-start",
-                                    alignItems: "center",
-                                }}
-                            >
+                            <Stack gap={2}>
                                 <Stack
-                                    direction='vertical'
+                                    direction='horizontal'
                                     gap={1}
                                     style={{
                                         justifyContent: "flex-start",
                                         alignItems: "center",
                                     }}
                                 >
-                                    <Button
-                                        style={{ fontSize: "20px", minWidth: "165px" }}
-                                        variant={buttonState}
-                                        ref={button1Ref}
-                                        onClick={() => {
-                                            handleSubmit(0);
+                                    <Stack
+                                        direction='vertical'
+                                        gap={1}
+                                        style={{
+                                            justifyContent: "flex-start",
+                                            alignItems: "center",
                                         }}
                                     >
-                                        {answer1}
-                                    </Button>
-                                    <Button
-                                        style={{ fontSize: "20px", minWidth: "165px" }}
-                                        variant={buttonState}
-                                        ref={button3Ref}
-                                        onClick={() => {
-                                            handleSubmit(1);
+                                        <Button
+                                            style={{ 
+                                                fontSize: "20px", 
+                                                minWidth: "165px",
+                                                backgroundColor: isSubmitting && answerPlacement === 0 ? "#2E972E" : 
+                                                               isSubmitting && answerPlacement !== 0 ? "#DD4F4F" : undefined,
+                                                border: selectedAnswer === 0 ? "4px solid black" : "4px solid transparent"
+                                            }}
+                                            variant={buttonState}
+                                            ref={button1Ref}
+                                            onClick={() => {
+                                                if (isSubmitting) {
+                                                    handleSubmit();
+                                                } else {
+                                                    setSelectedAnswer(0);
+                                                    handleSubmit(0);
+                                                }
+                                            }}
+                                        >
+                                            {answer1}
+                                        </Button>
+                                        <Button
+                                            style={{ 
+                                                fontSize: "20px", 
+                                                minWidth: "165px",
+                                                backgroundColor: isSubmitting && answerPlacement === 1 ? "#2E972E" : 
+                                                               isSubmitting && answerPlacement !== 1 ? "#DD4F4F" : undefined,
+                                                border: selectedAnswer === 1 ? "4px solid black" : "4px solid transparent"
+                                            }}
+                                            variant={buttonState}
+                                            ref={button3Ref}
+                                            onClick={() => {
+                                                if (isSubmitting) {
+                                                    handleSubmit();
+                                                } else {
+                                                    setSelectedAnswer(1);
+                                                    handleSubmit(1);
+                                                }
+                                            }}
+                                        >
+                                            {answer2}
+                                        </Button>
+                                    </Stack>
+                                    <Stack
+                                        direction='vertical'
+                                        gap={1}
+                                        style={{
+                                            justifyContent: "flex-start",
+                                            alignItems: "center",
                                         }}
                                     >
-                                        {answer2}
-                                    </Button>
+                                        <Button
+                                            style={{ 
+                                                fontSize: "20px", 
+                                                minWidth: "165px",
+                                                backgroundColor: isSubmitting && answerPlacement === 2 ? "#2E972E" : 
+                                                               isSubmitting && answerPlacement !== 2 ? "#DD4F4F" : undefined,
+                                                border: selectedAnswer === 2 ? "4px solid black" : "4px solid transparent"
+                                            }}
+                                            variant={buttonState}
+                                            ref={button2Ref}
+                                            onClick={() => {
+                                                if (isSubmitting) {
+                                                    handleSubmit();
+                                                } else {
+                                                    setSelectedAnswer(2);
+                                                    handleSubmit(2);
+                                                }
+                                            }}
+                                        >
+                                            {answer3}
+                                        </Button>
+                                        <Button
+                                            style={{ 
+                                                fontSize: "20px", 
+                                                minWidth: "165px",
+                                                backgroundColor: isSubmitting && answerPlacement === 3 ? "#2E972E" : 
+                                                               isSubmitting && answerPlacement !== 3 ? "#DD4F4F" : undefined,
+                                                border: selectedAnswer === 3 ? "4px solid black" : "4px solid transparent"
+                                            }}
+                                            variant={buttonState}
+                                            ref={button4Ref}
+                                            onClick={() => {
+                                                if (isSubmitting) {
+                                                    handleSubmit();
+                                                } else {
+                                                    setSelectedAnswer(3);
+                                                    handleSubmit(3);
+                                                }
+                                            }}
+                                        >
+                                            {answer4}
+                                        </Button>
+                                    </Stack>
                                 </Stack>
-                                <Stack
-                                    direction='vertical'
-                                    gap={1}
-                                    style={{
-                                        justifyContent: "flex-start",
-                                        alignItems: "center",
+                                <Button 
+                                    variant="primary"
+                                    onClick={() => {
+                                        if (!isSubmitting) {
+                                            // Register as incorrect answer
+                                            setIsCorrect(false);
+                                            setFormColor("#DD4F4F");
+                                            setButtonState("danger");
+                                            setButtonText("Next ->");
+                                            setResponseCounts((prev) => [...prev, 0]);
+                                            setWrongCounts((answerCounts) => {
+                                                let newAnswerCounts = { ...answerCounts };
+                                                newAnswerCounts[key] = (newAnswerCounts[key] || 0) + 1;
+                                                return newAnswerCounts;
+                                            });
+                                            setSubmissionNum((submissionNum) => submissionNum + 1);
+                                            // Show the answer feedback
+                                            setKeyText(true);
+                                            setTerm("");
+                                            setIsSubmitting(true);
+                                        } else {
+                                            // Move to next question
+                                            setKeyText(false);
+                                            setAnswer("");
+                                            setFormColor("black");
+                                            setButtonState("primary");
+                                            setButtonText("Submit");
+                                            setIsSubmitting(false);
+                                            setSelectedAnswer(null);
+                                            prepareNext();
+                                        }
                                     }}
                                 >
-                                    <Button
-                                        style={{ fontSize: "20px", minWidth: "165px" }}
-                                        variant={buttonState}
-                                        ref={button2Ref}
-                                        onClick={() => {
-                                            handleSubmit(2);
-                                        }}
-                                    >
-                                        {answer3}
-                                    </Button>
-                                    <Button
-                                        style={{ fontSize: "20px", minWidth: "165px" }}
-                                        variant={buttonState}
-                                        ref={button4Ref}
-                                        onClick={() => {
-                                            handleSubmit(3);
-                                        }}
-                                    >
-                                        {answer4}
-                                    </Button>
-                                </Stack>
+                                    {isSubmitting ? "Next ->" : "Skip ->"}
+                                </Button>
                             </Stack>
                         )}
                     </Stack>
