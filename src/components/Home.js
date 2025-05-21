@@ -5,7 +5,6 @@ import { getUserVocabSets } from "../services/vocabSetService";
 import VocabSetEditor from "./VocabSetEditor";
 import { FaCog } from 'react-icons/fa';
 
-
 export default function Home(props) {
     const {
         goToPage,
@@ -18,25 +17,25 @@ export default function Home(props) {
     const [editingSet, setEditingSet] = useState(null);
     const [isCreating, setIsCreating] = useState(false);
 
-    useEffect(() => {
-        async function loadSets() {
-            try {
-                const userSets = await getUserVocabSets(currentUser.uid);
-                setSets(userSets);
-            } catch (error) {
-                console.error("Error loading sets:", error);
-            } finally {
-                setLoading(false);
-            }
+    const loadSets = async () => {
+        try {
+            const userSets = await getUserVocabSets(currentUser.uid);
+            setSets(userSets);
+        } catch (error) {
+            console.error("Error loading sets:", error);
+        } finally {
+            setLoading(false);
         }
+    };
 
+    useEffect(() => {
         if (currentUser) {
             loadSets();
         }
     }, [currentUser]);
 
     const handleStartLearning = (set) => {
-        goToPage("startLearning", set); // Pass the set to StartLearning
+        goToPage("startLearning", set);
     };
 
     const handleBack = () => {
@@ -44,10 +43,20 @@ export default function Home(props) {
         setIsCreating(false);
     };
 
+    const handleSetUpdated = async () => {
+        await loadSets();
+    };
+
     if (loading) return <div>Loading...</div>;
 
     if (editingSet || isCreating) {
-        return <VocabSetEditor set={editingSet} goToPage={handleBack} />;
+        return (
+            <VocabSetEditor 
+                set={editingSet} 
+                goToPage={handleBack}
+                onSetUpdated={handleSetUpdated}
+            />
+        );
     }
 
     return (
@@ -89,5 +98,5 @@ export default function Home(props) {
                 ))}
             </Row>
         </Container>
-    );    
+    );
 }

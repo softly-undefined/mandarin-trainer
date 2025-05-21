@@ -2,13 +2,9 @@ import { useState, useEffect } from "react";
 import {
     Stack,
     Card,
-    Form,
     Button,
-    ButtonGroup,
-    ToggleButton,
-    Spinner,
     CloseButton,
-    Table,
+    Alert,
 } from "react-bootstrap";
 import { Line } from 'react-chartjs-2';
 import {
@@ -32,22 +28,19 @@ ChartJS.register(
   Legend
 );
 
-export default function Menu(props) {
+export default function FinishPage(props) {
     const { 
-        setChoice, 
         goToPage,
         responseCounts,
-        setResponseCounts,
-        learnedOverTime
+        learnedOverTime,
+        currentSetName
     } = props;
 
     const [rightCount, setRightCount] = useState(0);
     const [wrongCount, setWrongCount] = useState(0);
 
-
-    useEffect( () => {
+    useEffect(() => {
         getRightWrong(responseCounts);
-        console.log("IS THIS EVER WRITING");
     }, [responseCounts]);
 
     const getRightWrong = (array) => {
@@ -56,8 +49,6 @@ export default function Menu(props) {
         setRightCount(right);
         setWrongCount(wrong);
     };
-    
-
 
     return (
         <Card body style={{ width: "400px" }}>
@@ -68,30 +59,18 @@ export default function Menu(props) {
                     alignItems: "flex-start",
                 }}
             >
-                <Card.Title style={{ flexGrow: 1 }}>Finished Testing {props.currentSetName}</Card.Title>
+                <Card.Title style={{ flexGrow: 1 }}>Finished Testing {currentSetName}</Card.Title>
                 <CloseButton onClick={() => goToPage("menu")} />
             </Stack>
 
             <Stack gap='3'>
+                <Alert variant="success">
+                    <div>Correct Answers: {rightCount}</div>
+                    <div>Incorrect Answers: {wrongCount}</div>
+                    <div>Accuracy: {rightCount + wrongCount > 0 ? 
+                        Math.round((rightCount / (rightCount + wrongCount)) * 100) : 0}%</div>
+                </Alert>
 
-                {/* !You finished! Go you! old */}
-
-                <Stack
-                    direction='horizontal'
-                    style={{
-                        justifyContent: "space-between",
-                        alignItems: "flex-start",
-                        gap: "5px",
-                    }}
-                >
-                    {/* old<Stack>
-                        {rightCount}
-                    </Stack>
-                    <Stack>
-                        {wrongCount}
-                    </Stack> */}
-
-                </Stack>
                 {learnedOverTime.length > 0 && (
                     <Line
                         data={{
@@ -135,7 +114,6 @@ export default function Menu(props) {
                         }}
                     />
                 )}
-
 
                 <Button
                     variant='success'
