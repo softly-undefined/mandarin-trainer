@@ -64,7 +64,12 @@ export default function Home(props) {
     return (
         <Container className="py-4" style={{ overflowY: "auto", maxHeight: "100vh" }}>
             <Row className="mb-4" style={{ alignItems: "center" }}>
-                <Col><h2>Your Vocab Sets</h2></Col>
+                <Col>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <img src={process.env.PUBLIC_URL + '/roundedfinallogo.png'} alt="Mandarin Trainer Logo" style={{ height: 32, width: 32 }} />
+                        <h2>Your Vocab Sets</h2>
+                    </div>
+                </Col>
                 <Col xs="auto">
                     <Stack direction="horizontal" gap={2}>
                         <Button 
