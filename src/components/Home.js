@@ -64,7 +64,7 @@ export default function Home(props) {
     return (
         <Container className="py-4" style={{ overflowY: "auto", maxHeight: "100vh" }}>
             <Row className="mb-4" style={{ alignItems: "center" }}>
-                <Col><h2>Your Vocabulary Sets</h2></Col>
+                <Col><h2>Your Vocab Sets</h2></Col>
                 <Col xs="auto">
                     <Stack direction="horizontal" gap={2}>
                         <Button 

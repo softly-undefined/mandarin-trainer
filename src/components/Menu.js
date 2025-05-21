@@ -100,7 +100,10 @@ export default function Menu(props) {
                     gap: "5px",
                 }}
             >
-                <Card.Title>Mandarin Trainer</Card.Title>
+                <Card.Title style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <img src={process.env.PUBLIC_URL + '/finallogo.png'} alt="Mandarin Trainer Logo" style={{ height: 32, width: 32 }} />
+                    Mandarin Trainer
+                </Card.Title>
                 <Button 
                     style={{
                         backgroundColor: "transparent",
