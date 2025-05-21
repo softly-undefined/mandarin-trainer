@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Button, Card, Container, Row, Col, Form, Table, Alert } from 'react-bootstrap';
 import { createVocabSet, updateVocabSet, deleteVocabSet } from '../services/vocabSetService';
 
-export default function VocabSetEditor({ set, goToPage, onSetUpdated = () => goToPage('mySets') }) {
+export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
     const { currentUser } = useAuth();
     const [setName, setSetName] = useState(set?.setName || '');
     const [vocabItems, setVocabItems] = useState(set?.vocabItems || []);
@@ -53,7 +53,14 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated = () => goT
                 await createVocabSet(currentUser.uid, setName, vocabItems);
             }
             setSuccess('Set saved successfully!');
-            setTimeout(onSetUpdated, 500); // Always call onSetUpdated
+            
+            // Call onSetUpdated first to refresh the sets list
+            if (onSetUpdated) {
+                await onSetUpdated();
+            }
+            
+            // Then navigate back to home
+            setTimeout(() => goToPage('home'), 500);
         } catch (error) {
             console.error("Error saving set:", error);
             setError(error.message);
@@ -64,17 +71,19 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated = () => goT
         if (window.confirm('Are you sure you want to delete this set? This action cannot be undone.')) {
             try {
                 await deleteVocabSet(set.id);
-                onSetUpdated(); // Always call onSetUpdated
+                if (onSetUpdated) {
+                    await onSetUpdated();
+                }
+                goToPage('home');
             } catch (error) {
                 console.error("Error deleting set:", error);
                 setError(error.message);
             }
         }
     };
-    
 
     const handleBack = () => {
-        goToPage('mySets');
+        goToPage('home');
     };
 
     return (

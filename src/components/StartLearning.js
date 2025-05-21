@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, ToggleButton, Card, Stack, Form } from "react-bootstrap";
+import { Button, ButtonGroup, ToggleButton, Card, Stack, Form, Alert } from "react-bootstrap";
 
 export default function StartLearning({
     set,
@@ -20,6 +20,9 @@ export default function StartLearning({
         { name: "Definition", value: "definition" },
     ];
 
+    const MIN_WORDS_REQUIRED = 5;
+    const hasEnoughWords = set?.vocabItems?.length >= MIN_WORDS_REQUIRED;
+
     return (
         <Card 
             body 
@@ -36,6 +39,13 @@ export default function StartLearning({
                     <h5 style={{ marginBottom: "0.5rem" }}>Select Learning Mode</h5>
                     <div style={{ fontWeight: "600", fontSize: "1.1rem" }}>{set.setName}</div>
                 </div>
+
+                {!hasEnoughWords && (
+                    <Alert variant="warning">
+                        This set needs at least {MIN_WORDS_REQUIRED} words to start learning. 
+                        Current word count: {set?.vocabItems?.length || 0}
+                    </Alert>
+                )}
 
                 <Stack
                     direction='horizontal'
@@ -124,7 +134,7 @@ export default function StartLearning({
                         setLearnedOverTime([]);
                         goToPage("testingZone");
                     }}
-                    disabled={!given || !want}
+                    disabled={!given || !want || !hasEnoughWords}
                 >
                     Start
                 </Button>
