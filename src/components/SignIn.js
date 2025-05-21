@@ -7,7 +7,7 @@ export default function SignIn() {
 
     return (
         <div className="d-flex flex-column align-items-center justify-content-center p-4">
-            <h2 className="mb-4">Welcome to Mandarin Trainer v4</h2>
+            <h2 className="mb-4">Welcome to Mandarin Trainer v5</h2>
             <Button 
                 variant="outline-primary" 
                 onClick={() => {

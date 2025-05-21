@@ -3,7 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 
 export default function Settings(props) {
     const { goToPage } = props;
-    const { logout } = useAuth();
+    const { currentUser, logout } = useAuth();
 
     const handleLogout = async () => {
         try {
@@ -35,10 +35,26 @@ export default function Settings(props) {
                 </Stack>
 
                 <Stack gap={3} style={{ marginTop: "20px" }}>
+                    <div style={{ 
+                        padding: "10px", 
+                        backgroundColor: "#f8f9fa", 
+                        borderRadius: "5px",
+                        textAlign: "center"
+                    }}>
+                        <div style={{ fontSize: "0.9rem", color: "#6c757d" }}>Logged in as</div>
+                        <div style={{ 
+                            fontSize: "1.1rem", 
+                            fontWeight: "500",
+                            wordBreak: "break-all"
+                        }}>
+                            {currentUser?.email}
+                        </div>
+                    </div>
+
                     <Button 
                         variant="danger" 
                         onClick={handleLogout}
-                        style={{ marginTop: "20px" }}
+                        style={{ marginTop: "10px" }}
                     >
                         Log Out
                     </Button>
