@@ -134,18 +134,10 @@ function AppContent() {
                 {showSettings && (
                     <Settings
                         goToPage={goToPage}
-                    
-                        isMultipleChoice={isMultipleChoice}
-                        setIsMultipleChoice={setIsMultipleChoice}
-                        multipleChoiceValue={multipleChoiceValue}
-                        setMultipleChoiceValue={setMultipleChoiceValue}
-
                         isTraditional={isTraditional}
                         setIsTraditional={setIsTraditional}
                         traditionalValue={traditionalValue}
                         setTraditionalValue={setTraditionalValue}
-
-                        
                     />
                 )}
 
@@ -161,6 +153,8 @@ function AppContent() {
                         setCurrentSetName={setCurrentSetName}
                         setResponseCounts={setResponseCounts}
                         setLearnedOverTime={setLearnedOverTime}
+                        isMultipleChoice={isMultipleChoice}
+                        setIsMultipleChoice={setIsMultipleChoice}
                     />
                 )}
             </Stack>

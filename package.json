@@ -1,7 +1,7 @@
 {
   "name": "mandarin-trainer",
   "version": "0.1.0",
-  "homepage": "https://softly-undefined.github.io/mandarin-trainer",
+  "homepage": ".",
   "private": true,
   "dependencies": {
     "@firebase/auth": "^1.10.0",

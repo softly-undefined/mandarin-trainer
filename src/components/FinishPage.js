@@ -143,7 +143,7 @@ export default function Menu(props) {
                         goToPage("menu");
                     }}
                 >
-                    RETURN HOME
+                    Return Home
                 </Button>
             </Stack>
         </Card>
