@@ -71,7 +71,7 @@ export default function Home(props) {
                     </div>
                 </Col>
                 <Col xs="auto">
-                    <Stack direction="horizontal" gap={2}>
+                    <Stack direction="horizontal" gap={4}>
                         <Button 
                             variant={isDarkMode ? "outline-light" : "secondary"} 
                             onClick={() => setIsCreating(true)}
