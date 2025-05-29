@@ -528,7 +528,7 @@ export default function TestingZone(props) {
                 >
                     <Stack gap={0}>
                         <Card.Title style={headerStyle}>
-                            Testing {want} given {given}
+                            {given} → {want}
                         </Card.Title>
                         <Card.Title style={headerStyle}>{currentSetName}</Card.Title>
                     </Stack>
@@ -588,156 +588,142 @@ export default function TestingZone(props) {
                             )}
                             {isMultipleChoice && (
                                 <Stack gap={2}>
-                                    <Stack
-                                        direction='horizontal'
-                                        gap={1}
-                                        style={{
-                                            justifyContent: "flex-start",
-                                            alignItems: "center",
-                                        }}
-                                    >
-                                        <Stack
-                                            direction='vertical'
-                                            gap={1}
-                                            style={{
-                                                justifyContent: "flex-start",
-                                                alignItems: "center",
+                                    <Stack gap={2}>
+                                        <Button
+                                            style={{ 
+                                                fontSize: "20px", 
+                                                width: "100%",
+                                                backgroundColor: isSubmitting && answerPlacement === 0 ? "#2E972E" : 
+                                                               isSubmitting && answerPlacement !== 0 ? "#DD4F4F" : mcButtonBg,
+                                                border: selectedAnswer === 0 ? selectedBorder : "4px solid transparent",
+                                                color: isDarkMode ? "#fff" : undefined
+                                            }}
+                                            variant={buttonState}
+                                            ref={button1Ref}
+                                            onClick={() => {
+                                                if (isSubmitting) {
+                                                    handleSubmit();
+                                                } else {
+                                                    setSelectedAnswer(0);
+                                                    handleSubmit(0);
+                                                }
                                             }}
                                         >
-                                            <Button
-                                                style={{ 
-                                                    fontSize: "20px", 
-                                                    minWidth: "165px",
-                                                    backgroundColor: isSubmitting && answerPlacement === 0 ? "#2E972E" : 
-                                                                   isSubmitting && answerPlacement !== 0 ? "#DD4F4F" : mcButtonBg,
-                                                    border: selectedAnswer === 0 ? selectedBorder : "4px solid transparent",
-                                                    color: isDarkMode ? "#fff" : undefined
-                                                }}
-                                                variant={buttonState}
-                                                ref={button1Ref}
-                                                onClick={() => {
-                                                    if (isSubmitting) {
-                                                        handleSubmit();
-                                                    } else {
-                                                        setSelectedAnswer(0);
-                                                        handleSubmit(0);
-                                                    }
-                                                }}
-                                            >
-                                                {answer1}
-                                            </Button>
-                                            <Button
-                                                style={{ 
-                                                    fontSize: "20px", 
-                                                    minWidth: "165px",
-                                                    backgroundColor: isSubmitting && answerPlacement === 1 ? "#2E972E" : 
-                                                                   isSubmitting && answerPlacement !== 1 ? "#DD4F4F" : mcButtonBg,
-                                                    border: selectedAnswer === 1 ? selectedBorder : "4px solid transparent",
-                                                    color: isDarkMode ? "#fff" : undefined
-                                                }}
-                                                variant={buttonState}
-                                                ref={button3Ref}
-                                                onClick={() => {
-                                                    if (isSubmitting) {
-                                                        handleSubmit();
-                                                    } else {
-                                                        setSelectedAnswer(1);
-                                                        handleSubmit(1);
-                                                    }
-                                                }}
-                                            >
-                                                {answer2}
-                                            </Button>
-                                        </Stack>
-                                        <Stack
-                                            direction='vertical'
-                                            gap={1}
-                                            style={{
-                                                justifyContent: "flex-start",
-                                                alignItems: "center",
+                                            {answer1}
+                                        </Button>
+                                        <Button
+                                            style={{ 
+                                                fontSize: "20px", 
+                                                width: "100%",
+                                                backgroundColor: isSubmitting && answerPlacement === 1 ? "#2E972E" : 
+                                                               isSubmitting && answerPlacement !== 1 ? "#DD4F4F" : mcButtonBg,
+                                                border: selectedAnswer === 1 ? selectedBorder : "4px solid transparent",
+                                                color: isDarkMode ? "#fff" : undefined
+                                            }}
+                                            variant={buttonState}
+                                            ref={button2Ref}
+                                            onClick={() => {
+                                                if (isSubmitting) {
+                                                    handleSubmit();
+                                                } else {
+                                                    setSelectedAnswer(1);
+                                                    handleSubmit(1);
+                                                }
                                             }}
                                         >
-                                            <Button
-                                                style={{ 
-                                                    fontSize: "20px", 
-                                                    minWidth: "165px",
-                                                    backgroundColor: isSubmitting && answerPlacement === 2 ? "#2E972E" : 
-                                                                   isSubmitting && answerPlacement !== 2 ? "#DD4F4F" : mcButtonBg,
-                                                    border: selectedAnswer === 2 ? selectedBorder : "4px solid transparent",
-                                                    color: isDarkMode ? "#fff" : undefined
-                                                }}
-                                                variant={buttonState}
-                                                ref={button2Ref}
-                                                onClick={() => {
-                                                    if (isSubmitting) {
-                                                        handleSubmit();
-                                                    } else {
-                                                        setSelectedAnswer(2);
-                                                        handleSubmit(2);
-                                                    }
-                                                }}
-                                            >
-                                                {answer3}
-                                            </Button>
-                                            <Button
-                                                style={{ 
-                                                    fontSize: "20px", 
-                                                    minWidth: "165px",
-                                                    backgroundColor: isSubmitting && answerPlacement === 3 ? "#2E972E" : 
-                                                                   isSubmitting && answerPlacement !== 3 ? "#DD4F4F" : mcButtonBg,
-                                                    border: selectedAnswer === 3 ? selectedBorder : "4px solid transparent",
-                                                    color: isDarkMode ? "#fff" : undefined
-                                                }}
-                                                variant={buttonState}
-                                                ref={button4Ref}
-                                                onClick={() => {
-                                                    if (isSubmitting) {
-                                                        handleSubmit();
-                                                    } else {
-                                                        setSelectedAnswer(3);
-                                                        handleSubmit(3);
-                                                    }
-                                                }}
-                                            >
-                                                {answer4}
-                                            </Button>
-                                        </Stack>
+                                            {answer2}
+                                        </Button>
+                                        <Button
+                                            style={{ 
+                                                fontSize: "20px", 
+                                                width: "100%",
+                                                backgroundColor: isSubmitting && answerPlacement === 2 ? "#2E972E" : 
+                                                               isSubmitting && answerPlacement !== 2 ? "#DD4F4F" : mcButtonBg,
+                                                border: selectedAnswer === 2 ? selectedBorder : "4px solid transparent",
+                                                color: isDarkMode ? "#fff" : undefined
+                                            }}
+                                            variant={buttonState}
+                                            ref={button3Ref}
+                                            onClick={() => {
+                                                if (isSubmitting) {
+                                                    handleSubmit();
+                                                } else {
+                                                    setSelectedAnswer(2);
+                                                    handleSubmit(2);
+                                                }
+                                            }}
+                                        >
+                                            {answer3}
+                                        </Button>
+                                        <Button
+                                            style={{ 
+                                                fontSize: "20px", 
+                                                width: "100%",
+                                                backgroundColor: isSubmitting && answerPlacement === 3 ? "#2E972E" : 
+                                                               isSubmitting && answerPlacement !== 3 ? "#DD4F4F" : mcButtonBg,
+                                                border: selectedAnswer === 3 ? selectedBorder : "4px solid transparent",
+                                                color: isDarkMode ? "#fff" : undefined
+                                            }}
+                                            variant={buttonState}
+                                            ref={button4Ref}
+                                            onClick={() => {
+                                                if (isSubmitting) {
+                                                    handleSubmit();
+                                                } else {
+                                                    setSelectedAnswer(3);
+                                                    handleSubmit(3);
+                                                }
+                                            }}
+                                        >
+                                            {answer4}
+                                        </Button>
                                     </Stack>
-                                    <Button 
-                                        variant={isDarkMode ? "light" : "primary"}
-                                        onClick={() => {
-                                            if (!isSubmitting) {
-                                                // Register as incorrect answer
-                                                setIsCorrect(false);
-                                                setFormColor("#DD4F4F");
-                                                setButtonState("danger");
-                                                setButtonText("Next ->");
-                                                setResponseCounts((prev) => [...prev, 0]);
-                                                setWrongCounts((answerCounts) => {
-                                                    let newAnswerCounts = { ...answerCounts };
-                                                    newAnswerCounts[key] = (newAnswerCounts[key] || 0) + 1;
-                                                    return newAnswerCounts;
-                                                });
-                                                setSubmissionNum((submissionNum) => submissionNum + 1);
-                                                // Show the answer feedback
-                                                setKeyText(true);
-                                                setTerm("");
-                                                setIsSubmitting(true);
-                                            } else {
-                                                // Move to next question
-                                                setKeyText(false);
-                                                setAnswer("");
-                                                setFormColor("black");
-                                                setButtonState("primary");
-                                                setButtonText("Submit");
-                                                setIsSubmitting(false);
-                                                setSelectedAnswer(null);
-                                                prepareNext();
-                                            }
-                                        }}
-                                    >
-                                        {isSubmitting ? "Next ->" : "Skip ->"}
-                                    </Button>
+                                    <div style={{ 
+                                        borderTop: isDarkMode ? '1px solid #444' : '1px solid #dee2e6',
+                                        marginTop: '0.5rem',
+                                        paddingTop: '1rem'
+                                    }}>
+                                        <Button 
+                                            variant={isDarkMode ? "light" : "outline-secondary"}
+                                            onClick={() => {
+                                                if (!isSubmitting) {
+                                                    // Register as incorrect answer
+                                                    setIsCorrect(false);
+                                                    setFormColor("#DD4F4F");
+                                                    setButtonState("danger");
+                                                    setButtonText("Next ->");
+                                                    setResponseCounts((prev) => [...prev, 0]);
+                                                    setWrongCounts((answerCounts) => {
+                                                        let newAnswerCounts = { ...answerCounts };
+                                                        newAnswerCounts[key] = (newAnswerCounts[key] || 0) + 1;
+                                                        return newAnswerCounts;
+                                                    });
+                                                    setSubmissionNum((submissionNum) => submissionNum + 1);
+                                                    // Show the answer feedback
+                                                    setKeyText(true);
+                                                    setTerm("");
+                                                    setIsSubmitting(true);
+                                                } else {
+                                                    // Move to next question
+                                                    setKeyText(false);
+                                                    setAnswer("");
+                                                    setFormColor("black");
+                                                    setButtonState("primary");
+                                                    setButtonText("Submit");
+                                                    setIsSubmitting(false);
+                                                    setSelectedAnswer(null);
+                                                    prepareNext();
+                                                }
+                                            }}
+                                            style={{
+                                                width: '100%',
+                                                fontSize: '1.1rem',
+                                                fontWeight: '500'
+                                            }}
+                                        >
+                                            {isSubmitting ? "Next ->" : "Skip ->"}
+                                        </Button>
+                                    </div>
                                 </Stack>
                             )}
                         </Stack>

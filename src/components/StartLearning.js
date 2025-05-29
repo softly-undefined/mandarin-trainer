@@ -1,5 +1,6 @@
 import { Button, ButtonGroup, ToggleButton, Card, Stack, Form, Alert } from "react-bootstrap";
 import { useTheme } from "../contexts/ThemeContext";
+import { useEffect } from "react";
 
 export default function StartLearning({
     set,
@@ -21,6 +22,12 @@ export default function StartLearning({
         { name: "Character", value: "character" },
         { name: "Definition", value: "definition" },
     ];
+
+    // Set default values if not already set
+    useEffect(() => {
+        if (!given) setGiven("definition");
+        if (!want) setWant("character");
+    }, []);
 
     const MIN_WORDS_REQUIRED = 5;
     const hasEnoughWords = set?.vocabItems?.length >= MIN_WORDS_REQUIRED;
@@ -63,7 +70,12 @@ export default function StartLearning({
                 >
                     {/* Given Section */}
                     <Stack style={{ flex: 1, minWidth: "140px" }}>
-                        <h6 style={{ textAlign: "center", ...labelStyle }}>Given</h6>
+                        <h6 style={{ 
+                            textAlign: "center", 
+                            ...labelStyle,
+                            textDecoration: "underline",
+                            marginBottom: "0.5rem"
+                        }}>Given</h6>
                         <ButtonGroup vertical>
                             {answerTypes.map((radio, idx) => (
                                 <ToggleButton
@@ -85,7 +97,12 @@ export default function StartLearning({
 
                     {/* Test For Section */}
                     <Stack style={{ flex: 1, minWidth: "140px" }}>
-                        <h6 style={{ textAlign: "center", ...labelStyle }}>Test For</h6>
+                        <h6 style={{ 
+                            textAlign: "center", 
+                            ...labelStyle,
+                            textDecoration: "underline",
+                            marginBottom: "0.5rem"
+                        }}>Test For</h6>
                         <ButtonGroup vertical>
                             {answerTypes.map((radio, idx) => (
                                 <ToggleButton
@@ -107,31 +124,18 @@ export default function StartLearning({
                 </Stack>
 
                 <Stack style={{ alignItems: "center" }}>
-                    {/* <h6 style={{ textAlign: "center", marginBottom: "10px" }}>Mode</h6> */}
-                    <Stack direction="horizontal" gap={2} style={{ justifyContent: "center" }}>
-                        <Button
-                            variant={!isMultipleChoice ? (isDarkMode ? "light" : "primary") : (isDarkMode ? "outline-light" : "outline-primary")}
-                            onClick={() => setIsMultipleChoice(false)}
-                            style={{ 
-                                border: "none", 
-                                minWidth: "140px",
-                                fontSize: "1rem"
-                            }}
-                        >
-                            Free Response
-                        </Button>
-                        <Button
-                            variant={isMultipleChoice ? (isDarkMode ? "light" : "primary") : (isDarkMode ? "outline-light" : "outline-primary")}
-                            onClick={() => setIsMultipleChoice(true)}
-                            style={{ 
-                                border: "none", 
-                                minWidth: "140px",
-                                fontSize: "1rem"
-                            }}
-                        >
-                            Multiple Choice
-                        </Button>
-                    </Stack>
+                    <Form.Check 
+                        type="switch"
+                        id="multiple-choice-switch"
+                        label="Multiple Choice"
+                        checked={isMultipleChoice}
+                        onChange={(e) => setIsMultipleChoice(e.target.checked)}
+                        style={{ 
+                            color: isDarkMode ? '#ffffff' : '#000000',
+                            fontSize: '1.1rem',
+                            marginBottom: '1rem'
+                        }}
+                    />
                 </Stack>
 
                 <Button
