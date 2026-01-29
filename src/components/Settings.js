@@ -77,13 +77,30 @@ export default function Settings(props) {
                         />
                     </Form>
 
-                    <Button 
-                        variant="danger" 
-                        onClick={handleLogout}
-                        style={{ marginTop: "10px" }}
-                    >
-                        Log Out
-                    </Button>
+                    {currentUser ? (
+                        <Button 
+                            variant="danger" 
+                            onClick={handleLogout}
+                            style={{ marginTop: "10px" }}
+                        >
+                            Log Out
+                        </Button>
+                    ) : (
+                        <Button
+                            variant={isDarkMode ? "light" : "primary"}
+                            style={{ marginTop: "10px" }}
+                            onClick={() => {
+                                const base = process.env.PUBLIC_URL || "";
+                                if (goToPage) {
+                                    goToPage("home");
+                                } else {
+                                    window.location.assign(`${base}/`);
+                                }
+                            }}
+                        >
+                            Log In
+                        </Button>
+                    )}
                 </Stack>
             </Card.Body>
         </Card>
