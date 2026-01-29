@@ -192,10 +192,18 @@ export default function StartLearning({
                     Start
                 </Button>
 
-                <Button variant={isDarkMode ? "outline-light" : "secondary"} onClick={() => {
-                    if (onBack) return onBack();
-                    goToPage("home");
-                }}>
+                <Button
+                    variant={isDarkMode ? "outline-light" : "secondary"}
+                    onClick={() => {
+                        if (onBack) return onBack();
+                        if (goToPage) {
+                            goToPage("menu");
+                        } else {
+                            const base = process.env.PUBLIC_URL || "";
+                            window.location.assign(`${base}/`);
+                        }
+                    }}
+                >
                     My Sets
                 </Button>
             </Stack>

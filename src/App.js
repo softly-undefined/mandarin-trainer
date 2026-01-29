@@ -49,6 +49,7 @@ function AppContent() {
     const [shareSet, setShareSet] = useState(null);
     const [shareLoading, setShareLoading] = useState(false);
     const [shareError, setShareError] = useState(null);
+    const [shareShowLoader, setShareShowLoader] = useState(false);
 
     const [responseCounts, setResponseCounts] = useState([]); // creates an array of 1's and 0's based on right/wrong
 
@@ -74,6 +75,10 @@ function AppContent() {
             if (!shareSlug) return;
             setShareLoading(true);
             setShareError(null);
+            setShareShowLoader(false);
+            const timer = setTimeout(() => {
+                if (active) setShareShowLoader(true);
+            }, 2000);
             try {
                 const s = await getSetBySlug(shareSlug);
                 if (!active) return;
@@ -100,17 +105,21 @@ function AppContent() {
                 if (active) setShareError("Error loading shared set.");
             } finally {
                 if (active) setShareLoading(false);
+                clearTimeout(timer);
             }
         };
         loadShare();
         return () => { active = false; };
     }, [shareSlug, given, want]);
 
+    const shouldShowSignIn = !currentUser && !isSettingsPath && !shareSlug;
+
     if (shareSlug) {
-        if (shareLoading) return <div style={{ textAlign: "center", marginTop: "2rem" }}>Loading shared set...</div>;
+        if (shareLoading && showHome) return null; // avoid flash while state still home
+        if (shareLoading && shareShowLoader) return <div style={{ textAlign: "center", marginTop: "2rem" }}>Loading set...</div>;
         if (shareError) return <div style={{ textAlign: "center", marginTop: "2rem" }}>{shareError}</div>;
         // Allow anonymous use for shared sets: skip SignIn gate
-    } else if (!currentUser && !isSettingsPath) {
+    } else if (shouldShowSignIn) {
         return <SignIn />;
     }
 
@@ -125,6 +134,12 @@ function AppContent() {
         setShowSettings(false);
         setShowMySets(false);
         setShowStartLearning(false);
+
+        const base = process.env.PUBLIC_URL || "";
+        if (!currentUser && shareSlug && (pageName === "home" || pageName === "menu" || pageName === "mySets")) {
+            window.location.assign(`${base}/`);
+            return;
+        }
         
         if (pageName === "home" || pageName === "menu" || pageName === "mySets") {
             setShowHome(true); // redirect both old routes to home
@@ -144,10 +159,14 @@ function AppContent() {
         } else if (pageName === "mySets") {
             setShowMySets(true);
         } else if (pageName === "startLearning") {
-            const nextSet = payload?.set || payload;
-            setLearningSet(nextSet); // set passed
-            setExternalSet(nextSet);
-            setShowStartLearning(true);
+            const nextSet = payload?.set || payload || learningSet || externalSet;
+            if (nextSet) {
+                setLearningSet(nextSet);
+                setExternalSet(nextSet);
+                setShowStartLearning(true);
+            } else {
+                setShowHome(true);
+            }
         }
     }
 

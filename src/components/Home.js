@@ -36,8 +36,18 @@ export default function Home(props) {
         }
     }, [currentUser]);
 
-    const handleStartLearning = (set) => {
-        goToPage("startLearning", { set, fromShare: false });
+    const handleStartLearning = async (set) => {
+        try {
+            let slug = set.slug;
+            if (!slug) {
+                slug = await ensureSetSlug(set.id);
+                await loadSets();
+            }
+            const base = process.env.PUBLIC_URL || "";
+            window.location.assign(`${base}/set/${slug}`);
+        } catch (error) {
+            console.error("Error starting learning:", error);
+        }
     };
 
     const handleBack = () => {

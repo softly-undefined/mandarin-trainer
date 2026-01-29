@@ -509,7 +509,9 @@ export default function TestingZone(props) {
                         <CloseButton
                             onClick={() => {
                                 if (goToPage) {
-                                    goToPage("menu");
+                                    goToPage("startLearning");
+                                } else {
+                                    window.history.back();
                                 }
                             }}
                         />
