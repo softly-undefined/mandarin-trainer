@@ -1,6 +1,7 @@
 import { Button, ButtonGroup, ToggleButton, Card, Stack, Form, Alert } from "react-bootstrap";
 import { useTheme } from "../contexts/ThemeContext";
 import { useEffect } from "react";
+import { FaCog } from 'react-icons/fa';
 
 export default function StartLearning({
     set,
@@ -14,7 +15,10 @@ export default function StartLearning({
     setResponseCounts,
     setLearnedOverTime,
     isMultipleChoice,
-    setIsMultipleChoice
+    setIsMultipleChoice,
+    showSettingsShortcut = false,
+    backLabel = "Back",
+    onBack
 }) {
     const { isDarkMode } = useTheme();
     const answerTypes = [
@@ -51,9 +55,28 @@ export default function StartLearning({
             }}
             >
             <Stack gap={3}>
-                <div style={{ textAlign: "center" }}>
-                    <h5 style={{ marginBottom: "0.5rem", ...headerStyle }}>Select Learning Mode</h5>
-                    <div style={{ fontWeight: "600", fontSize: "1.1rem", ...headerStyle }}>{set.setName}</div>
+                <div style={{ textAlign: "center", position: "relative" }}>
+                    <h5 style={{ marginBottom: "0.25rem", ...headerStyle }}>{set.setName}</h5>
+                    <h6 style={{ marginBottom: "0.5rem", ...headerStyle }}>Select Learning Mode</h6>
+                    <div style={{ position: "absolute", top: 0, right: 0 }}>
+                        {showSettingsShortcut && (
+                        <Button
+                            variant="link"
+                            size="sm"
+                            onClick={() => {
+                                if (goToPage) {
+                                    goToPage("settings");
+                                } else {
+                                    const base = process.env.PUBLIC_URL || "";
+                                    window.location.assign(`${base}/settings`);
+                                }
+                            }}
+                            style={{ display: "flex", alignItems: "center", gap: "6px", color: isDarkMode ? "#fff" : "#000" }}
+                        >
+                            <FaCog size={18} color={isDarkMode ? "#fff" : "#000"} />
+                        </Button>
+                    )}
+                </div>
                 </div>
 
                 {!hasEnoughWords && (
@@ -152,8 +175,11 @@ export default function StartLearning({
                     Start
                 </Button>
 
-                <Button variant={isDarkMode ? "outline-light" : "secondary"} onClick={() => goToPage("home")}>
-                    Back
+                <Button variant={isDarkMode ? "outline-light" : "secondary"} onClick={() => {
+                    if (onBack) return onBack();
+                    goToPage("home");
+                }}>
+                    My Sets
                 </Button>
             </Stack>
         </Card>

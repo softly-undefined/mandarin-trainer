@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Button, Card, Container, Row, Col, Stack } from "react-bootstrap";
-import { getUserVocabSets } from "../services/vocabSetService";
+import { getUserVocabSets, ensureSetSlug } from "../services/vocabSetService";
 import VocabSetEditor from "./VocabSetEditor";
 import { FaCog } from 'react-icons/fa';
 import { useTheme } from "../contexts/ThemeContext";
@@ -37,7 +37,7 @@ export default function Home(props) {
     }, [currentUser]);
 
     const handleStartLearning = (set) => {
-        goToPage("startLearning", set);
+        goToPage("startLearning", { set, fromShare: false });
     };
 
     const handleBack = () => {
@@ -47,6 +47,23 @@ export default function Home(props) {
 
     const handleSetUpdated = async () => {
         await loadSets();
+    };
+
+    const handleCopyLink = async (set) => {
+        try {
+            let slug = set.slug;
+            if (!slug) {
+                slug = await ensureSetSlug(set.id);
+                await loadSets();
+            }
+            const basePath = process.env.PUBLIC_URL || '';
+            const url = `${window.location.origin}${basePath}/set/${slug}`;
+            await navigator.clipboard.writeText(url);
+            alert("Share link copied to clipboard");
+        } catch (error) {
+            console.error("Error copying link:", error);
+            alert("Unable to copy link right now.");
+        }
     };
 
     if (loading) return <div>Loading...</div>;
@@ -122,6 +139,12 @@ export default function Home(props) {
                                         onClick={() => handleStartLearning(set)}
                                     >
                                         Learn
+                                    </Button>
+                                    <Button 
+                                        variant={isDarkMode ? "outline-info" : "info"} 
+                                        onClick={() => handleCopyLink(set)}
+                                    >
+                                        Share
                                     </Button>
                                 </Stack>
                             </Card.Body>

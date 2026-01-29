@@ -13,6 +13,7 @@ import SignIn from "./components/SignIn";
 import MySets from "./components/MySets";
 import Home from "./components/Home";
 import StartLearning from "./components/StartLearning";
+import { getSetBySlug } from "./services/vocabSetService";
 
 
 function AppContent() {
@@ -39,16 +40,74 @@ function AppContent() {
     const [showStartLearning, setShowStartLearning] = useState(false);
     const [showMySets, setShowMySets] = useState(false);
     const [learningSet, setLearningSet] = useState(null);
+    const [externalSet, setExternalSet] = useState(null);
+
+    // Shared set handling
+    const [shareSet, setShareSet] = useState(null);
+    const [shareLoading, setShareLoading] = useState(false);
+    const [shareError, setShareError] = useState(null);
 
     const [responseCounts, setResponseCounts] = useState([]); // creates an array of 1's and 0's based on right/wrong
 
     const [learnedOverTime, setLearnedOverTime] = useState([]); //This has to deal with the graph in FinishPage
 
-    if (!currentUser) {
+    const getShareSlug = () => {
+        const segments = window.location.pathname.split("/").filter(Boolean);
+        const idx = segments.findIndex((s) => s === "set");
+        if (idx !== -1 && segments[idx + 1]) {
+            return segments[idx + 1];
+        }
+        return null;
+    };
+
+    const shareSlug = getShareSlug();
+
+    useEffect(() => {
+        let active = true;
+        const loadShare = async () => {
+            if (!shareSlug) return;
+            setShareLoading(true);
+            setShareError(null);
+            try {
+                const s = await getSetBySlug(shareSlug);
+                if (!active) return;
+                if (!s || s.isPublic !== true) {
+                    setShareError("Set not found or not public.");
+                } else {
+                    setLearningSet(s);
+                    setExternalSet(s);
+                    setCurrentSetName(s.setName || "");
+                    setResponseCounts([]);
+                    setLearnedOverTime([]);
+                    setShowHome(false);
+                    setShowReviewSet(false);
+                    setShowTestingZone(false);
+                    setShowFinishPage(false);
+                    setShowSettings(false);
+                    setShowMySets(false);
+                    setShowStartLearning(true);
+                    if (!given) setGiven("definition");
+                    if (!want) setWant("character");
+                }
+            } catch (err) {
+                if (active) setShareError("Error loading shared set.");
+            } finally {
+                if (active) setShareLoading(false);
+            }
+        };
+        loadShare();
+        return () => { active = false; };
+    }, [shareSlug, given, want]);
+
+    if (shareSlug) {
+        if (shareLoading) return <div style={{ textAlign: "center", marginTop: "2rem" }}>Loading shared set...</div>;
+        if (shareError) return <div style={{ textAlign: "center", marginTop: "2rem" }}>{shareError}</div>;
+        // Allow anonymous use for shared sets: skip SignIn gate
+    } else if (!currentUser) {
         return <SignIn />;
     }
 
-    function goToPage(pageName) {
+    function goToPage(pageName, payload) {
         setShowHome(false);
         setShowReviewSet(false);
         setShowTestingZone(false);
@@ -71,7 +130,9 @@ function AppContent() {
         } else if (pageName === "mySets") {
             setShowMySets(true);
         } else if (pageName === "startLearning") {
-            setLearningSet(arguments[1]); // second argument is the set passed
+            const nextSet = payload?.set || payload;
+            setLearningSet(nextSet); // set passed
+            setExternalSet(payload?.fromShare ? nextSet : null);
             setShowStartLearning(true);
         }
     }
@@ -110,6 +171,7 @@ function AppContent() {
                         learnedOverTime={learnedOverTime}
                         setLearnedOverTime={setLearnedOverTime}
                         currentSetName={currentSetName}
+                        externalSet={externalSet || learningSet}
                     />
                 )}
 
@@ -156,6 +218,16 @@ function AppContent() {
                         setLearnedOverTime={setLearnedOverTime}
                         isMultipleChoice={isMultipleChoice}
                         setIsMultipleChoice={setIsMultipleChoice}
+                        showSettingsShortcut
+                        backLabel="Back"
+                        onBack={undefined}
+                        onStart={() => {
+                            setResponseCounts([]);
+                            setLearnedOverTime([]);
+                            setExternalSet(learningSet);
+                            setCurrentSetName(learningSet?.setName || "");
+                            goToPage("testingZone");
+                        }}
                     />
                 )}
             </Stack>

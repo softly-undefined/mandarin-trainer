@@ -16,7 +16,8 @@ export default function TestingZone(props) {
         setResponseCounts,
         learnedOverTime,
         setLearnedOverTime,
-        currentSetName
+        currentSetName,
+        externalSet,
     } = props;
 
     const { isDarkMode } = useTheme();
@@ -96,12 +97,7 @@ export default function TestingZone(props) {
     useEffect(() => {
         let isMounted = true;
 
-        const loadSet = async () => {
-            if (!setChoice) {
-                console.log("No set selected");
-                return;
-            }
-
+        const buildFromSet = (selectedSet) => {
             // Reset all state first
             setCurrentSet(null);
             setTerm("");
@@ -128,94 +124,95 @@ export default function TestingZone(props) {
             setMcOptions([]);
             setAnswerPlacement(null);
 
-            console.log("Loading set with choice:", setChoice);
+            if (!selectedSet?.vocabItems || !Array.isArray(selectedSet.vocabItems)) {
+                console.error("Selected set has invalid vocabItems:", selectedSet);
+                return;
+            }
+
+            const validWords = selectedSet.vocabItems
+                .filter(item => 
+                    item && 
+                    item.character && 
+                    item.pinyin && 
+                    item.definition &&
+                    item.character.trim() !== '' &&
+                    item.pinyin.trim() !== '' &&
+                    item.definition.trim() !== ''
+                )
+                .map(item => ({
+                    character: item.character,
+                    pinyin: item.pinyin,
+                    definition: item.definition
+                }));
+
+            if (validWords.length === 0) {
+                console.error("No valid words found in set");
+                return;
+            }
+
+            const transformedSet = { words: validWords };
+            setCurrentSet(transformedSet);
+            setTotalWords(validWords.length);
+
+            let shuffled = validWords
+                .map((value) => ({ value, sort: Math.random() }))
+                .sort((a, b) => a.sort - b.sort)
+                .map(({ value }) => value);
+
+            setShuffledSet(shuffled);
+            setRemainingSet(shuffled);
+            setLearnedWords(0);
+            setLastWord(null);
+
+            if (shuffled.length > 0) {
+                const firstWord = shuffled[0];
+                if (isMultipleChoice) {
+                    const { options, correctIndex } = buildMcOptions(validWords, firstWord);
+                    setMcOptions(options);
+                    setAnswerPlacement(correctIndex);
+                }
+                
+                setLastWord(firstWord);
+                setTerm(firstWord[given]);
+                setKey(firstWord[want]);
+                setCurrChar(firstWord.character);
+                setCurrPinyin(firstWord.pinyin);
+                setCurrDefinition(firstWord.definition);
+                
+                setRemainingSet(shuffled.slice(1));
+            }
+        };
+
+        const loadSet = async () => {
+            if (externalSet) {
+                buildFromSet(externalSet);
+                return;
+            }
+
+            if (!setChoice || !currentUser) {
+                console.log("No set selected or user not logged in");
+                return;
+            }
+
             const setId = setChoice.replace('custom_', '');
-            console.log("Looking for set with ID:", setId);
-            
             const sets = await getUserVocabSets(currentUser.uid);
-            console.log("Available sets:", sets);
-            
             const selectedSet = sets.find(set => set.id === setId);
-            console.log("Found selected set:", selectedSet);
-            
             if (!selectedSet) {
                 console.error("Selected set not found");
                 return;
             }
 
-            if (!selectedSet.vocabItems || !Array.isArray(selectedSet.vocabItems)) {
-                console.error("Selected set has invalid vocabItems:", selectedSet);
-                return;
-            }
-
-            if (isMounted) {
-                // Transform the vocabItems into the expected format and filter out empty/invalid words
-                const validWords = selectedSet.vocabItems
-                    .filter(item => 
-                        item && 
-                        item.character && 
-                        item.pinyin && 
-                        item.definition &&
-                        item.character.trim() !== '' &&
-                        item.pinyin.trim() !== '' &&
-                        item.definition.trim() !== ''
-                    )
-                    .map(item => ({
-                        character: item.character,
-                        pinyin: item.pinyin,
-                        definition: item.definition
-                    }));
-
-                if (validWords.length === 0) {
-                    console.error("No valid words found in set");
-                    return;
-                }
-
-                const transformedSet = { words: validWords };
-                console.log("Transformed set:", transformedSet);
-                setCurrentSet(transformedSet);
-                setTotalWords(validWords.length);
-
-                // Shuffle and set up the first word immediately
-                let shuffled = validWords
-                    .map((value) => ({ value, sort: Math.random() }))
-                    .sort((a, b) => a.sort - b.sort)
-                    .map(({ value }) => value);
-                
-                console.log("Shuffled words:", shuffled);
-                setShuffledSet(shuffled);
-                setRemainingSet(shuffled);
-                setLearnedWords(0);
-                setLastWord(null);
-
-                // Set up the first word
-                if (shuffled.length > 0) {
-                    const firstWord = shuffled[0];
-                    if (isMultipleChoice) {
-                        const { options, correctIndex } = buildMcOptions(validWords, firstWord);
-                        setMcOptions(options);
-                        setAnswerPlacement(correctIndex);
-                    }
-                    
-                    setLastWord(firstWord);
-                    setTerm(firstWord[given]);
-                    setKey(firstWord[want]);
-                    setCurrChar(firstWord.character);
-                    setCurrPinyin(firstWord.pinyin);
-                    setCurrDefinition(firstWord.definition);
-                    
-                    // Remove the first word from remaining set
-                    setRemainingSet(shuffled.slice(1));
-                }
-            }
+            buildFromSet(selectedSet);
         };
 
-        loadSet();
+        if (isMounted) {
+            loadSet();
+        }
 
         return () => {
             isMounted = false;
         };
-    }, [setChoice, currentUser]);
+    }, [setChoice, currentUser, externalSet, isMultipleChoice, given, want]);
 
     const shuffle = (set) => {
         console.log("Shuffling set:", set);
@@ -341,16 +338,19 @@ export default function TestingZone(props) {
             }
         } else {
             console.log("No words left to train, going to finish page");
-            goToPage("finishPage");
+            if (goToPage) {
+                goToPage("finishPage");
+            }
         }
     };
 
     useEffect(() => {
-        document.addEventListener("keydown", handleButton);
+        const handler = (e) => handleButton(e);
+        document.addEventListener("keydown", handler);
         return () => {
-            document.removeEventListener("keydown", handleButton);
+            document.removeEventListener("keydown", handler);
         };
-    }, []);
+    }, [isMultipleChoice, mcOptions, selectedAnswer]);
 
     useEffect(() => {
         if (responseCounts.length === 0) return;
@@ -362,9 +362,13 @@ export default function TestingZone(props) {
 
     const handleButton = (event) => {
         if (!isMultipleChoice) return;
-        const keyMap = { 49: 0, 50: 1, 51: 2, 52: 3 };
-        const idx = keyMap[event.keyCode];
+        const keyMap = {
+            49: 0, 50: 1, 51: 2, 52: 3,        // keyCode for 1-4
+            '1': 0, '2': 1, '3': 2, '4': 3      // event.key for 1-4
+        };
+        const idx = keyMap[event.keyCode] ?? keyMap[event.key];
         if (idx !== undefined && idx < mcOptions.length) {
+            setSelectedAnswer(idx);
             handleSubmit(idx);
         }
     };
@@ -504,7 +508,9 @@ export default function TestingZone(props) {
                     <div className={isDarkMode ? "testingzone-darkmode-close" : undefined}>
                         <CloseButton
                             onClick={() => {
-                                goToPage("menu");
+                                if (goToPage) {
+                                    goToPage("menu");
+                                }
                             }}
                         />
                     </div>
