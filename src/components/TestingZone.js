@@ -39,16 +39,9 @@ export default function TestingZone(props) {
     const [selectedAnswer, setSelectedAnswer] = useState(null);
 
     // Multiple choice related variables
-    const [answer1, setAnswer1] = useState("");
-    const [answer2, setAnswer2] = useState("");
-    const [answer3, setAnswer3] = useState("");
-    const [answer4, setAnswer4] = useState("");
-    const [answerPlacement, setAnswerPlacement] = useState(4);
+    const [mcOptions, setMcOptions] = useState([]);
+    const [answerPlacement, setAnswerPlacement] = useState(null);
 
-    const button1Ref = useRef();
-    const button2Ref = useRef();
-    const button3Ref = useRef();
-    const button4Ref = useRef();
     const learnedWordsRef = useRef(0);
 
     const [shuffledSet, setShuffledSet] = useState([]);
@@ -70,6 +63,35 @@ export default function TestingZone(props) {
     const progressBarVariant = isDarkMode ? "light" : "primary";
     const mcButtonBg = isDarkMode ? "#343a40" : undefined;
     const selectedBorder = isDarkMode ? "4px solid #fff" : "4px solid black";
+
+    const shuffleArray = (array) =>
+        array
+            .map((value) => ({ value, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({ value }) => value);
+
+    const buildMcOptions = (wordList, correctWord) => {
+        if (!wordList || wordList.length === 0 || !correctWord) {
+            return { options: [], correctIndex: null };
+        }
+
+        // Unique answer pool, excluding the correct answer
+        const uniquePool = Array.from(
+            new Set(
+                wordList
+                    .map((w) => w?.[want])
+                    .filter((val) => val && val === val) // filters falsy/undefined/NaN
+            )
+        ).filter((val) => val !== correctWord[want]);
+
+        const wrongChoices = shuffleArray(uniquePool).slice(0, Math.min(3, uniquePool.length));
+        const options = [...wrongChoices];
+
+        const insertAt = Math.floor(Math.random() * (options.length + 1));
+        options.splice(insertAt, 0, correctWord[want]);
+
+        return { options, correctIndex: insertAt };
+    };
 
     useEffect(() => {
         let isMounted = true;
@@ -103,11 +125,8 @@ export default function TestingZone(props) {
             setShuffledSet([]);
             setRemainingSet([]);
             // Reset multiple choice states
-            setAnswer1("");
-            setAnswer2("");
-            setAnswer3("");
-            setAnswer4("");
-            setAnswerPlacement(4);
+            setMcOptions([]);
+            setAnswerPlacement(null);
 
             console.log("Loading set with choice:", setChoice);
             const setId = setChoice.replace('custom_', '');
@@ -173,28 +192,9 @@ export default function TestingZone(props) {
                 if (shuffled.length > 0) {
                     const firstWord = shuffled[0];
                     if (isMultipleChoice) {
-                        // Set up multiple choice first
-                        const answerLocation = Math.floor(Math.random() * 4);
-                        const options = [];
-                        
-                        // Get three random wrong answers
-                        for (let i = 0; i < 3; i++) {
-                            let randomWord;
-                            do {
-                                const randomIndex = Math.floor(Math.random() * validWords.length);
-                                randomWord = validWords[randomIndex][want];
-                            } while (randomWord === firstWord[want] || options.includes(randomWord));
-                            options.push(randomWord);
-                        }
-                        
-                        // Insert the correct answer at random position
-                        options.splice(answerLocation, 0, firstWord[want]);
-                        
-                        setAnswer1(options[0]);
-                        setAnswer2(options[1]);
-                        setAnswer3(options[2]);
-                        setAnswer4(options[3]);
-                        setAnswerPlacement(answerLocation);
+                        const { options, correctIndex } = buildMcOptions(validWords, firstWord);
+                        setMcOptions(options);
+                        setAnswerPlacement(correctIndex);
                     }
                     
                     setLastWord(firstWord);
@@ -278,7 +278,7 @@ export default function TestingZone(props) {
         setCurrDefinition(next.definition);
         
         if (isMultipleChoice) {
-            assignMC(next[want]);
+            assignMC(next);
         }
     };
 
@@ -334,7 +334,7 @@ export default function TestingZone(props) {
                 setCurrPinyin(firstWord.pinyin);
                 setCurrDefinition(firstWord.definition);
                 if (isMultipleChoice) {
-                    assignMC(firstWord[want]);
+                    assignMC(firstWord);
                 }
                 // Remove the first word from remaining set
                 setRemainingSet(shuffled.slice(1));
@@ -361,63 +361,25 @@ export default function TestingZone(props) {
     }, [responseCounts]);
 
     const handleButton = (event) => {
-        if (isMultipleChoice) {
-            if (event.keyCode === 49) {
-                button1Ref.current.click();
-            } else if (event.keyCode === 50) {
-                button2Ref.current.click();
-            } else if (event.keyCode === 51) {
-                button3Ref.current.click();
-            } else if (event.keyCode === 52) {
-                button4Ref.current.click();
-            }
+        if (!isMultipleChoice) return;
+        const keyMap = { 49: 0, 50: 1, 51: 2, 52: 3 };
+        const idx = keyMap[event.keyCode];
+        if (idx !== undefined && idx < mcOptions.length) {
+            handleSubmit(idx);
         }
     };
 
-    const selectRandomAnswer = (currAns) => {
-        if (!currentSet?.words || currentSet.words.length <= 4) {
-            return "Option";
-        }
-        
-        let randomWord;
-        do {
-            const randomIndex = Math.floor(Math.random() * currentSet.words.length);
-            randomWord = currentSet.words[randomIndex][want];
-        } while (randomWord === currAns);
-        
-        return randomWord;
+    const assignMC = (word) => {
+        const pool = currentSet?.words || [];
+        const { options, correctIndex } = buildMcOptions(pool, word);
+        setMcOptions(options);
+        setAnswerPlacement(correctIndex);
+        setSelectedAnswer(null);
     };
 
-    const assignMC = (currAns) => {
-        if (!currentSet?.words || currentSet.words.length === 0) {
-            console.error("No valid words available for multiple choice");
-            return;
-        }
-
-        const answerLocation = Math.floor(Math.random() * 4);
-        setAnswer1(selectRandomAnswer(currAns));
-        setAnswer2(selectRandomAnswer(currAns));
-        setAnswer3(selectRandomAnswer(currAns));
-        setAnswer4(selectRandomAnswer(currAns));
-
-        if (answerLocation === 0) {
-            setAnswer1(currAns);
-            setAnswerPlacement(0);
-        } else if (answerLocation === 1) {
-            setAnswer2(currAns);
-            setAnswerPlacement(1);
-        } else if (answerLocation === 2) {
-            setAnswer3(currAns);
-            setAnswerPlacement(2);
-        } else if (answerLocation === 3) {
-            setAnswer4(currAns);
-            setAnswerPlacement(3);
-        }
-    };
-
-    const handleSubmit = (event) => {
-        if (!isMultipleChoice) {
-            event.preventDefault();
+    const handleSubmit = (eventOrIndex) => {
+        if (!isMultipleChoice && eventOrIndex?.preventDefault) {
+            eventOrIndex.preventDefault();
         }
 
         // If we're already showing the answer, move to next question
@@ -439,10 +401,17 @@ export default function TestingZone(props) {
         setIsSubmitting(true);
 
         // Normalize both answers by converting to lowercase and removing spaces
-        const normalizedAnswer = answer.toLowerCase().replace(/\s+/g, '');
+        let normalizedAnswer = "";
+        if (isMultipleChoice) {
+            const selectedIndex = typeof eventOrIndex === "number" ? eventOrIndex : selectedAnswer;
+            const chosen = selectedIndex !== null ? mcOptions[selectedIndex] : "";
+            normalizedAnswer = (chosen || "").toLowerCase().replace(/\s+/g, '');
+        } else {
+            normalizedAnswer = answer.toLowerCase().replace(/\s+/g, '');
+        }
         const normalizedKey = key.toLowerCase().replace(/\s+/g, '');
 
-        if (normalizedAnswer === normalizedKey || event === answerPlacement) {
+        if (normalizedAnswer === normalizedKey) {
             setIsCorrect(true);
             setFormColor("#2E972E");
             setButtonState("success");
@@ -589,94 +558,31 @@ export default function TestingZone(props) {
                             {isMultipleChoice && (
                                 <Stack gap={2}>
                                     <Stack gap={2}>
-                                        <Button
-                                            style={{ 
-                                                fontSize: "20px", 
-                                                width: "100%",
-                                                backgroundColor: isSubmitting && answerPlacement === 0 ? "#2E972E" : 
-                                                               isSubmitting && answerPlacement !== 0 ? "#DD4F4F" : mcButtonBg,
-                                                border: selectedAnswer === 0 ? selectedBorder : "4px solid transparent",
-                                                color: isDarkMode ? "#fff" : undefined
-                                            }}
-                                            variant={buttonState}
-                                            ref={button1Ref}
-                                            onClick={() => {
-                                                if (isSubmitting) {
-                                                    handleSubmit();
-                                                } else {
-                                                    setSelectedAnswer(0);
-                                                    handleSubmit(0);
-                                                }
-                                            }}
-                                        >
-                                            {answer1}
-                                        </Button>
-                                        <Button
-                                            style={{ 
-                                                fontSize: "20px", 
-                                                width: "100%",
-                                                backgroundColor: isSubmitting && answerPlacement === 1 ? "#2E972E" : 
-                                                               isSubmitting && answerPlacement !== 1 ? "#DD4F4F" : mcButtonBg,
-                                                border: selectedAnswer === 1 ? selectedBorder : "4px solid transparent",
-                                                color: isDarkMode ? "#fff" : undefined
-                                            }}
-                                            variant={buttonState}
-                                            ref={button2Ref}
-                                            onClick={() => {
-                                                if (isSubmitting) {
-                                                    handleSubmit();
-                                                } else {
-                                                    setSelectedAnswer(1);
-                                                    handleSubmit(1);
-                                                }
-                                            }}
-                                        >
-                                            {answer2}
-                                        </Button>
-                                        <Button
-                                            style={{ 
-                                                fontSize: "20px", 
-                                                width: "100%",
-                                                backgroundColor: isSubmitting && answerPlacement === 2 ? "#2E972E" : 
-                                                               isSubmitting && answerPlacement !== 2 ? "#DD4F4F" : mcButtonBg,
-                                                border: selectedAnswer === 2 ? selectedBorder : "4px solid transparent",
-                                                color: isDarkMode ? "#fff" : undefined
-                                            }}
-                                            variant={buttonState}
-                                            ref={button3Ref}
-                                            onClick={() => {
-                                                if (isSubmitting) {
-                                                    handleSubmit();
-                                                } else {
-                                                    setSelectedAnswer(2);
-                                                    handleSubmit(2);
-                                                }
-                                            }}
-                                        >
-                                            {answer3}
-                                        </Button>
-                                        <Button
-                                            style={{ 
-                                                fontSize: "20px", 
-                                                width: "100%",
-                                                backgroundColor: isSubmitting && answerPlacement === 3 ? "#2E972E" : 
-                                                               isSubmitting && answerPlacement !== 3 ? "#DD4F4F" : mcButtonBg,
-                                                border: selectedAnswer === 3 ? selectedBorder : "4px solid transparent",
-                                                color: isDarkMode ? "#fff" : undefined
-                                            }}
-                                            variant={buttonState}
-                                            ref={button4Ref}
-                                            onClick={() => {
-                                                if (isSubmitting) {
-                                                    handleSubmit();
-                                                } else {
-                                                    setSelectedAnswer(3);
-                                                    handleSubmit(3);
-                                                }
-                                            }}
-                                        >
-                                            {answer4}
-                                        </Button>
+                                        {mcOptions.map((opt, idx) => (
+                                            <Button
+                                                key={`${opt}-${idx}`}
+                                                style={{ 
+                                                    fontSize: "20px", 
+                                                    width: "100%",
+                                                    backgroundColor: isSubmitting && answerPlacement !== null
+                                                        ? (answerPlacement === idx ? "#2E972E" : "#DD4F4F")
+                                                        : mcButtonBg,
+                                                    border: selectedAnswer === idx ? selectedBorder : "4px solid transparent",
+                                                    color: isDarkMode ? "#fff" : undefined
+                                                }}
+                                                variant={buttonState}
+                                                onClick={() => {
+                                                    if (isSubmitting) {
+                                                        handleSubmit();
+                                                    } else {
+                                                        setSelectedAnswer(idx);
+                                                        handleSubmit(idx);
+                                                    }
+                                                }}
+                                            >
+                                                {opt}
+                                            </Button>
+                                        ))}
                                     </Stack>
                                     <div style={{ 
                                         borderTop: isDarkMode ? '1px solid #444' : '1px solid #dee2e6',

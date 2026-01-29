@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Button, Card, Container, Row, Col, Form, Table, Alert } from 'react-bootstrap';
-import { createVocabSet, updateVocabSet, deleteVocabSet } from '../services/vocabSetService';
+import { createVocabSet, updateVocabSet, deleteVocabSet, MAX_WORDS_PER_SET } from '../services/vocabSetService';
 import { useTheme } from '../contexts/ThemeContext';
 
 export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
@@ -24,8 +24,8 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
             updated[editingIndex] = newItem;
             setEditingIndex(null);
         } else {
-            if (vocabItems.length >= 100) {
-                setError('Maximum limit of 100 words per set reached');
+            if (vocabItems.length >= MAX_WORDS_PER_SET) {
+                setError(`Maximum limit of ${MAX_WORDS_PER_SET} words per set reached`);
                 return;
             }
             updated.push(newItem);
