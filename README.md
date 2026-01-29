@@ -8,3 +8,6 @@ Make theming more original?
 
 Add accounts, ability to view another person's account and the public sets, add an image to represent you
 
+Add more personalized features which are specific to Chinese language learning (similarity based on radicals or something?)
+
+Add a Learn Mode which mixes learning types
