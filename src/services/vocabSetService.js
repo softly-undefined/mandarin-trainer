@@ -2,7 +2,7 @@ import { db } from '../firebase';
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
 
 const MAX_SETS_PER_USER = 50;
-const MAX_WORDS_PER_SET = 100;
+const MAX_WORDS_PER_SET = 200;
 
 export async function createVocabSet(userId, setName, vocabItems) {
     try {
