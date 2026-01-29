@@ -3,12 +3,15 @@ import { useAuth } from '../contexts/AuthContext';
 import { Button, Card, Container, Row, Col, Form, Table, Alert } from 'react-bootstrap';
 import { createVocabSet, updateVocabSet, deleteVocabSet, MAX_WORDS_PER_SET } from '../services/vocabSetService';
 import { useTheme } from '../contexts/ThemeContext';
+import { useRef } from 'react';
 
 export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
     const { currentUser } = useAuth();
     const { isDarkMode } = useTheme();
     const [setName, setSetName] = useState(set?.setName || '');
     const [vocabItems, setVocabItems] = useState(set?.vocabItems || []);
+    const initialNameRef = useRef(set?.setName || '');
+    const initialItemsRef = useRef(set?.vocabItems || []);
     const [newItem, setNewItem] = useState({ character: '', pinyin: '', definition: '' });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
@@ -81,7 +84,15 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
     };
 
     const handleBack = () => {
-        goToPage('home');
+        const initialName = initialNameRef.current || '';
+        const initialItems = initialItemsRef.current || [];
+        const hasChanges =
+            setName !== initialName ||
+            JSON.stringify(vocabItems) !== JSON.stringify(initialItems);
+
+        if (!hasChanges || window.confirm('Discard unsaved changes and go back to My Sets?')) {
+            goToPage('home');
+        }
     };
 
     const cardStyle = isDarkMode
@@ -95,12 +106,66 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
         : {};
 
     return (
-        <div style={{ maxHeight: "100vh", overflowY: "auto", padding: "1rem", background: isDarkMode ? '#181a1b' : undefined }}>
+        <div
+            style={{
+                maxHeight: "100vh",
+                overflowY: "auto",
+                padding: "1rem",
+                background: isDarkMode ? '#181a1b' : undefined
+            }}
+            className={isDarkMode ? 'vocab-scroll-dark' : ''}
+        >
             {isDarkMode && (
                 <style>{`
                     .vocab-darkmode-input::placeholder {
                         color: #b0b0b0 !important;
                         opacity: 1 !important;
+                    }
+                    .vocab-scroll-dark::-webkit-scrollbar {
+                        width: 10px;
+                    }
+                    .vocab-scroll-dark::-webkit-scrollbar-track {
+                        background: #111;
+                    }
+                    .vocab-scroll-dark::-webkit-scrollbar-thumb {
+                        background: #444;
+                        border-radius: 6px;
+                    }
+                    .vocab-scroll-dark::-webkit-scrollbar-thumb:hover {
+                        background: #666;
+                    }
+                    .vocab-table-dark {
+                        background-color: #111 !important;
+                        color: #fff !important;
+                    }
+                    .vocab-table-dark th {
+                        background-color: #1f1f1f !important;
+                        color: #fff !important;
+                        border-color: #3a3a3a !important;
+                    }
+                    .vocab-table-dark td {
+                        border-color: #3a3a3a !important;
+                        background-color: #161616 !important;
+                        color: #fff !important;
+                    }
+                    .vocab-table-dark tbody tr {
+                        color: #fff !important;
+                    }
+                    .vocab-table-dark tbody tr td {
+                        color: #fff !important;
+                    }
+                    .vocab-table-dark tbody tr:nth-child(odd) {
+                        background-color: #161616 !important;
+                    }
+                    .vocab-table-dark tbody tr:nth-child(even) {
+                        background-color: #1d1d1d !important;
+                    }
+                    .vocab-table-dark tbody tr:hover {
+                        background-color: #2a2a2a !important;
+                    }
+                    .vocab-table-dark thead tr {
+                        background-color: #1f1f1f !important;
+                        border-color: #3a3a3a !important;
                     }
                 `}</style>
             )}
@@ -180,8 +245,11 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
 
                 <h5 className="mb-2" style={{ color: isDarkMode ? '#fff' : undefined }}>Set Length: {vocabItems.length}</h5>
 
-                <div style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '1rem' }}>
-                    <Table striped bordered hover>
+        <div
+            style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '1rem' }}
+            className={isDarkMode ? 'vocab-scroll-dark' : ''}
+        >
+            <Table striped bordered hover className={isDarkMode ? 'vocab-table-dark' : ''}>
                         <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}>
                             <tr>
                                 <th style={thStyle}>Character</th>
