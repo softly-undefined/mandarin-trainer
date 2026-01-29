@@ -55,11 +55,8 @@ export default function StartLearning({
             }}
             >
             <Stack gap={3}>
-                <div style={{ textAlign: "center", position: "relative" }}>
-                    <h5 style={{ marginBottom: "0.25rem", ...headerStyle }}>{set.setName}</h5>
-                    <h6 style={{ marginBottom: "0.5rem", ...headerStyle }}>Select Learning Mode</h6>
-                    <div style={{ position: "absolute", top: 0, right: 0 }}>
-                        {showSettingsShortcut && (
+                <div style={{ position: "relative", paddingRight: "2rem" }}>
+                    {showSettingsShortcut && (
                         <Button
                             variant="link"
                             size="sm"
@@ -71,12 +68,26 @@ export default function StartLearning({
                                     window.location.assign(`${base}/settings`);
                                 }
                             }}
-                            style={{ display: "flex", alignItems: "center", gap: "6px", color: isDarkMode ? "#fff" : "#000" }}
+                            style={{
+                                position: "absolute",
+                                top: "-4px",
+                                right: 0,
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "6px",
+                                color: isDarkMode ? "#fff" : "#000",
+                                textDecoration: "none"
+                            }}
                         >
                             <FaCog size={18} color={isDarkMode ? "#fff" : "#000"} />
                         </Button>
                     )}
-                </div>
+                    <div style={{ textAlign: "center" }}>
+                        <h5 style={{ marginBottom: "0.25rem", ...headerStyle, wordBreak: "break-word" }}>
+                            {set.setName}
+                        </h5>
+                        <h6 style={{ marginBottom: "0.5rem", ...headerStyle }}>Select Learning Mode</h6>
+                    </div>
                 </div>
 
                 {!hasEnoughWords && (
