@@ -42,6 +42,10 @@ export default function StartLearning({
     const headerStyle = isDarkMode ? { color: "#fff" } : {};
     const labelStyle = isDarkMode ? { color: "#fff" } : {};
 
+    if (!set) {
+        return null;
+    }
+
     return (
         <Card 
             body 
@@ -60,12 +64,14 @@ export default function StartLearning({
                         <Button
                             variant="link"
                             size="sm"
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
                                 if (goToPage) {
                                     goToPage("settings");
                                 } else {
                                     const base = process.env.PUBLIC_URL || "";
-                                    window.location.assign(`${base}/settings`);
+                                    window.location.href = `${base}/settings`;
                                 }
                             }}
                             style={{

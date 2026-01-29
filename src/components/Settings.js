@@ -3,7 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 
 export default function Settings(props) {
-    const { goToPage } = props;
+    const { onBack, goToPage } = props;
     const { currentUser, logout } = useAuth();
     const { isDarkMode, toggleDarkMode } = useTheme();
 
@@ -37,22 +37,32 @@ export default function Settings(props) {
                     <Card.Title style={{ color: isDarkMode ? "#fff" : undefined }}>Settings</Card.Title>
                     <Button
                         variant={isDarkMode ? "outline-light" : "outline-secondary"}
-                        onClick={() => goToPage("menu")}
+                        onClick={() => {
+                            if (onBack) {
+                                onBack();
+                            } else if (goToPage) {
+                                goToPage("menu");
+                            } else {
+                                window.history.back();
+                            }
+                        }}
                     >
-                        Back to Menu
+                        Back
                     </Button>
                 </Stack>
 
                 <Stack gap={3} style={{ marginTop: "20px" }}>
                     <div style={infoBoxStyle}>
-                        <div style={{ fontSize: "0.9rem", color: isDarkMode ? "#b0b0b0" : "#6c757d" }}>Logged in as</div>
+                        <div style={{ fontSize: "0.9rem", color: isDarkMode ? "#b0b0b0" : "#6c757d" }}>
+                            {currentUser ? "Logged in as" : "Not logged in"}
+                        </div>
                         <div style={{ 
                             fontSize: "1.1rem", 
                             fontWeight: "500",
                             wordBreak: "break-all",
                             color: isDarkMode ? "#fff" : undefined
                         }}>
-                            {currentUser?.email}
+                            {currentUser ? currentUser.email : "Sign in to save and edit sets"}
                         </div>
                     </div>
 

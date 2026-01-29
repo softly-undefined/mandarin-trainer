@@ -41,6 +41,9 @@ function AppContent() {
     const [showMySets, setShowMySets] = useState(false);
     const [learningSet, setLearningSet] = useState(null);
     const [externalSet, setExternalSet] = useState(null);
+    const [currentPage, setCurrentPage] = useState("home");
+    const [lastPage, setLastPage] = useState("home");
+    const [settingsReturnPage, setSettingsReturnPage] = useState({ page: "home", payload: null });
 
     // Shared set handling
     const [shareSet, setShareSet] = useState(null);
@@ -51,16 +54,19 @@ function AppContent() {
 
     const [learnedOverTime, setLearnedOverTime] = useState([]); //This has to deal with the graph in FinishPage
 
+    const getPathSegments = () => window.location.pathname.split("/").filter(Boolean);
+    const pathSegments = getPathSegments();
+
     const getShareSlug = () => {
-        const segments = window.location.pathname.split("/").filter(Boolean);
-        const idx = segments.findIndex((s) => s === "set");
-        if (idx !== -1 && segments[idx + 1]) {
-            return segments[idx + 1];
+        const idx = pathSegments.findIndex((s) => s === "set");
+        if (idx !== -1 && pathSegments[idx + 1]) {
+            return pathSegments[idx + 1];
         }
         return null;
     };
 
     const shareSlug = getShareSlug();
+    const isSettingsPath = pathSegments.includes("settings");
 
     useEffect(() => {
         let active = true;
@@ -86,6 +92,7 @@ function AppContent() {
                     setShowSettings(false);
                     setShowMySets(false);
                     setShowStartLearning(true);
+                    setCurrentPage("startLearning");
                     if (!given) setGiven("definition");
                     if (!want) setWant("character");
                 }
@@ -103,11 +110,14 @@ function AppContent() {
         if (shareLoading) return <div style={{ textAlign: "center", marginTop: "2rem" }}>Loading shared set...</div>;
         if (shareError) return <div style={{ textAlign: "center", marginTop: "2rem" }}>{shareError}</div>;
         // Allow anonymous use for shared sets: skip SignIn gate
-    } else if (!currentUser) {
+    } else if (!currentUser && !isSettingsPath) {
         return <SignIn />;
     }
 
     function goToPage(pageName, payload) {
+        const priorPage = currentPage || "home";
+        setLastPage(priorPage);
+        setCurrentPage(pageName);
         setShowHome(false);
         setShowReviewSet(false);
         setShowTestingZone(false);
@@ -126,13 +136,17 @@ function AppContent() {
         } else if (pageName === "finishPage") {
             setShowFinishPage(true);
         } else if (pageName === "settings") {
+            setSettingsReturnPage({
+                page: payload?.returnTo || priorPage || "home",
+                payload: payload?.returnPayload || (priorPage === "startLearning" ? learningSet : null),
+            });
             setShowSettings(true);
         } else if (pageName === "mySets") {
             setShowMySets(true);
         } else if (pageName === "startLearning") {
             const nextSet = payload?.set || payload;
             setLearningSet(nextSet); // set passed
-            setExternalSet(payload?.fromShare ? nextSet : null);
+            setExternalSet(nextSet);
             setShowStartLearning(true);
         }
     }
@@ -147,6 +161,18 @@ function AppContent() {
                     alignItems: "center",
                 }}
             >
+                {isSettingsPath && showSettings && (
+                    <Settings
+                        onBack={() => {
+                            goToPage(settingsReturnPage.page, settingsReturnPage.payload);
+                        }}
+                        isTraditional={isTraditional}
+                        setIsTraditional={setIsTraditional}
+                        traditionalValue={traditionalValue}
+                        setTraditionalValue={setTraditionalValue}
+                    />
+                )}
+
                 {showHome && (
                     <Home goToPage={goToPage} />
                 )}
@@ -194,9 +220,11 @@ function AppContent() {
                     />
                 )}
 
-                {showSettings && (
+                {showSettings && !isSettingsPath && (
                     <Settings
-                        goToPage={goToPage}
+                        onBack={() => {
+                            goToPage(settingsReturnPage.page, settingsReturnPage.payload);
+                        }}
                         isTraditional={isTraditional}
                         setIsTraditional={setIsTraditional}
                         traditionalValue={traditionalValue}
