@@ -82,6 +82,9 @@ export default function StartLearning({
                 <h5 style={{ marginBottom: "0.25rem", ...headerStyle, wordBreak: "break-word" }}>
                     {set.setName}
                 </h5>
+                <div style={{ marginBottom: "0.35rem", fontWeight: 600, color: isDarkMode ? "#d0d0d0" : "#444" }}>
+                    {set?.vocabItems?.length || 0} terms
+                </div>
                 <h6 style={{ marginBottom: "0.5rem", ...headerStyle }}>Select Learning Mode</h6>
             </div>
         </div>
@@ -212,7 +215,7 @@ export default function StartLearning({
                     onClick={() => {
                         if (onBack) return onBack();
                         if (goToPage) {
-                            goToPage("menu");
+                            goToPage("home");
                         } else {
                             const base = process.env.PUBLIC_URL || "";
                             window.location.assign(`${base}/`);

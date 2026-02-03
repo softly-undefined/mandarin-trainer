@@ -112,7 +112,7 @@ export default function FinishPage(props) {
                 }}
             >
                 <Card.Title style={{ flexGrow: 1, ...headerStyle }}>Finished Testing {currentSetName}</Card.Title>
-                <CloseButton onClick={() => goToPage("menu")} />
+                <CloseButton onClick={() => goToPage("home")} />
             </Stack>
 
             <Stack gap='3'>
@@ -144,7 +144,7 @@ export default function FinishPage(props) {
                 <Button
                     variant='success'
                     onClick={() => {
-                        goToPage("menu");
+                        goToPage("home");
                     }}
                 >
                     Return Home

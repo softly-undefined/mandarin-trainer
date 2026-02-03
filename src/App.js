@@ -4,13 +4,10 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { useAuth } from "./contexts/AuthContext";
 
-import Menu from "./components/Menu";
 import TestingZone from "./components/TestingZone";
-import ReviewSet from "./components/ReviewSet";
 import FinishPage from "./components/FinishPage";
 import Settings from "./components/Settings";
 import SignIn from "./components/SignIn";
-import MySets from "./components/MySets";
 import Home from "./components/Home";
 import StartLearning from "./components/StartLearning";
 import { getSetBySlug } from "./services/vocabSetService";
@@ -33,20 +30,16 @@ function AppContent() {
 
     //to show or not to show each of the pages
     const [showHome, setShowHome] = useState(true);
-    const [showReviewSet, setShowReviewSet] = useState(false);
     const [showTestingZone, setShowTestingZone] = useState(false);
     const [showFinishPage, setShowFinishPage] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const [showStartLearning, setShowStartLearning] = useState(false);
-    const [showMySets, setShowMySets] = useState(false);
     const [learningSet, setLearningSet] = useState(null);
     const [externalSet, setExternalSet] = useState(null);
     const [currentPage, setCurrentPage] = useState("home");
     const [lastPage, setLastPage] = useState("home");
     const [settingsReturnPage, setSettingsReturnPage] = useState({ page: "home", payload: null });
 
-    // Shared set handling
-    const [shareSet, setShareSet] = useState(null);
     const [shareLoading, setShareLoading] = useState(false);
     const [shareError, setShareError] = useState(null);
     const [shareShowLoader, setShareShowLoader] = useState(false);
@@ -91,11 +84,9 @@ function AppContent() {
                     setResponseCounts([]);
                     setLearnedOverTime([]);
                     setShowHome(false);
-                    setShowReviewSet(false);
                     setShowTestingZone(false);
                     setShowFinishPage(false);
                     setShowSettings(false);
-                    setShowMySets(false);
                     setShowStartLearning(true);
                     setCurrentPage("startLearning");
                     if (!given) setGiven("definition");
@@ -128,24 +119,26 @@ function AppContent() {
         setLastPage(priorPage);
         setCurrentPage(pageName);
         setShowHome(false);
-        setShowReviewSet(false);
         setShowTestingZone(false);
         setShowFinishPage(false);
         setShowSettings(false);
-        setShowMySets(false);
         setShowStartLearning(false);
 
         const base = process.env.PUBLIC_URL || "";
-        if (!currentUser && shareSlug && (pageName === "home" || pageName === "menu" || pageName === "mySets")) {
+        if (!currentUser && shareSlug && (pageName === "home" || pageName === "menu")) {
             window.location.assign(`${base}/`);
             return;
         }
         
-        if (pageName === "home" || pageName === "menu" || pageName === "mySets") {
+        if (pageName === "home" || pageName === "menu") {
+            // Ensure URL resets to app root when coming from a shared /set/:slug path
+            const homeUrl = `${base}/`;
+            if (window.location.pathname.includes("/set/")) {
+                window.location.assign(homeUrl);
+                return;
+            }
             setShowHome(true); // redirect both old routes to home
             console.log("isMultipleChoice", isMultipleChoice);
-        } else if (pageName === "reviewSet") {
-            setShowReviewSet(true);
         } else if (pageName === "testingZone") {
             setShowTestingZone(true);
         } else if (pageName === "finishPage") {
@@ -156,8 +149,6 @@ function AppContent() {
                 payload: payload?.returnPayload || (priorPage === "startLearning" ? learningSet : null),
             });
             setShowSettings(true);
-        } else if (pageName === "mySets") {
-            setShowMySets(true);
         } else if (pageName === "startLearning") {
             const nextSet = payload?.set || payload || learningSet || externalSet;
             if (nextSet) {
@@ -196,11 +187,6 @@ function AppContent() {
                     <Home goToPage={goToPage} />
                 )}
 
-
-                {/* {showMySets && (
-                    <MySets goToPage={goToPage} />
-                )} */}
-
                 {showTestingZone && (
                     <TestingZone
                         given={given}
@@ -217,14 +203,6 @@ function AppContent() {
                         setLearnedOverTime={setLearnedOverTime}
                         currentSetName={currentSetName}
                         externalSet={externalSet || learningSet}
-                    />
-                )}
-
-                {showReviewSet && (
-                    <ReviewSet
-                        setChoice={setChoice}
-                        setSetChoice={setSetChoice}
-                        goToPage={goToPage}
                     />
                 )}
 

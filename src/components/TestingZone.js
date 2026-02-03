@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button, Card, CloseButton, Form, Stack, ProgressBar } from "react-bootstrap";
 import { getUserVocabSets } from "../services/vocabSetService";
 import { useAuth } from "../contexts/AuthContext";
-import dictionary from "./dictionary.json";
 import { useTheme } from "../contexts/ThemeContext";
 
 export default function TestingZone(props) {

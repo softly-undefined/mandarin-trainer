@@ -41,7 +41,7 @@ export default function Settings(props) {
                             if (onBack) {
                                 onBack();
                             } else if (goToPage) {
-                                goToPage("menu");
+                                goToPage("home");
                             } else {
                                 window.history.back();
                             }
