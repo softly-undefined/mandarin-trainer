@@ -19,6 +19,7 @@ function AppContent() {
     const [want, setWant] = useState("");
     const [setChoice, setSetChoice] = useState(""); //which dataset
     const [currentSetName, setCurrentSetName] = useState("");
+    const [termCount, setTermCount] = useState(0);
 
     //Code for the Multiple Choice in Settings
     const [isMultipleChoice, setIsMultipleChoice] = useState(false);
@@ -203,6 +204,7 @@ function AppContent() {
                         setLearnedOverTime={setLearnedOverTime}
                         currentSetName={currentSetName}
                         externalSet={externalSet || learningSet}
+                        onTermCountChange={setTermCount}
                     />
                 )}
 
@@ -214,6 +216,9 @@ function AppContent() {
                         setResponseCounts={setResponseCounts}
                         learnedOverTime={learnedOverTime}
                         currentSetName={currentSetName}
+                        given={given}
+                        want={want}
+                        termCount={termCount}
                     />
                 )}
 

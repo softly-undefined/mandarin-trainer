@@ -17,3 +17,5 @@ Make theming more original? (Night Market mode)
 
 Add more personalized features which are specific to Chinese language learning (similarity based on radicals or something?)
 
+Work on FinishPage
+- better description of what you were looking at.

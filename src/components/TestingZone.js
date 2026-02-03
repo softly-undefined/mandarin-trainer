@@ -17,6 +17,7 @@ export default function TestingZone(props) {
         setLearnedOverTime,
         currentSetName,
         externalSet,
+        onTermCountChange,
     } = props;
 
     const { isDarkMode } = useTheme();
@@ -146,12 +147,14 @@ export default function TestingZone(props) {
 
             if (validWords.length === 0) {
                 console.error("No valid words found in set");
+                if (onTermCountChange) onTermCountChange(0);
                 return;
             }
 
             const transformedSet = { words: validWords };
             setCurrentSet(transformedSet);
             setTotalWords(validWords.length);
+            if (onTermCountChange) onTermCountChange(validWords.length);
 
             let shuffled = validWords
                 .map((value) => ({ value, sort: Math.random() }))

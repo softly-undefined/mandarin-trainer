@@ -34,7 +34,10 @@ export default function FinishPage(props) {
         goToPage,
         responseCounts,
         learnedOverTime,
-        currentSetName
+        currentSetName,
+        given,
+        want,
+        termCount,
     } = props;
 
     const { isDarkMode } = useTheme();
@@ -50,6 +53,13 @@ export default function FinishPage(props) {
         const wrong = array.filter((v) => v === 0).length;
         setRightCount(right);
         setWrongCount(wrong);
+    };
+
+    const formatModeText = () => {
+        if (!given || !want) return "";
+        const givenLabel = given.toUpperCase();
+        const wantLabel = want.toUpperCase();
+        return `${termCount || 0} terms, Testing ${wantLabel} given ${givenLabel}`;
     };
 
     const cardStyle = isDarkMode
@@ -121,6 +131,7 @@ export default function FinishPage(props) {
                     <div>Incorrect Answers: {wrongCount}</div>
                     <div>Accuracy: {rightCount + wrongCount > 0 ? 
                         Math.round((rightCount / (rightCount + wrongCount)) * 100) : 0}%</div>
+                    <div>{formatModeText()}</div>
                 </Alert>
 
                 {learnedOverTime.length > 0 && (
