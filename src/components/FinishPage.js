@@ -44,6 +44,11 @@ export default function FinishPage(props) {
     const [rightCount, setRightCount] = useState(0);
     const [wrongCount, setWrongCount] = useState(0);
 
+    const capitalize = (v) => {
+        if (!v) return "";
+        return v.charAt(0).toUpperCase() + v.slice(1);
+    };
+
     useEffect(() => {
         getRightWrong(responseCounts);
     }, [responseCounts]);
@@ -57,10 +62,21 @@ export default function FinishPage(props) {
 
     const formatModeText = () => {
         if (!given || !want) return "";
-        const givenLabel = given.toUpperCase();
-        const wantLabel = want.toUpperCase();
+        const givenLabel = capitalize(given);
+        const wantLabel = capitalize(want);
         return `${termCount || 0} terms, Testing ${wantLabel} given ${givenLabel}`;
     };
+
+    const wantLabel = capitalize(want);
+    const easiestTerm = learnedOverTime?.length ? learnedOverTime[0].term : null;
+    const hardestTermEntry = learnedOverTime && learnedOverTime.length
+        ? learnedOverTime.reduce((worst, entry) => {
+            if (!entry) return worst;
+            if (!worst || (entry.attempts ?? 0) > (worst.attempts ?? 0)) return entry;
+            return worst;
+        }, null)
+        : null;
+    const hardestTerm = hardestTermEntry?.term || null;
 
     const cardStyle = isDarkMode
         ? { backgroundColor: "#23272b", color: "#fff", borderColor: "#444" }
@@ -126,12 +142,18 @@ export default function FinishPage(props) {
             </Stack>
 
             <Stack gap='3'>
+                {formatModeText() && (
+                    <div style={{ ...headerStyle, fontSize: "0.95rem", marginTop: "-4px" }}>
+                        {formatModeText()}
+                    </div>
+                )}
                 <Alert variant="success" style={alertStyle}>
                     <div>Correct Answers: {rightCount}</div>
                     <div>Incorrect Answers: {wrongCount}</div>
                     <div>Accuracy: {rightCount + wrongCount > 0 ? 
                         Math.round((rightCount / (rightCount + wrongCount)) * 100) : 0}%</div>
-                    <div>{formatModeText()}</div>
+                    <div>Easiest {wantLabel || "Term"}: {easiestTerm || "N/A"}</div>
+                    <div>Worst {wantLabel || "Term"}: {hardestTerm || "N/A"}</div>
                 </Alert>
 
                 {learnedOverTime.length > 0 && (

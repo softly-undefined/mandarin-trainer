@@ -354,14 +354,6 @@ export default function TestingZone(props) {
         };
     }, [isMultipleChoice, mcOptions, selectedAnswer]);
 
-    useEffect(() => {
-        if (responseCounts.length === 0) return;
-        setLearnedOverTime((prev) => [
-            ...prev,
-            { trial: responseCounts.length, learned: learnedWordsRef.current },
-        ]);
-    }, [responseCounts]);
-
     const handleButton = (event) => {
         if (!isMultipleChoice) return;
         const keyMap = {
@@ -417,6 +409,8 @@ export default function TestingZone(props) {
         }
         const normalizedKey = key.toLowerCase().replace(/\s+/g, '');
 
+        const nextTrial = responseCounts.length + 1;
+
         if (normalizedAnswer === normalizedKey) {
             setIsCorrect(true);
             setFormColor("#2E972E");
@@ -444,6 +438,11 @@ export default function TestingZone(props) {
                         const newCount = learnedWords + 1;
                         setLearnedWords(newCount);
                         learnedWordsRef.current = newCount;
+                        const attemptsToMaster = correctCount + wrongCount;
+                        setLearnedOverTime((prev) => [
+                            ...prev,
+                            { trial: nextTrial, learned: newCount, term: key, attempts: attemptsToMaster },
+                        ]);
                         return newSet;
                     }
                     return safeSet;
