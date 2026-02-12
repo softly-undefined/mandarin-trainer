@@ -10,7 +10,6 @@ If the set is on your home page and isn't yours it should also include the usern
 
 3. Add a Search Function to let users explore the base of sets / revamp the unlogged in home view. Add a better sorting feature for sets (tie to textbook series, etc.)
 
-
 Add a Learn Mode which mixes learning types
 
 Make theming more original? (Night Market mode)
@@ -19,3 +18,12 @@ Add more personalized features which are specific to Chinese language learning (
 
 Work on FinishPage
 - better description of what you were looking at.
+
+Toggle between traditional and simplified Chinese!
+
+
+- Plug in a real dictionary as the backend for this website https://www.plecoforums.com/threads/the-moe-dictionary-is-now-open-source.3606/
+    - use this for PINYIN suggestions, definition suggestions
+    - NOTE: The main thing stopping this from being a plug and play solution is words with multiple definitions.
+    - also use for 
+        - Auto generate a sentence for each vocab term or grammatical setup (how to do reliably)

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Button, Card, Container, Row, Col, Form, Table, Alert } from 'react-bootstrap';
-import { createVocabSet, updateVocabSet, deleteVocabSet, MAX_WORDS_PER_SET } from '../services/vocabSetService';
+import { createVocabSet, updateVocabSet, deleteVocabSet, ensureSetSlug, MAX_WORDS_PER_SET } from '../services/vocabSetService';
 import { useTheme } from '../contexts/ThemeContext';
 import { useRef } from 'react';
 
@@ -45,25 +45,52 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
         setVocabItems(updatedItems);
     };
 
+    const persistSet = async () => {
+        let setId = set?.id;
+        if (set) {
+            await updateVocabSet(set.id, {
+                setName,
+                vocabItems,
+                updatedAt: new Date()
+            });
+        } else {
+            setId = await createVocabSet(currentUser.uid, setName, vocabItems);
+        }
+
+        if (onSetUpdated) {
+            await onSetUpdated();
+        }
+
+        return setId;
+    };
+
     const handleSave = async () => {
         try {
             setError('');
-            if (set) {
-                await updateVocabSet(set.id, {
-                    setName,
-                    vocabItems,
-                    updatedAt: new Date()
-                });
-            } else {
-                await createVocabSet(currentUser.uid, setName, vocabItems);
-            }
+            await persistSet();
             setSuccess('Set saved successfully!');
-            if (onSetUpdated) {
-                await onSetUpdated();
-            }
             setTimeout(() => goToPage('home'), 500);
         } catch (error) {
             console.error("Error saving set:", error);
+            setError(error.message);
+        }
+    };
+
+    const handleLearn = async () => {
+        try {
+            setError('');
+            const setId = await persistSet();
+            setSuccess('Set saved successfully!');
+
+            let slug = set?.slug;
+            if (!slug) {
+                slug = await ensureSetSlug(setId);
+            }
+
+            const base = process.env.PUBLIC_URL || '';
+            window.location.assign(`${base}/set/${slug}`);
+        } catch (error) {
+            console.error("Error saving and starting learning:", error);
             setError(error.message);
         }
     };
@@ -297,7 +324,15 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                         onClick={handleSave}
                         disabled={!setName || vocabItems.length === 0}
                     >
-                        Save Set
+                        Save
+                    </Button>
+                    <Button
+                        variant={isDarkMode ? "outline-success" : "success"}
+                        size="lg"
+                        onClick={handleLearn}
+                        disabled={!setName || vocabItems.length === 0}
+                    >
+                        Learn
                     </Button>
                     {set && (
                         <Button
@@ -305,7 +340,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                             size="lg"
                             onClick={handleDeleteSet}
                         >
-                            Delete Set
+                            Delete
                         </Button>
                     )}
                 </div>

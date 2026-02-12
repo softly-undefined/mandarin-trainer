@@ -18,6 +18,7 @@ export default function Home(props) {
     const [loading, setLoading] = useState(true);
     const [editingSet, setEditingSet] = useState(null);
     const [isCreating, setIsCreating] = useState(false);
+    const [handledEditQuery, setHandledEditQuery] = useState(false);
 
     const loadSets = async () => {
         try {
@@ -35,6 +36,28 @@ export default function Home(props) {
             loadSets();
         }
     }, [currentUser]);
+
+    useEffect(() => {
+        if (loading || handledEditQuery) {
+            return;
+        }
+
+        const url = new URL(window.location.href);
+        const editSetId = url.searchParams.get("editSet");
+        if (!editSetId) {
+            setHandledEditQuery(true);
+            return;
+        }
+
+        const matchingSet = sets.find((s) => s.id === editSetId);
+        if (matchingSet) {
+            setEditingSet(matchingSet);
+        }
+
+        url.searchParams.delete("editSet");
+        window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+        setHandledEditQuery(true);
+    }, [loading, handledEditQuery, sets]);
 
     const handleStartLearning = async (set) => {
         try {

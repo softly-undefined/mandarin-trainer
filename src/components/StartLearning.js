@@ -2,6 +2,7 @@ import { Button, ButtonGroup, ToggleButton, Card, Stack, Form, Alert } from "rea
 import { useTheme } from "../contexts/ThemeContext";
 import { useEffect, useState } from "react";
 import { FaCog } from 'react-icons/fa';
+import { useAuth } from "../contexts/AuthContext";
 
 export default function StartLearning({
     set,
@@ -21,6 +22,7 @@ export default function StartLearning({
     onBack
 }) {
     const { isDarkMode } = useTheme();
+    const { currentUser } = useAuth();
     const [showVocab, setShowVocab] = useState(false);
     const answerTypes = [
         { name: "Pinyin", value: "pinyin" },
@@ -36,6 +38,7 @@ export default function StartLearning({
 
     const MIN_WORDS_REQUIRED = 5;
     const hasEnoughWords = set?.vocabItems?.length >= MIN_WORDS_REQUIRED;
+    const isOwner = Boolean(currentUser?.uid) && (set?.ownerId === currentUser.uid || set?.userId === currentUser.uid);
 
     const cardStyle = isDarkMode
         ? { backgroundColor: "#23272b", color: "#fff", borderColor: "#444" }
@@ -46,6 +49,15 @@ export default function StartLearning({
     if (!set) {
         return null;
     }
+
+    const handleEditSet = () => {
+        if (!isOwner) {
+            return;
+        }
+
+        const base = process.env.PUBLIC_URL || "";
+        window.location.assign(`${base}/?editSet=${encodeURIComponent(set.id)}`);
+    };
 
     const renderHeader = () => (
         <div style={{ position: "relative", paddingRight: "2rem" }}>
@@ -255,20 +267,20 @@ export default function StartLearning({
                 }}
             >
                 {set?.vocabItems?.length ? (
-                    <table style={{ width: "100%", fontSize: "0.95rem" }}>
+                    <table style={{ width: "100%", fontSize: "0.95rem", borderCollapse: "collapse" }}>
                         <thead>
                             <tr>
-                                <th style={{ textAlign: "left" }}>Character</th>
-                                <th style={{ textAlign: "left" }}>Pinyin</th>
-                                <th style={{ textAlign: "left" }}>Definition</th>
+                                <th style={{ textAlign: "left", border: isDarkMode ? "1px solid #444" : "1px solid #ced4da", padding: "0.5rem" }}>Character</th>
+                                <th style={{ textAlign: "left", border: isDarkMode ? "1px solid #444" : "1px solid #ced4da", padding: "0.5rem" }}>Pinyin</th>
+                                <th style={{ textAlign: "left", border: isDarkMode ? "1px solid #444" : "1px solid #ced4da", padding: "0.5rem" }}>Definition</th>
                             </tr>
                         </thead>
                         <tbody>
                             {set.vocabItems.map((item, idx) => (
                                 <tr key={idx}>
-                                    <td style={{ verticalAlign: "top" }}>{item.character}</td>
-                                    <td style={{ verticalAlign: "top" }}>{item.pinyin}</td>
-                                    <td style={{ verticalAlign: "top" }}>{item.definition}</td>
+                                    <td style={{ verticalAlign: "top", border: isDarkMode ? "1px solid #444" : "1px solid #ced4da", padding: "0.5rem" }}>{item.character}</td>
+                                    <td style={{ verticalAlign: "top", border: isDarkMode ? "1px solid #444" : "1px solid #ced4da", padding: "0.5rem" }}>{item.pinyin}</td>
+                                    <td style={{ verticalAlign: "top", border: isDarkMode ? "1px solid #444" : "1px solid #ced4da", padding: "0.5rem" }}>{item.definition}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -279,9 +291,18 @@ export default function StartLearning({
             </div>
 
             <Button
+                variant={isOwner ? (isDarkMode ? "outline-light" : "outline-primary") : "outline-secondary"}
+                onClick={handleEditSet}
+                disabled={!isOwner}
+                style={{ marginTop: "1.4rem", marginBottom: "0.75rem" }}
+            >
+                {isOwner ? "Edit Set" : "Must be your set to edit"}
+            </Button>
+
+            <Button
                 variant={isDarkMode ? "outline-light" : "secondary"}
                 onClick={() => setShowVocab(false)}
-                style={{ marginTop: "1.4rem" }}
+                style={{ marginTop: 0 }}
             >
                 Back
             </Button>
