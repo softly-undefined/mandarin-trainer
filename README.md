@@ -27,3 +27,7 @@ Toggle between traditional and simplified Chinese!
     - NOTE: The main thing stopping this from being a plug and play solution is words with multiple definitions.
     - also use for 
         - Auto generate a sentence for each vocab term or grammatical setup (how to do reliably)
+
+
+- auto-saving to prevent sets made from being forgotten
+- better sorting for your home page (big home page revamp)
