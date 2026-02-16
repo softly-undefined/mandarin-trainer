@@ -3,6 +3,7 @@ import { Stack } from "react-bootstrap";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { ScriptProvider } from "./contexts/ScriptContext";
+import { PinyinProvider } from "./contexts/PinyinContext";
 import { useAuth } from "./contexts/AuthContext";
 
 import TestingZone from "./components/TestingZone";
@@ -259,7 +260,9 @@ export default function App() {
         <AuthProvider>
             <ThemeProvider>
                 <ScriptProvider>
-                    <AppContent />
+                    <PinyinProvider>
+                        <AppContent />
+                    </PinyinProvider>
                 </ScriptProvider>
             </ThemeProvider>
         </AuthProvider>

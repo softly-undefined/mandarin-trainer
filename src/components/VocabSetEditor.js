@@ -4,7 +4,9 @@ import { Button, Card, Container, Row, Col, Form, Table, Alert } from 'react-boo
 import { createVocabSet, updateVocabSet, deleteVocabSet, ensureSetSlug, MAX_WORDS_PER_SET } from '../services/vocabSetService';
 import { useTheme } from '../contexts/ThemeContext';
 import { useScript } from '../contexts/ScriptContext';
+import { usePinyin } from '../contexts/PinyinContext';
 import { tradToSimplified, simplifiedToTrad } from '../utils/chineseConverter';
+import { suggestPinyinFromChinese } from '../utils/pinyinUtils';
 
 const AUTO_SAVE_MS = 8000;
 
@@ -12,6 +14,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
     const { currentUser } = useAuth();
     const { isDarkMode } = useTheme();
     const { isTraditional, getDisplayChar, showAltScript } = useScript();
+    const { easyTypePinyin, formatPinyin } = usePinyin();
     const [setName, setSetName] = useState(set?.setName || '');
     const [vocabItems, setVocabItems] = useState(set?.vocabItems || []);
     const initialNameRef = useRef(set?.setName || '');
@@ -20,6 +23,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [editingIndex, setEditingIndex] = useState(null);
+    const [pinyinManuallyEdited, setPinyinManuallyEdited] = useState(false);
     const [autoSaveNotice, setAutoSaveNotice] = useState('');
     const restoredDraftRef = useRef(false);
 
@@ -36,9 +40,10 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
             vocabItems,
             newItem,
             editingIndex,
+            pinyinManuallyEdited,
             updatedAt: Date.now()
         })
-    ), [setName, vocabItems, newItem, editingIndex]);
+    ), [setName, vocabItems, newItem, editingIndex, pinyinManuallyEdited]);
 
     const clearDraft = () => {
         if (!draftKey) {
@@ -53,13 +58,13 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
             return;
         }
 
-        if (!setName.trim() && vocabItems.length === 0 && !newItem.character && !newItem.pinyin && !newItem.definition) {
+        if (!setName.trim() && vocabItems.length === 0 && !newItem.character && !newItem.characterTrad && !newItem.pinyin && !newItem.definition) {
             return;
         }
 
         localStorage.setItem(draftKey, draftPayload);
         setAutoSaveNotice(`Draft autosaved at ${new Date().toLocaleTimeString()}`);
-    }, [draftKey, draftPayload, newItem.character, newItem.definition, newItem.pinyin, setName, vocabItems.length]);
+    }, [draftKey, draftPayload, newItem.character, newItem.characterTrad, newItem.definition, newItem.pinyin, setName, vocabItems.length]);
 
     useEffect(() => {
         restoredDraftRef.current = false;
@@ -96,6 +101,9 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
             if (typeof parsed.editingIndex === 'number' || parsed.editingIndex === null) {
                 setEditingIndex(parsed.editingIndex);
             }
+            if (typeof parsed.pinyinManuallyEdited === 'boolean') {
+                setPinyinManuallyEdited(parsed.pinyinManuallyEdited);
+            }
             setAutoSaveNotice('Recovered autosaved draft.');
         } catch (restoreError) {
             console.error('Failed to restore draft:', restoreError);
@@ -115,6 +123,23 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
 
         return () => clearInterval(interval);
     }, [draftKey, saveDraftNow]);
+
+    const applyPrimaryCharacterInput = (value) => {
+        const nextItem = isTraditional
+            ? { ...newItem, characterTrad: value, character: tradToSimplified(value) }
+            : { ...newItem, character: value, characterTrad: simplifiedToTrad(value) };
+
+        const suggestion = suggestPinyinFromChinese(value, easyTypePinyin);
+        const canAutoFill = !pinyinManuallyEdited || !nextItem.pinyin.trim();
+
+        if (suggestion && canAutoFill) {
+            setNewItem({ ...nextItem, pinyin: suggestion });
+            setPinyinManuallyEdited(false);
+            return;
+        }
+
+        setNewItem(nextItem);
+    };
 
     useEffect(() => {
         if (!draftKey) {
@@ -148,6 +173,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
 
         setVocabItems(updated);
         setNewItem({ character: '', characterTrad: '', pinyin: '', definition: '' });
+        setPinyinManuallyEdited(false);
         setError('');
     };
 
@@ -351,14 +377,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                                         type="text"
                                         placeholder={isTraditional ? "繁體字 (Traditional)" : "简体字 (Simplified)"}
                                         value={isTraditional ? (newItem.characterTrad || '') : (newItem.character || '')}
-                                        onChange={(e) => {
-                                            const val = e.target.value;
-                                            if (isTraditional) {
-                                                setNewItem({ ...newItem, characterTrad: val, character: tradToSimplified(val) });
-                                            } else {
-                                                setNewItem({ ...newItem, character: val, characterTrad: simplifiedToTrad(val) });
-                                            }
-                                        }}
+                                        onChange={(e) => applyPrimaryCharacterInput(e.target.value)}
                                         style={inputStyle}
                                         className={isDarkMode ? 'vocab-darkmode-input' : ''}
                                     />
@@ -368,7 +387,11 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                                         type="text"
                                         placeholder="Pinyin"
                                         value={newItem.pinyin}
-                                        onChange={(e) => setNewItem({ ...newItem, pinyin: e.target.value })}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            setNewItem({ ...newItem, pinyin: value });
+                                            setPinyinManuallyEdited(value.trim() !== '');
+                                        }}
                                         style={inputStyle}
                                         className={isDarkMode ? 'vocab-darkmode-input' : ''}
                                     />
@@ -440,7 +463,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                                 <tr key={index}>
                                     <td>{getDisplayChar(item)}</td>
                                     {showAltScript && <td style={{ fontSize: '0.85em', opacity: 0.7 }}>{isTraditional ? item.character : item.characterTrad}</td>}
-                                    <td>{item.pinyin}</td>
+                                    <td>{formatPinyin(item.pinyin)}</td>
                                     <td>{item.definition}</td>
                                     <td>
                                         <Button
@@ -450,6 +473,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                                             onClick={() => {
                                                 setNewItem(item);
                                                 setEditingIndex(index);
+                                                setPinyinManuallyEdited(false);
                                             }}
                                         >
                                             Edit

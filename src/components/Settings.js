@@ -2,12 +2,14 @@ import { Button, Card, Stack, Form } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { useScript } from "../contexts/ScriptContext";
+import { usePinyin } from "../contexts/PinyinContext";
 
 export default function Settings(props) {
     const { onBack, goToPage } = props;
     const { currentUser, logout } = useAuth();
     const { isDarkMode, toggleDarkMode } = useTheme();
     const { isTraditional, toggleScript, showAltScript, toggleAltScript } = useScript();
+    const { easyTypePinyin, toggleEasyTypePinyin } = usePinyin();
 
     const handleLogout = async () => {
         try {
@@ -91,6 +93,14 @@ export default function Settings(props) {
                             label="Show Alternative Script"
                             checked={showAltScript}
                             onChange={toggleAltScript}
+                            style={{ fontSize: "1.1rem", color: isDarkMode ? "#fff" : undefined, marginTop: "0.5rem" }}
+                        />
+                        <Form.Check
+                            type="switch"
+                            id="easytype-pinyin-switch"
+                            label="easyType PINYIN"
+                            checked={easyTypePinyin}
+                            onChange={toggleEasyTypePinyin}
                             style={{ fontSize: "1.1rem", color: isDarkMode ? "#fff" : undefined, marginTop: "0.5rem" }}
                         />
                     </Form>

@@ -4,6 +4,8 @@ import { getUserVocabSets } from "../services/vocabSetService";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { useScript } from "../contexts/ScriptContext";
+import { usePinyin } from "../contexts/PinyinContext";
+import { normalizePinyinForCompare } from "../utils/pinyinUtils";
 
 export default function TestingZone(props) {
     const {
@@ -23,15 +25,23 @@ export default function TestingZone(props) {
 
     const { isDarkMode } = useTheme();
     const { getDisplayChar } = useScript();
+    const { formatPinyin } = usePinyin();
     const { currentUser } = useAuth();
 
-    // Resolves the display value for a field, respecting script preference for character fields
+    // Resolves the canonical value for a field.
     const resolveField = (word, field) => {
         if (field === 'character') {
             return getDisplayChar(word);
         }
         return word[field];
     };
+
+    const formatFieldForDisplay = useCallback((value, field) => {
+        if (field === 'pinyin') {
+            return formatPinyin(value);
+        }
+        return value;
+    }, [formatPinyin]);
     const [currentSet, setCurrentSet] = useState(null);
     const [term, setTerm] = useState("");
     const [key, setKey] = useState("");
@@ -412,16 +422,26 @@ export default function TestingZone(props) {
         setTerm("");
         setIsSubmitting(true);
 
-        // Normalize both answers by converting to lowercase and removing spaces
+        // Normalize both answers before comparing
         let normalizedAnswer = "";
+        let normalizedKey = "";
         if (isMultipleChoice) {
             const selectedIndex = typeof eventOrIndex === "number" ? eventOrIndex : selectedAnswer;
             const chosen = selectedIndex !== null ? mcOptions[selectedIndex] : "";
-            normalizedAnswer = (chosen || "").toLowerCase().replace(/\s+/g, '');
+            normalizedAnswer = want === "pinyin"
+                ? normalizePinyinForCompare(chosen || "")
+                : (chosen || "").toLowerCase().replace(/\s+/g, '');
+            normalizedKey = want === "pinyin"
+                ? normalizePinyinForCompare(key)
+                : key.toLowerCase().replace(/\s+/g, '');
         } else {
-            normalizedAnswer = answer.toLowerCase().replace(/\s+/g, '');
+            normalizedAnswer = want === "pinyin"
+                ? normalizePinyinForCompare(answer)
+                : answer.toLowerCase().replace(/\s+/g, '');
+            normalizedKey = want === "pinyin"
+                ? normalizePinyinForCompare(key)
+                : key.toLowerCase().replace(/\s+/g, '');
         }
-        const normalizedKey = key.toLowerCase().replace(/\s+/g, '');
 
         const nextTrial = responseCounts.length + 1;
 
@@ -542,7 +562,7 @@ export default function TestingZone(props) {
                                         ...headerStyle
                                     }}
                                 >
-                                    {term}
+                                    {formatFieldForDisplay(term, given)}
                                 </Form.Label>
                                 <Form.Label
                                     style={{
@@ -553,7 +573,7 @@ export default function TestingZone(props) {
                                     {keyText && (
                                         <Stack>
                                             <Form.Label style={{ fontSize: "50px", ...headerStyle }}>{currChar}</Form.Label>
-                                            <Form.Label style={headerStyle}>{currPinyin}</Form.Label>
+                                            <Form.Label style={headerStyle}>{formatPinyin(currPinyin)}</Form.Label>
                                             <Form.Label style={headerStyle}>{currDefinition}</Form.Label>
                                         </Stack>
                                     )}
@@ -603,7 +623,7 @@ export default function TestingZone(props) {
                                                     }
                                                 }}
                                             >
-                                                {opt}
+                                                {formatFieldForDisplay(opt, want)}
                                             </Button>
                                         ))}
                                     </Stack>

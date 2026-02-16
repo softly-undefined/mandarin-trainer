@@ -1,6 +1,7 @@
 import { Button, ButtonGroup, ToggleButton, Card, Stack, Form, Alert } from "react-bootstrap";
 import { useTheme } from "../contexts/ThemeContext";
 import { useScript } from "../contexts/ScriptContext";
+import { usePinyin } from "../contexts/PinyinContext";
 import { useEffect, useState } from "react";
 import { FaCog } from 'react-icons/fa';
 import { useAuth } from "../contexts/AuthContext";
@@ -24,6 +25,7 @@ export default function StartLearning({
 }) {
     const { isDarkMode } = useTheme();
     const { getDisplayChar } = useScript();
+    const { formatPinyin } = usePinyin();
     const { currentUser } = useAuth();
     const [showVocab, setShowVocab] = useState(false);
     const answerTypes = [
@@ -281,7 +283,7 @@ export default function StartLearning({
                             {set.vocabItems.map((item, idx) => (
                                 <tr key={idx}>
                                     <td style={{ verticalAlign: "top", border: isDarkMode ? "1px solid #444" : "1px solid #ced4da", padding: "0.5rem" }}>{getDisplayChar(item)}</td>
-                                    <td style={{ verticalAlign: "top", border: isDarkMode ? "1px solid #444" : "1px solid #ced4da", padding: "0.5rem" }}>{item.pinyin}</td>
+                                    <td style={{ verticalAlign: "top", border: isDarkMode ? "1px solid #444" : "1px solid #ced4da", padding: "0.5rem" }}>{formatPinyin(item.pinyin)}</td>
                                     <td style={{ verticalAlign: "top", border: isDarkMode ? "1px solid #444" : "1px solid #ced4da", padding: "0.5rem" }}>{item.definition}</td>
                                 </tr>
                             ))}
