@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Button, Card, Container, Row, Col, Form, Table, Alert } from 'react-bootstrap';
 import { createVocabSet, updateVocabSet, deleteVocabSet, ensureSetSlug, MAX_WORDS_PER_SET } from '../services/vocabSetService';
 import { useTheme } from '../contexts/ThemeContext';
 import { useScript } from '../contexts/ScriptContext';
 import { tradToSimplified, simplifiedToTrad } from '../utils/chineseConverter';
-import { useRef } from 'react';
+
+const AUTO_SAVE_MS = 8000;
 
 export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
     const { currentUser } = useAuth();
@@ -19,6 +20,114 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [editingIndex, setEditingIndex] = useState(null);
+    const [autoSaveNotice, setAutoSaveNotice] = useState('');
+    const restoredDraftRef = useRef(false);
+
+    const draftKey = useMemo(() => {
+        if (!currentUser?.uid) {
+            return null;
+        }
+        return `vocabSetDraft:${currentUser.uid}:${set?.id || 'new'}`;
+    }, [currentUser?.uid, set?.id]);
+
+    const draftPayload = useMemo(() => (
+        JSON.stringify({
+            setName,
+            vocabItems,
+            newItem,
+            editingIndex,
+            updatedAt: Date.now()
+        })
+    ), [setName, vocabItems, newItem, editingIndex]);
+
+    const clearDraft = () => {
+        if (!draftKey) {
+            return;
+        }
+        localStorage.removeItem(draftKey);
+        setAutoSaveNotice('');
+    };
+
+    const saveDraftNow = useCallback(() => {
+        if (!draftKey) {
+            return;
+        }
+
+        if (!setName.trim() && vocabItems.length === 0 && !newItem.character && !newItem.pinyin && !newItem.definition) {
+            return;
+        }
+
+        localStorage.setItem(draftKey, draftPayload);
+        setAutoSaveNotice(`Draft autosaved at ${new Date().toLocaleTimeString()}`);
+    }, [draftKey, draftPayload, newItem.character, newItem.definition, newItem.pinyin, setName, vocabItems.length]);
+
+    useEffect(() => {
+        restoredDraftRef.current = false;
+        setAutoSaveNotice('');
+    }, [draftKey]);
+
+    useEffect(() => {
+        if (!draftKey || restoredDraftRef.current) {
+            return;
+        }
+
+        const rawDraft = localStorage.getItem(draftKey);
+        if (!rawDraft) {
+            restoredDraftRef.current = true;
+            return;
+        }
+
+        try {
+            const parsed = JSON.parse(rawDraft);
+            if (typeof parsed.setName === 'string') {
+                setSetName(parsed.setName);
+            }
+            if (Array.isArray(parsed.vocabItems)) {
+                setVocabItems(parsed.vocabItems);
+            }
+            if (parsed.newItem && typeof parsed.newItem === 'object') {
+                setNewItem({
+                    character: parsed.newItem.character || '',
+                    characterTrad: parsed.newItem.characterTrad || '',
+                    pinyin: parsed.newItem.pinyin || '',
+                    definition: parsed.newItem.definition || ''
+                });
+            }
+            if (typeof parsed.editingIndex === 'number' || parsed.editingIndex === null) {
+                setEditingIndex(parsed.editingIndex);
+            }
+            setAutoSaveNotice('Recovered autosaved draft.');
+        } catch (restoreError) {
+            console.error('Failed to restore draft:', restoreError);
+        } finally {
+            restoredDraftRef.current = true;
+        }
+    }, [draftKey]);
+
+    useEffect(() => {
+        if (!draftKey || !restoredDraftRef.current) {
+            return;
+        }
+
+        const interval = setInterval(() => {
+            saveDraftNow();
+        }, AUTO_SAVE_MS);
+
+        return () => clearInterval(interval);
+    }, [draftKey, saveDraftNow]);
+
+    useEffect(() => {
+        if (!draftKey) {
+            return;
+        }
+
+        const handleBeforeUnload = () => {
+            saveDraftNow();
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }, [draftKey, saveDraftNow]);
 
     const handleAddItem = (e) => {
         e.preventDefault();
@@ -71,6 +180,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
         try {
             setError('');
             await persistSet();
+            clearDraft();
             setSuccess('Set saved successfully!');
             setTimeout(() => goToPage('home'), 500);
         } catch (error) {
@@ -83,6 +193,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
         try {
             setError('');
             const setId = await persistSet();
+            clearDraft();
             setSuccess('Set saved successfully!');
 
             let slug = set?.slug;
@@ -102,6 +213,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
         if (window.confirm('Are you sure you want to delete this set? This action cannot be undone.')) {
             try {
                 await deleteVocabSet(set.id);
+                clearDraft();
                 if (onSetUpdated) {
                     await onSetUpdated();
                 }
@@ -213,6 +325,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
 
                 {error && <Alert variant="danger">{error}</Alert>}
                 {success && <Alert variant="success">{success}</Alert>}
+                {autoSaveNotice && <Alert variant="info">{autoSaveNotice}</Alert>}
 
                 <Form className="mb-4">
                     <Form.Group className="mb-3">
