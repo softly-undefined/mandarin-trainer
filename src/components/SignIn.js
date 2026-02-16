@@ -12,7 +12,7 @@ export default function SignIn() {
             <Card 
                 style={{ 
                     width: '400px',
-                    backgroundColor: isDarkMode ? '#2d2d2d' : '#ffffff',
+                    backgroundColor: isDarkMode ? '#2d2d2d' : '#FFF2DC',
                     borderColor: isDarkMode ? '#404040' : '#dee2e6'
                 }}
             >

@@ -76,7 +76,7 @@ export default function TestingZone(props) {
 
     const cardStyle = isDarkMode
         ? { backgroundColor: "#23272b", color: "#fff", borderColor: "#444" }
-        : {};
+        : { backgroundColor: "#FFF2DC", borderColor: "#e7dccb" };
     const headerStyle = isDarkMode ? { color: "#fff" } : {};
     const inputStyle = isDarkMode
         ? { backgroundColor: '#181a1b', color: '#fff', border: '1px solid #444' }

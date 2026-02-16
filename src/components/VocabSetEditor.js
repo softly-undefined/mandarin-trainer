@@ -11,13 +11,15 @@ import { suggestPinyinFromChinese } from '../utils/pinyinUtils';
 const AUTO_SAVE_MS = 8000;
 
 export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
-    const { currentUser } = useAuth();
+    const { currentUser, userProfile } = useAuth();
     const { isDarkMode } = useTheme();
     const { isTraditional, getDisplayChar, showAltScript } = useScript();
     const { easyTypePinyin, formatPinyin } = usePinyin();
     const [setName, setSetName] = useState(set?.setName || '');
+    const [isPublic, setIsPublic] = useState(set?.isPublic !== false);
     const [vocabItems, setVocabItems] = useState(set?.vocabItems || []);
     const initialNameRef = useRef(set?.setName || '');
+    const initialPublicRef = useRef(set?.isPublic !== false);
     const initialItemsRef = useRef(set?.vocabItems || []);
     const [newItem, setNewItem] = useState({ character: '', characterTrad: '', pinyin: '', definition: '' });
     const [error, setError] = useState('');
@@ -37,13 +39,14 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
     const draftPayload = useMemo(() => (
         JSON.stringify({
             setName,
+            isPublic,
             vocabItems,
             newItem,
             editingIndex,
             pinyinManuallyEdited,
             updatedAt: Date.now()
         })
-    ), [setName, vocabItems, newItem, editingIndex, pinyinManuallyEdited]);
+    ), [setName, isPublic, vocabItems, newItem, editingIndex, pinyinManuallyEdited]);
 
     const clearDraft = () => {
         if (!draftKey) {
@@ -86,6 +89,9 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
             const parsed = JSON.parse(rawDraft);
             if (typeof parsed.setName === 'string') {
                 setSetName(parsed.setName);
+            }
+            if (typeof parsed.isPublic === 'boolean') {
+                setIsPublic(parsed.isPublic);
             }
             if (Array.isArray(parsed.vocabItems)) {
                 setVocabItems(parsed.vocabItems);
@@ -185,14 +191,24 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
 
     const persistSet = async () => {
         let setId = set?.id;
+        const ownerProfile = {
+            displayName: userProfile?.displayName || currentUser?.displayName || currentUser?.email?.split('@')[0] || '',
+            photoURL: userProfile?.photoURL || currentUser?.photoURL || '',
+            username: userProfile?.username || '',
+        };
+
         if (set) {
             await updateVocabSet(set.id, {
                 setName,
+                isPublic,
                 vocabItems,
+                ownerDisplayName: ownerProfile.displayName,
+                ownerPhotoURL: ownerProfile.photoURL,
+                ownerUsername: ownerProfile.username,
                 updatedAt: new Date()
             });
         } else {
-            setId = await createVocabSet(currentUser.uid, setName, vocabItems);
+            setId = await createVocabSet(currentUser.uid, setName, vocabItems, { isPublic, ownerProfile });
         }
 
         if (onSetUpdated) {
@@ -256,6 +272,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
         const initialItems = initialItemsRef.current || [];
         const hasChanges =
             setName !== initialName ||
+            isPublic !== initialPublicRef.current ||
             JSON.stringify(vocabItems) !== JSON.stringify(initialItems);
 
         if (!hasChanges || window.confirm('Discard unsaved changes and go back to My Sets?')) {
@@ -265,7 +282,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
 
     const cardStyle = isDarkMode
         ? { backgroundColor: '#23272b', color: '#fff', borderColor: '#444' }
-        : {};
+        : { backgroundColor: '#FFF2DC', borderColor: '#e7dccb' };
     const inputStyle = isDarkMode
         ? { backgroundColor: '#181a1b', color: '#fff', border: '1px solid #444' }
         : {};
@@ -365,6 +382,14 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                             className={isDarkMode ? 'vocab-darkmode-input' : ''}
                         />
                     </Form.Group>
+                    <Form.Check
+                        type="switch"
+                        id="set-public-switch"
+                        label="Public set (visible on profile and shareable)"
+                        checked={isPublic}
+                        onChange={(e) => setIsPublic(e.target.checked)}
+                        style={{ color: isDarkMode ? '#fff' : undefined }}
+                    />
                 </Form>
 
                 <Card className="mb-4" style={cardStyle}>

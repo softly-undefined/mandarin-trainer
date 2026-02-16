@@ -1,8 +1,16 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { auth } from '../firebase';
 import { onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-import { getUserVocabSets, createVocabSet } from '../services/vocabSetService';
+import { getUserVocabSets, createVocabSet, syncOwnerMetadataForUser } from '../services/vocabSetService';
 import { normalizeVocabItems } from '../utils/chineseConverter';
+import {
+    ensureUserProfileFromAuth,
+    getUserProfileById,
+    resetUserProfilePhotoToGoogle,
+    updateUsername,
+    updateUserProfilePhoto,
+    uploadUserProfilePhoto,
+} from '../services/userProfileService';
 
 const AuthContext = createContext();
 
@@ -12,11 +20,20 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState(null);
+    const [userProfile, setUserProfile] = useState(null);
+    const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
 
-    function signInWithGoogle() {
+    async function signInWithGoogle() {
+        setError('');
         const provider = new GoogleAuthProvider();
-        return signInWithPopup(auth, provider);
+        try {
+            return await signInWithPopup(auth, provider);
+        } catch (err) {
+            console.error("Failed to sign in with Google:", err);
+            setError('Failed to sign in with Google');
+            throw err;
+        }
     }
 
     async function logout() {
@@ -28,14 +45,122 @@ export function AuthProvider({ children }) {
         }
     }
 
+    async function refreshUserProfile(uid = currentUser?.uid) {
+        if (!uid) return null;
+        try {
+            const profile = await getUserProfileById(uid);
+            setUserProfile(profile);
+            return profile;
+        } catch (err) {
+            console.error("Failed to refresh profile:", err);
+            return null;
+        }
+    }
+
+    async function saveProfilePhoto(file) {
+        if (!currentUser?.uid) {
+            throw new Error('You must be signed in to update your photo.');
+        }
+
+        const photoURL = await uploadUserProfilePhoto(currentUser.uid, file);
+        try {
+            await updateUserProfilePhoto(currentUser.uid, photoURL);
+            const profile = await refreshUserProfile(currentUser.uid);
+            if (profile) {
+                await syncOwnerMetadataForUser(currentUser.uid, profile);
+            }
+        } catch (err) {
+            console.error("Failed to persist profile photo to Firestore, using local fallback:", err);
+            setUserProfile((prev) => ({
+                ...(prev || {}),
+                uid: currentUser.uid,
+                photoURL,
+                displayName: prev?.displayName || currentUser.displayName || currentUser.email?.split('@')[0] || 'Mandarin Learner',
+                email: prev?.email || currentUser.email || '',
+                updatedAt: new Date(),
+            }));
+        }
+        return photoURL;
+    }
+
+    async function resetProfilePhoto() {
+        if (!currentUser?.uid) {
+            throw new Error('You must be signed in to update your photo.');
+        }
+
+        const googlePhotoURL = currentUser.photoURL || userProfile?.googlePhotoURL || '';
+        if (!googlePhotoURL) {
+            throw new Error('No Google account photo is available for this account.');
+        }
+
+        try {
+            await resetUserProfilePhotoToGoogle(currentUser.uid, googlePhotoURL);
+            const profile = await refreshUserProfile(currentUser.uid);
+            if (profile) {
+                await syncOwnerMetadataForUser(currentUser.uid, profile);
+            }
+        } catch (err) {
+            console.error("Failed to persist reset profile photo to Firestore, using local fallback:", err);
+            setUserProfile((prev) => ({
+                ...(prev || {}),
+                uid: currentUser.uid,
+                photoURL: googlePhotoURL,
+                googlePhotoURL: prev?.googlePhotoURL || googlePhotoURL,
+                displayName: prev?.displayName || currentUser.displayName || currentUser.email?.split('@')[0] || 'Mandarin Learner',
+                email: prev?.email || currentUser.email || '',
+                updatedAt: new Date(),
+            }));
+        }
+    }
+
+    async function saveUsername(nextUsername) {
+        if (!currentUser?.uid) {
+            throw new Error('You must be signed in to change your username.');
+        }
+
+        const normalized = await updateUsername(currentUser.uid, nextUsername);
+        const profile = await refreshUserProfile(currentUser.uid);
+        if (profile) {
+            await syncOwnerMetadataForUser(currentUser.uid, profile);
+        }
+        return normalized;
+    }
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setCurrentUser(user);
-            setLoading(false);
 
             if (user) {
-                // Call a helper function to check/create ExampleSet
-                ensureExampleSet(user.uid);
+                ensureUserProfileFromAuth(user)
+                    .then((profile) => {
+                        // Call a helper function to check/create ExampleSet
+                        ensureExampleSet(user.uid, profile);
+                        if (profile) {
+                            syncOwnerMetadataForUser(user.uid, profile).catch((syncErr) => {
+                                console.error("Error syncing owner metadata:", syncErr);
+                            });
+                        }
+                        setUserProfile(profile);
+                    })
+                    .catch((err) => {
+                        console.error("Error ensuring user profile:", err);
+                        const fallbackProfile = {
+                            uid: user.uid,
+                            username: '',
+                            displayName: user.displayName || user.email?.split('@')[0] || 'Mandarin Learner',
+                            email: user.email || '',
+                            photoURL: user.photoURL || '',
+                            googlePhotoURL: user.photoURL || '',
+                        };
+                        setUserProfile(fallbackProfile);
+                        ensureExampleSet(user.uid, fallbackProfile);
+                    })
+                    .finally(() => {
+                        setLoading(false);
+                    });
+            } else {
+                setUserProfile(null);
+                setLoading(false);
             }
         });
 
@@ -44,8 +169,14 @@ export function AuthProvider({ children }) {
 
     const value = {
         currentUser,
+        userProfile,
+        error,
         signInWithGoogle,
-        logout
+        logout,
+        refreshUserProfile,
+        saveProfilePhoto,
+        resetProfilePhoto,
+        saveUsername,
     };
 
     return (
@@ -55,7 +186,7 @@ export function AuthProvider({ children }) {
     );
 } 
 
-async function ensureExampleSet(uid) {
+async function ensureExampleSet(uid, ownerProfile = null) {
     try {
         const existingSets = await getUserVocabSets(uid);
 
@@ -103,7 +234,8 @@ async function ensureExampleSet(uid) {
                     { character: "無聊", pinyin: "wu2 liao2", definition: "To be bored" },
                     { character: "非。。。不可", pinyin: "fei1...bu4 ke3", definition: "Have to" },
                     { character: "想發", pinyin: "xiang3 fa3", definition: "Point of view" }
-                ])
+                ]),
+                { ownerProfile }
             );
             console.log("Lesson 6 Vocabulary created for new user.");
         } else {
@@ -113,4 +245,3 @@ async function ensureExampleSet(uid) {
         console.error("Error checking or creating Lesson 6 Vocabulary:", error);
     }
 }
-

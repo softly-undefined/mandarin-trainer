@@ -3,8 +3,11 @@ import { useTheme } from "../contexts/ThemeContext";
 import { useScript } from "../contexts/ScriptContext";
 import { usePinyin } from "../contexts/PinyinContext";
 import { useEffect, useState } from "react";
-import { FaCog } from 'react-icons/fa';
 import { useAuth } from "../contexts/AuthContext";
+import { getProfileHandle, getUserProfileById } from "../services/userProfileService";
+import { FaStar } from "react-icons/fa";
+import { getSetStarCount, isSetStarredByUser, setVocabSetStarred } from "../services/vocabSetService";
+import UserAvatarButton from "./UserAvatarButton";
 
 export default function StartLearning({
     set,
@@ -28,11 +31,16 @@ export default function StartLearning({
     const { formatPinyin } = usePinyin();
     const { currentUser } = useAuth();
     const [showVocab, setShowVocab] = useState(false);
+    const [ownerProfile, setOwnerProfile] = useState(null);
+    const [starCount, setStarCount] = useState(0);
+    const [isStarred, setIsStarred] = useState(false);
+    const [isStarLoading, setIsStarLoading] = useState(false);
     const answerTypes = [
         { name: "Pinyin", value: "pinyin" },
         { name: "Character", value: "character" },
         { name: "Definition", value: "definition" },
     ];
+    const ownerUid = set?.ownerId || set?.userId || null;
 
     // Set default values if not already set
     useEffect(() => {
@@ -40,13 +48,73 @@ export default function StartLearning({
         if (!want) setWant("character");
     }, []);
 
+    useEffect(() => {
+        let active = true;
+
+        const loadOwnerProfile = async () => {
+            if (!ownerUid) {
+                setOwnerProfile(null);
+                return;
+            }
+
+            try {
+                const profile = await getUserProfileById(ownerUid);
+                if (active) {
+                    if (profile) {
+                        setOwnerProfile(profile);
+                    } else {
+                        setOwnerProfile({
+                            uid: ownerUid,
+                            username: set?.ownerUsername || '',
+                            displayName: set?.ownerDisplayName || '',
+                            photoURL: set?.ownerPhotoURL || '',
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error("Error loading set owner profile:", error);
+                if (active) {
+                    setOwnerProfile({
+                        uid: ownerUid,
+                        username: set?.ownerUsername || '',
+                        displayName: set?.ownerDisplayName || '',
+                        photoURL: set?.ownerPhotoURL || '',
+                    });
+                }
+            }
+        };
+
+        loadOwnerProfile();
+        return () => {
+            active = false;
+        };
+    }, [ownerUid, set?.ownerDisplayName, set?.ownerPhotoURL, set?.ownerUsername]);
+
     const MIN_WORDS_REQUIRED = 5;
     const hasEnoughWords = set?.vocabItems?.length >= MIN_WORDS_REQUIRED;
     const isOwner = Boolean(currentUser?.uid) && (set?.ownerId === currentUser.uid || set?.userId === currentUser.uid);
+    const ownerName =
+        ownerProfile?.username ||
+        ownerProfile?.displayName ||
+        set?.ownerUsername ||
+        set?.ownerDisplayName ||
+        (isOwner ? "You" : "Set creator");
+    const canToggleStar = Boolean(currentUser?.uid) && !isOwner;
+
+    useEffect(() => {
+        if (!set) {
+            setStarCount(0);
+            setIsStarred(false);
+            return;
+        }
+
+        setStarCount(getSetStarCount(set));
+        setIsStarred(isSetStarredByUser(set, currentUser?.uid));
+    }, [set, currentUser?.uid]);
 
     const cardStyle = isDarkMode
         ? { backgroundColor: "#23272b", color: "#fff", borderColor: "#444" }
-        : {};
+        : { backgroundColor: "#FFF2DC", borderColor: "#e7dccb" };
     const headerStyle = isDarkMode ? { color: "#fff" } : {};
     const labelStyle = isDarkMode ? { color: "#fff" } : {};
 
@@ -63,41 +131,105 @@ export default function StartLearning({
         window.location.assign(`${base}/?editSet=${encodeURIComponent(set.id)}`);
     };
 
+    const handleOpenOwnerProfile = () => {
+        if (!ownerUid) return;
+        const ownerHandle = getProfileHandle(ownerProfile, ownerUid);
+        const base = process.env.PUBLIC_URL || "";
+        window.location.assign(`${base}/u/${ownerHandle}`);
+    };
+
+    const handleToggleStar = async () => {
+        if (!set?.id || !currentUser?.uid || !canToggleStar) {
+            return;
+        }
+
+        try {
+            setIsStarLoading(true);
+            const updated = await setVocabSetStarred(set.id, currentUser.uid, !isStarred);
+            setStarCount(getSetStarCount(updated));
+            setIsStarred(isSetStarredByUser(updated, currentUser.uid));
+        } catch (error) {
+            console.error("Error toggling set star:", error);
+            if (error?.code === 'permission-denied') {
+                alert("Unable to star due Firebase permissions. Please check Firestore rules for star writes.");
+            } else {
+                alert("Unable to update star right now.");
+            }
+        } finally {
+            setIsStarLoading(false);
+        }
+    };
+
     const renderHeader = () => (
-        <div style={{ position: "relative", paddingRight: "2rem" }}>
+        <div style={{ position: "relative", paddingRight: "2rem", paddingLeft: "2.75rem" }}>
+            <Button
+                variant="link"
+                size="sm"
+                onClick={handleToggleStar}
+                disabled={!canToggleStar || isStarLoading}
+                style={{
+                    position: "absolute",
+                    top: "-4px",
+                    left: 0,
+                    padding: 0,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    color: isStarred ? "#DB6C46" : "#9aa0a6",
+                    textDecoration: "none",
+                }}
+                title={
+                    isOwner
+                        ? "Creators are automatically starred"
+                        : currentUser
+                            ? "Toggle star"
+                            : "Sign in to star sets"
+                }
+            >
+                <FaStar size={18} />
+                <span style={{ color: isDarkMode ? "#fff" : "#000", fontWeight: 600 }}>{starCount}</span>
+            </Button>
+
             {showSettingsShortcut && (
-                <Button
-                    variant="link"
-                    size="sm"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        if (goToPage) {
-                            goToPage("settings");
-                        } else {
-                            const base = process.env.PUBLIC_URL || "";
-                            window.location.href = `${base}/settings`;
-                        }
-                    }}
+                <div
                     style={{
                         position: "absolute",
                         top: "-4px",
                         right: 0,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        color: isDarkMode ? "#fff" : "#000",
-                        textDecoration: "none",
-                        padding: 0
                     }}
                 >
-                    <FaCog size={20} color={isDarkMode ? "#fff" : "#000"} />
-                </Button>
+                    <UserAvatarButton
+                        size={32}
+                        title="Settings"
+                        onClick={(e) => {
+                            if (e?.preventDefault) e.preventDefault();
+                            if (e?.stopPropagation) e.stopPropagation();
+                            if (goToPage) {
+                                goToPage("settings");
+                            }
+                        }}
+                    />
+                </div>
             )}
             <div style={{ textAlign: "center" }}>
                 <h5 style={{ marginBottom: "0.25rem", ...headerStyle, wordBreak: "break-word" }}>
                     {set.setName}
                 </h5>
+                {ownerUid && (
+                    <Button
+                        variant="link"
+                        size="sm"
+                        onClick={handleOpenOwnerProfile}
+                        style={{
+                            padding: 0,
+                            marginBottom: "0.25rem",
+                            color: isDarkMode ? "#9ec5fe" : "#0d6efd",
+                            textDecoration: "underline",
+                        }}
+                    >
+                        by {ownerName}
+                    </Button>
+                )}
                 <div style={{ marginBottom: "0.35rem", fontWeight: 600, color: isDarkMode ? "#d0d0d0" : "#444" }}>
                     {set?.vocabItems?.length || 0} terms
                 </div>
@@ -264,7 +396,7 @@ export default function StartLearning({
                     border: isDarkMode ? "1px solid #444" : "1px solid #dee2e6",
                     borderRadius: "10px",
                     padding: "1rem",
-                    backgroundColor: isDarkMode ? "#181a1b" : "#f8f9fa",
+                    backgroundColor: isDarkMode ? "#181a1b" : "#FFF2DC",
                     color: isDarkMode ? "#fff" : "#000",
                     maxHeight: "480px",
                     overflowY: "auto",

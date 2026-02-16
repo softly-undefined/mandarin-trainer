@@ -12,6 +12,7 @@ import Settings from "./components/Settings";
 import SignIn from "./components/SignIn";
 import Home from "./components/Home";
 import StartLearning from "./components/StartLearning";
+import ProfilePage from "./components/ProfilePage";
 import { getSetBySlug } from "./services/vocabSetService";
 
 
@@ -58,7 +59,16 @@ function AppContent() {
         return null;
     };
 
+    const getProfileHandle = () => {
+        const idx = pathSegments.findIndex((s) => s === "u");
+        if (idx !== -1 && pathSegments[idx + 1]) {
+            return pathSegments[idx + 1];
+        }
+        return null;
+    };
+
     const shareSlug = getShareSlug();
+    const profileHandle = getProfileHandle();
     const isSettingsPath = pathSegments.includes("settings");
 
     useEffect(() => {
@@ -102,13 +112,41 @@ function AppContent() {
         return () => { active = false; };
     }, [shareSlug, given, want]);
 
-    const shouldShowSignIn = !currentUser && !isSettingsPath && !shareSlug;
+    const shouldShowSignIn = !currentUser && !isSettingsPath && !shareSlug && !profileHandle;
 
     if (shareSlug) {
         if (shareLoading && showHome) return null; // avoid flash while state still home
         if (shareLoading && shareShowLoader) return <div style={{ textAlign: "center", marginTop: "2rem" }}>Loading set...</div>;
         if (shareError) return <div style={{ textAlign: "center", marginTop: "2rem" }}>{shareError}</div>;
         // Allow anonymous use for shared sets: skip SignIn gate
+    } else if (profileHandle) {
+        if (showSettings) {
+            return (
+                <div style={{ width: "100vw", height: "100vh" }}>
+                    <Stack
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Settings
+                            onBack={() => {
+                                setShowSettings(false);
+                            }}
+                        />
+                    </Stack>
+                </div>
+            );
+        }
+
+        return (
+            <ProfilePage
+                profileHandle={profileHandle}
+                onOpenSettings={() => setShowSettings(true)}
+            />
+        );
     } else if (shouldShowSignIn) {
         return <SignIn />;
     }
