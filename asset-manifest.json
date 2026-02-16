@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/mandarin-trainer/static/css/main.e6c13ad2.css",
-    "main.js": "/mandarin-trainer/static/js/main.29d89f33.js",
+    "main.js": "/mandarin-trainer/static/js/main.1f42e35e.js",
     "static/js/453.e076ee58.chunk.js": "/mandarin-trainer/static/js/453.e076ee58.chunk.js",
     "index.html": "/mandarin-trainer/index.html",
     "main.e6c13ad2.css.map": "/mandarin-trainer/static/css/main.e6c13ad2.css.map",
-    "main.29d89f33.js.map": "/mandarin-trainer/static/js/main.29d89f33.js.map",
+    "main.1f42e35e.js.map": "/mandarin-trainer/static/js/main.1f42e35e.js.map",
     "453.e076ee58.chunk.js.map": "/mandarin-trainer/static/js/453.e076ee58.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.29d89f33.js"
+    "static/js/main.1f42e35e.js"
   ]
 }
