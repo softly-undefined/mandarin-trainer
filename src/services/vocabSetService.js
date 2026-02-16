@@ -1,5 +1,6 @@
 import { db } from '../firebase';
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, limit } from 'firebase/firestore';
+import { normalizeVocabItems } from '../utils/chineseConverter';
 
 const MAX_SETS_PER_USER = 50;
 export const MAX_WORDS_PER_SET = 200;
@@ -32,12 +33,13 @@ export async function createVocabSet(userId, setName, vocabItems) {
             throw new Error(`Maximum limit of ${MAX_WORDS_PER_SET} words per set reached`);
         }
 
+        const normalizedItems = normalizeVocabItems(vocabItems);
         const slug = await ensureSlug();
         const docRef = await addDoc(collection(db, 'vocabSets'), {
             userId,
             ownerId: userId,
             setName,
-            vocabItems,
+            vocabItems: normalizedItems,
             slug,
             isPublic: true,
             createdAt: new Date(),
@@ -71,6 +73,14 @@ export async function getUserVocabSets(userId) {
             }
             if (!data.slug) {
                 updatePayload.slug = await ensureSlug();
+                needsUpdate = true;
+            }
+
+            // Normalize vocabItems to include characterTrad
+            const normalizedItems = normalizeVocabItems(data.vocabItems);
+            const itemsChanged = JSON.stringify(normalizedItems) !== JSON.stringify(data.vocabItems);
+            if (itemsChanged) {
+                updatePayload.vocabItems = normalizedItems;
                 needsUpdate = true;
             }
 
@@ -123,7 +133,12 @@ export async function getSetBySlug(slug) {
         const snapshot = await getDocs(q);
         if (snapshot.empty) return null;
         const d = snapshot.docs[0];
-        return { id: d.id, ...d.data() };
+        const data = d.data();
+        return {
+            id: d.id,
+            ...data,
+            vocabItems: normalizeVocabItems(data.vocabItems),
+        };
     } catch (error) {
         console.error("Error fetching set by slug:", error);
         throw error;

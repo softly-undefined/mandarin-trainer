@@ -3,16 +3,19 @@ import { useAuth } from '../contexts/AuthContext';
 import { Button, Card, Container, Row, Col, Form, Table, Alert } from 'react-bootstrap';
 import { createVocabSet, updateVocabSet, deleteVocabSet, ensureSetSlug, MAX_WORDS_PER_SET } from '../services/vocabSetService';
 import { useTheme } from '../contexts/ThemeContext';
+import { useScript } from '../contexts/ScriptContext';
+import { tradToSimplified, simplifiedToTrad } from '../utils/chineseConverter';
 import { useRef } from 'react';
 
 export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
     const { currentUser } = useAuth();
     const { isDarkMode } = useTheme();
+    const { isTraditional, getDisplayChar, showAltScript } = useScript();
     const [setName, setSetName] = useState(set?.setName || '');
     const [vocabItems, setVocabItems] = useState(set?.vocabItems || []);
     const initialNameRef = useRef(set?.setName || '');
     const initialItemsRef = useRef(set?.vocabItems || []);
-    const [newItem, setNewItem] = useState({ character: '', pinyin: '', definition: '' });
+    const [newItem, setNewItem] = useState({ character: '', characterTrad: '', pinyin: '', definition: '' });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [editingIndex, setEditingIndex] = useState(null);
@@ -35,7 +38,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
         }
 
         setVocabItems(updated);
-        setNewItem({ character: '', pinyin: '', definition: '' });
+        setNewItem({ character: '', characterTrad: '', pinyin: '', definition: '' });
         setError('');
     };
 
@@ -229,13 +232,20 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                     <Card.Body>
                         <Card.Title style={{ color: isDarkMode ? '#fff' : undefined }}>Add New Vocabulary Item</Card.Title>
                         <Form onSubmit={handleAddItem}>
-                            <Row>
+                            <Row className="mb-2">
                                 <Col>
                                     <Form.Control
                                         type="text"
-                                        placeholder="字"
-                                        value={newItem.character}
-                                        onChange={(e) => setNewItem({ ...newItem, character: e.target.value })}
+                                        placeholder={isTraditional ? "繁體字 (Traditional)" : "简体字 (Simplified)"}
+                                        value={isTraditional ? (newItem.characterTrad || '') : (newItem.character || '')}
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            if (isTraditional) {
+                                                setNewItem({ ...newItem, characterTrad: val, character: tradToSimplified(val) });
+                                            } else {
+                                                setNewItem({ ...newItem, character: val, characterTrad: simplifiedToTrad(val) });
+                                            }
+                                        }}
                                         style={inputStyle}
                                         className={isDarkMode ? 'vocab-darkmode-input' : ''}
                                     />
@@ -266,6 +276,32 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                                     </Button>
                                 </Col>
                             </Row>
+                            {showAltScript && (
+                                <Row>
+                                    <Col>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder={isTraditional ? "简体 (Simplified)" : "繁體 (Traditional)"}
+                                            value={isTraditional ? (newItem.character || '') : (newItem.characterTrad || '')}
+                                            onChange={(e) => {
+                                                const val = e.target.value;
+                                                if (isTraditional) {
+                                                    setNewItem({ ...newItem, character: val });
+                                                } else {
+                                                    setNewItem({ ...newItem, characterTrad: val });
+                                                }
+                                            }}
+                                            style={{ ...inputStyle, fontSize: '0.85rem', opacity: 0.7 }}
+                                            className={isDarkMode ? 'vocab-darkmode-input' : ''}
+                                        />
+                                    </Col>
+                                    <Col />
+                                    <Col />
+                                    <Col xs="auto" style={{ visibility: 'hidden' }}>
+                                        <Button variant="primary">Add</Button>
+                                    </Col>
+                                </Row>
+                            )}
                         </Form>
                     </Card.Body>
                 </Card>
@@ -280,6 +316,7 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                         <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}>
                             <tr>
                                 <th style={thStyle}>Character</th>
+                                {showAltScript && <th style={thStyle}>{isTraditional ? "Simplified" : "Traditional"}</th>}
                                 <th style={thStyle}>Pinyin</th>
                                 <th style={thStyle}>Definition</th>
                                 <th style={thStyle}>Actions</th>
@@ -288,7 +325,8 @@ export default function VocabSetEditor({ set, goToPage, onSetUpdated }) {
                         <tbody>
                             {vocabItems.map((item, index) => (
                                 <tr key={index}>
-                                    <td>{item.character}</td>
+                                    <td>{getDisplayChar(item)}</td>
+                                    {showAltScript && <td style={{ fontSize: '0.85em', opacity: 0.7 }}>{isTraditional ? item.character : item.characterTrad}</td>}
                                     <td>{item.pinyin}</td>
                                     <td>{item.definition}</td>
                                     <td>

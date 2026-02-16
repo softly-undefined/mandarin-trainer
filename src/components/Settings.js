@@ -1,11 +1,13 @@
 import { Button, Card, Stack, Form } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
+import { useScript } from "../contexts/ScriptContext";
 
 export default function Settings(props) {
     const { onBack, goToPage } = props;
     const { currentUser, logout } = useAuth();
     const { isDarkMode, toggleDarkMode } = useTheme();
+    const { isTraditional, toggleScript, showAltScript, toggleAltScript } = useScript();
 
     const handleLogout = async () => {
         try {
@@ -67,13 +69,29 @@ export default function Settings(props) {
                     </div>
 
                     <Form>
-                        <Form.Check 
+                        <Form.Check
                             type="switch"
                             id="dark-mode-switch"
                             label="Dark Mode"
                             checked={isDarkMode}
                             onChange={toggleDarkMode}
                             style={{ fontSize: "1.1rem", color: isDarkMode ? "#fff" : undefined }}
+                        />
+                        <Form.Check
+                            type="switch"
+                            id="traditional-switch"
+                            label="Traditional Chinese"
+                            checked={isTraditional}
+                            onChange={toggleScript}
+                            style={{ fontSize: "1.1rem", color: isDarkMode ? "#fff" : undefined, marginTop: "0.5rem" }}
+                        />
+                        <Form.Check
+                            type="switch"
+                            id="alt-script-switch"
+                            label="Show Alternative Script"
+                            checked={showAltScript}
+                            onChange={toggleAltScript}
+                            style={{ fontSize: "1.1rem", color: isDarkMode ? "#fff" : undefined, marginTop: "0.5rem" }}
                         />
                     </Form>
 

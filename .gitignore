@@ -129,3 +129,4 @@ dist
 .pnp.*
 .env.production
 .DS_Store
+CLAUDE.md

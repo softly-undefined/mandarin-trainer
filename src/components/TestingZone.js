@@ -3,6 +3,7 @@ import { Button, Card, CloseButton, Form, Stack, ProgressBar } from "react-boots
 import { getUserVocabSets } from "../services/vocabSetService";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
+import { useScript } from "../contexts/ScriptContext";
 
 export default function TestingZone(props) {
     const {
@@ -21,7 +22,16 @@ export default function TestingZone(props) {
     } = props;
 
     const { isDarkMode } = useTheme();
+    const { getDisplayChar } = useScript();
     const { currentUser } = useAuth();
+
+    // Resolves the display value for a field, respecting script preference for character fields
+    const resolveField = (word, field) => {
+        if (field === 'character') {
+            return getDisplayChar(word);
+        }
+        return word[field];
+    };
     const [currentSet, setCurrentSet] = useState(null);
     const [term, setTerm] = useState("");
     const [key, setKey] = useState("");
@@ -76,20 +86,22 @@ export default function TestingZone(props) {
             return { options: [], correctIndex: null };
         }
 
+        const correctVal = resolveField(correctWord, want);
+
         // Unique answer pool, excluding the correct answer
         const uniquePool = Array.from(
             new Set(
                 wordList
-                    .map((w) => w?.[want])
+                    .map((w) => resolveField(w, want))
                     .filter((val) => val && val === val) // filters falsy/undefined/NaN
             )
-        ).filter((val) => val !== correctWord[want]);
+        ).filter((val) => val !== correctVal);
 
         const wrongChoices = shuffleArray(uniquePool).slice(0, Math.min(3, uniquePool.length));
         const options = [...wrongChoices];
 
         const insertAt = Math.floor(Math.random() * (options.length + 1));
-        options.splice(insertAt, 0, correctWord[want]);
+        options.splice(insertAt, 0, correctVal);
 
         return { options, correctIndex: insertAt };
     };
@@ -130,10 +142,10 @@ export default function TestingZone(props) {
             }
 
             const validWords = selectedSet.vocabItems
-                .filter(item => 
-                    item && 
-                    item.character && 
-                    item.pinyin && 
+                .filter(item =>
+                    item &&
+                    item.character &&
+                    item.pinyin &&
                     item.definition &&
                     item.character.trim() !== '' &&
                     item.pinyin.trim() !== '' &&
@@ -141,6 +153,7 @@ export default function TestingZone(props) {
                 )
                 .map(item => ({
                     character: item.character,
+                    characterTrad: item.characterTrad || '',
                     pinyin: item.pinyin,
                     definition: item.definition
                 }));
@@ -175,12 +188,12 @@ export default function TestingZone(props) {
                 }
                 
                 setLastWord(firstWord);
-                setTerm(firstWord[given]);
-                setKey(firstWord[want]);
-                setCurrChar(firstWord.character);
+                setTerm(resolveField(firstWord, given));
+                setKey(resolveField(firstWord, want));
+                setCurrChar(getDisplayChar(firstWord));
                 setCurrPinyin(firstWord.pinyin);
                 setCurrDefinition(firstWord.definition);
-                
+
                 setRemainingSet(shuffled.slice(1));
             }
         };
@@ -262,7 +275,7 @@ export default function TestingZone(props) {
         }
 
         // If the next word is the same as the last word shown, get a different word
-        if (lastWord && next[want] === lastWord[want] && nextSet.length > 0) {
+        if (lastWord && resolveField(next, want) === resolveField(lastWord, want) && nextSet.length > 0) {
             const randomIndex = Math.floor(Math.random() * nextSet.length);
             [next, nextSet[randomIndex]] = [nextSet[randomIndex], next];
         }
@@ -270,9 +283,9 @@ export default function TestingZone(props) {
         console.log("Setting next word:", next);
         setLastWord(next);
         setRemainingSet(nextSet);
-        setTerm(next[given]);
-        setKey(next[want]);
-        setCurrChar(next.character);
+        setTerm(resolveField(next, given));
+        setKey(resolveField(next, want));
+        setCurrChar(getDisplayChar(next));
         setCurrPinyin(next.pinyin);
         setCurrDefinition(next.definition);
         
@@ -297,8 +310,9 @@ export default function TestingZone(props) {
         // Filter words that still need practice
         let newTrainingSet = { ...currentSet };
         newTrainingSet.words = newTrainingSet.words.filter((word) => {
-            const correctCount = answerCounts[word[want]] || 0;
-            const wrongCount = wrongCounts[word[want]] || 0;
+            const wordKey = resolveField(word, want);
+            const correctCount = answerCounts[wordKey] || 0;
+            const wrongCount = wrongCounts[wordKey] || 0;
             const keep = correctCount < 3 && !(correctCount >= 2 && wrongCount === 0);
             console.log("Filtering word:", word, "correctCount:", correctCount, "wrongCount:", wrongCount, "keep:", keep);
             return keep;
@@ -314,22 +328,22 @@ export default function TestingZone(props) {
                 .map(({ value }) => value);
             
             // If the first word is the same as the last word shown, swap it with another word
-            if (lastWord && shuffled.length > 1 && shuffled[0][want] === lastWord[want]) {
+            if (lastWord && shuffled.length > 1 && resolveField(shuffled[0], want) === resolveField(lastWord, want)) {
                 const randomIndex = Math.floor(Math.random() * (shuffled.length - 1)) + 1;
                 [shuffled[0], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[0]];
             }
-            
+
             console.log("Shuffled remaining words:", shuffled);
             setShuffledSet(shuffled);
             setRemainingSet(shuffled);
-            
+
             // Present the first word from the new set
             if (shuffled.length > 0) {
                 const firstWord = shuffled[0];
                 setLastWord(firstWord);
-                setTerm(firstWord[given]);
-                setKey(firstWord[want]);
-                setCurrChar(firstWord.character);
+                setTerm(resolveField(firstWord, given));
+                setKey(resolveField(firstWord, want));
+                setCurrChar(getDisplayChar(firstWord));
                 setCurrPinyin(firstWord.pinyin);
                 setCurrDefinition(firstWord.definition);
                 if (isMultipleChoice) {

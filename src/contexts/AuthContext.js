@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { auth } from '../firebase';
 import { onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { getUserVocabSets, createVocabSet } from '../services/vocabSetService';
+import { normalizeVocabItems } from '../utils/chineseConverter';
 
 const AuthContext = createContext();
 
@@ -62,7 +63,7 @@ async function ensureExampleSet(uid) {
             await createVocabSet(
                 uid,
                 "Lesson 6 Vocabulary",
-                [
+                normalizeVocabItems([
                     { character: "考卷", pinyin: "kao3 juan4", definition: "Exam paper" },
                     { character: "翻譯", pinyin: "fan1 yi4", definition: "Translate" },
                     { character: "扣分", pinyin: "kou4 fen1", definition: "Deduct points" },
@@ -102,7 +103,7 @@ async function ensureExampleSet(uid) {
                     { character: "無聊", pinyin: "wu2 liao2", definition: "To be bored" },
                     { character: "非。。。不可", pinyin: "fei1...bu4 ke3", definition: "Have to" },
                     { character: "想發", pinyin: "xiang3 fa3", definition: "Point of view" }
-                ]
+                ])
             );
             console.log("Lesson 6 Vocabulary created for new user.");
         } else {

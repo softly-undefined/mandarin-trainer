@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Stack } from "react-bootstrap";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { ScriptProvider } from "./contexts/ScriptContext";
 import { useAuth } from "./contexts/AuthContext";
 
 import TestingZone from "./components/TestingZone";
@@ -24,10 +25,6 @@ function AppContent() {
     //Code for the Multiple Choice in Settings
     const [isMultipleChoice, setIsMultipleChoice] = useState(false);
     const [multipleChoiceValue, setMultipleChoiceValue] = useState([2]);
-
-    //Code for Traditional in Settings
-    const [isTraditional, setIsTraditional] = useState(false);
-    const [traditionalValue, setTraditionalValue] = useState([2]);
 
     //to show or not to show each of the pages
     const [showHome, setShowHome] = useState(true);
@@ -177,10 +174,6 @@ function AppContent() {
                         onBack={() => {
                             goToPage(settingsReturnPage.page, settingsReturnPage.payload);
                         }}
-                        isTraditional={isTraditional}
-                        setIsTraditional={setIsTraditional}
-                        traditionalValue={traditionalValue}
-                        setTraditionalValue={setTraditionalValue}
                     />
                 )}
 
@@ -227,10 +220,6 @@ function AppContent() {
                         onBack={() => {
                             goToPage(settingsReturnPage.page, settingsReturnPage.payload);
                         }}
-                        isTraditional={isTraditional}
-                        setIsTraditional={setIsTraditional}
-                        traditionalValue={traditionalValue}
-                        setTraditionalValue={setTraditionalValue}
                     />
                 )}
 
@@ -269,7 +258,9 @@ export default function App() {
     return (
         <AuthProvider>
             <ThemeProvider>
-                <AppContent />
+                <ScriptProvider>
+                    <AppContent />
+                </ScriptProvider>
             </ThemeProvider>
         </AuthProvider>
     );
