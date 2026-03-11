@@ -9,6 +9,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
   <meta name="description" content="Mandarin Trainer - Learn Chinese vocabulary" />
+  <script>
+    (function () {
+      var isDarkMode = false;
+      try {
+        var savedTheme = window.localStorage.getItem('darkMode');
+        isDarkMode = savedTheme ? JSON.parse(savedTheme) === true : false;
+      } catch (e) {
+        isDarkMode = false;
+      }
+
+      var background = isDarkMode ? '#1a1a1a' : '#FDF5E9';
+      var textColor = isDarkMode ? '#ffffff' : '#000000';
+
+      document.documentElement.style.backgroundColor = background;
+      document.documentElement.style.color = textColor;
+
+      var style = document.createElement('style');
+      style.textContent = 'html, body, #root { background-color: ' + background + '; color: ' + textColor + '; }';
+      document.head.appendChild(style);
+
+      var themeMeta = document.querySelector('meta[name=\"theme-color\"]');
+      if (themeMeta) {
+        themeMeta.setAttribute('content', background);
+      }
+    })();
+  </script>
   <link rel="apple-touch-icon" href="%PUBLIC_URL%/finallogo.png" />
   <!--
       manifest.json provides metadata used when your web app is installed on a

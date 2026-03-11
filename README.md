@@ -1,9 +1,8 @@
 # Future Plans
 
 ## Large Changes
-UI Refresh! Make theming more original? (Night Market mode, started a bit with colors but need shapes)
-- imagining a toggle between card mode and another mode
-- needs to support usage on ipad, iphone, and mac
+
+UI Refresh! needs to support usage on ipad, iphone, and mac more cleanly
 
 3. Add a Search Function to let users explore the base of sets / revamp the unlogged in home view. Add a better sorting feature for sets (tie to textbook series, etc.) Including letting users create folders of vocab sets for better organization, this should involve a re-vamp of the home page
 
@@ -18,6 +17,3 @@ UI Refresh! Make theming more original? (Night Market mode, started a bit with c
 6. Add more personalized features which are specific to Chinese language learning (similarity based on radicals or something?)
 
 ## Small Changes
-
-- change the autofill for 5th tone to nothing instead of 0 on easytype PINYIN
-

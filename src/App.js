@@ -85,7 +85,11 @@ function AppContent() {
             try {
                 const s = await getSetBySlug(shareSlug);
                 if (!active) return;
-                if (!s || s.isPublic !== true) {
+                const isOwner = Boolean(currentUser?.uid) && (
+                    s?.ownerId === currentUser.uid || s?.userId === currentUser.uid
+                );
+
+                if (!s || (s.isPublic !== true && !isOwner)) {
                     setShareError("Set not found or not public.");
                 } else {
                     setLearningSet(s);
@@ -111,7 +115,7 @@ function AppContent() {
         };
         loadShare();
         return () => { active = false; };
-    }, [shareSlug, given, want]);
+    }, [shareSlug, given, want, currentUser?.uid]);
 
     const shouldShowSignIn = !currentUser && !isSettingsPath && !shareSlug && !profileHandle;
 
@@ -164,16 +168,14 @@ function AppContent() {
 
         const base = process.env.PUBLIC_URL || "";
         if (!currentUser && shareSlug && (pageName === "home" || pageName === "menu")) {
-            window.location.assign(`${base}/`);
-            return;
+            window.history.replaceState({}, "", `${base}/`);
         }
         
         if (pageName === "home" || pageName === "menu") {
-            // Ensure URL resets to app root when coming from a shared /set/:slug path
+            // Keep navigation in-app so theme/background does not flash on full reload.
             const homeUrl = `${base}/`;
             if (window.location.pathname.includes("/set/")) {
-                window.location.assign(homeUrl);
-                return;
+                window.history.replaceState({}, "", homeUrl);
             }
             setShowHome(true); // redirect both old routes to home
             console.log("isMultipleChoice", isMultipleChoice);

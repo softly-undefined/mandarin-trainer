@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { Button, Card, CloseButton, Form, Stack, ProgressBar } from "react-bootstrap";
 import { getUserVocabSets } from "../services/vocabSetService";
 import { useAuth } from "../contexts/AuthContext";
@@ -6,6 +6,23 @@ import { useTheme } from "../contexts/ThemeContext";
 import { useScript } from "../contexts/ScriptContext";
 import { usePinyin } from "../contexts/PinyinContext";
 import { normalizePinyinForCompare } from "../utils/pinyinUtils";
+import {
+    buildPromptFromWord,
+    buildValidWordsFromSet,
+    hasRequiredWordFields,
+    resolveWordField,
+    shuffleWords,
+} from "../learning/learningSessionModel";
+import {
+    createInitialLearningSessionState,
+    LEARNING_SESSION_ACTIONS,
+    learningSessionReducer,
+} from "../learning/learningSessionReducer";
+import {
+    completeLearningSession,
+    createLearningSession,
+    updateLearningSession,
+} from "../services/learningSessionService";
 
 export default function TestingZone(props) {
     const {
@@ -15,9 +32,7 @@ export default function TestingZone(props) {
         goToPage,
         isMultipleChoice,
         isQuickReview,
-        responseCounts,
         setResponseCounts,
-        learnedOverTime,
         setLearnedOverTime,
         currentSetName,
         externalSet,
@@ -29,13 +44,52 @@ export default function TestingZone(props) {
     const { formatPinyin } = usePinyin();
     const { currentUser } = useAuth();
 
-    // Resolves the canonical value for a field.
-    const resolveField = (word, field) => {
-        if (field === 'character') {
-            return getDisplayChar(word);
-        }
-        return word[field];
-    };
+    const [sessionState, dispatch] = useReducer(
+        learningSessionReducer,
+        undefined,
+        createInitialLearningSessionState
+    );
+
+    const {
+        sessionId,
+        currentSet,
+        term,
+        key,
+        answer,
+        keyText,
+        submissionNum,
+        isSubmitting,
+        formColor,
+        currChar,
+        currPinyin,
+        currDefinition,
+        buttonState,
+        buttonText,
+        selectedAnswer,
+        mcOptions,
+        answerPlacement,
+        remainingSet,
+        answerCounts,
+        wrongCounts,
+        totalWords,
+        learnedWords,
+        learnedWordKeys,
+        lastWord,
+        responseCounts,
+        learnedOverTime,
+    } = sessionState;
+
+    const patchSession = useCallback((patch) => {
+        dispatch({ type: LEARNING_SESSION_ACTIONS.PATCH, payload: patch });
+    }, []);
+
+    const setSessionAnswer = useCallback((value) => {
+        dispatch({ type: LEARNING_SESSION_ACTIONS.SET_ANSWER, payload: value });
+    }, []);
+
+    const setSessionSelectedAnswer = useCallback((value) => {
+        dispatch({ type: LEARNING_SESSION_ACTIONS.SET_SELECTED_ANSWER, payload: value });
+    }, []);
 
     const formatFieldForDisplay = useCallback((value, field) => {
         if (field === 'pinyin') {
@@ -43,37 +97,6 @@ export default function TestingZone(props) {
         }
         return value;
     }, [formatPinyin]);
-    const [currentSet, setCurrentSet] = useState(null);
-    const [term, setTerm] = useState("");
-    const [key, setKey] = useState("");
-    const [answer, setAnswer] = useState("");
-    const [keyText, setKeyText] = useState(false);
-    const [submissionNum, setSubmissionNum] = useState(1);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isCorrect, setIsCorrect] = useState(false);
-    const [formColor, setFormColor] = useState("black");
-    const [currChar, setCurrChar] = useState("");
-    const [currPinyin, setCurrPinyin] = useState("");
-    const [currDefinition, setCurrDefinition] = useState("");
-    const [buttonState, setButtonState] = useState("primary");
-    const [buttonText, setButtonText] = useState("Submit");
-    const [cardWidth] = useState(400);
-    const [selectedAnswer, setSelectedAnswer] = useState(null);
-
-    // Multiple choice related variables
-    const [mcOptions, setMcOptions] = useState([]);
-    const [answerPlacement, setAnswerPlacement] = useState(null);
-
-    const learnedWordsRef = useRef(0);
-
-    const [shuffledSet, setShuffledSet] = useState([]);
-    const [remainingSet, setRemainingSet] = useState([]);
-    const [answerCounts, setAnswerCounts] = useState({});
-    const [wrongCounts, setWrongCounts] = useState({});
-    const [totalWords, setTotalWords] = useState(0);
-    const [learnedWords, setLearnedWords] = useState(0);
-    const [learnedSet, setLearnedSet] = useState(new Set());
-    const [lastWord, setLastWord] = useState(null);
 
     const cardStyle = isDarkMode
         ? { backgroundColor: "#23272b", color: "#fff", borderColor: "#444" }
@@ -85,6 +108,7 @@ export default function TestingZone(props) {
     const progressBarVariant = isDarkMode ? "light" : "primary";
     const mcButtonBg = isDarkMode ? "#343a40" : undefined;
     const selectedBorder = isDarkMode ? "4px solid #fff" : "4px solid black";
+
     const hasMetLearningRequirement = useCallback((correctCount, wrongCount) => {
         if (isQuickReview) {
             return correctCount >= 1;
@@ -92,127 +116,281 @@ export default function TestingZone(props) {
         return correctCount >= 3 || (correctCount >= 2 && wrongCount === 0);
     }, [isQuickReview]);
 
-    const shuffleArray = (array) =>
-        array
-            .map((value) => ({ value, sort: Math.random() }))
-            .sort((a, b) => a.sort - b.sort)
-            .map(({ value }) => value);
-
-    const buildMcOptions = (wordList, correctWord) => {
+    const buildMcOptions = useCallback((wordList, correctWord) => {
         if (!wordList || wordList.length === 0 || !correctWord) {
             return { options: [], correctIndex: null };
         }
 
-        const correctVal = resolveField(correctWord, want);
+        const correctVal = resolveWordField(correctWord, want, getDisplayChar);
 
-        // Unique answer pool, excluding the correct answer
         const uniquePool = Array.from(
             new Set(
                 wordList
-                    .map((w) => resolveField(w, want))
-                    .filter((val) => val && val === val) // filters falsy/undefined/NaN
+                    .map((w) => resolveWordField(w, want, getDisplayChar))
+                    .filter((val) => val && !Number.isNaN(val))
             )
         ).filter((val) => val !== correctVal);
 
-        const wrongChoices = shuffleArray(uniquePool).slice(0, Math.min(3, uniquePool.length));
+        const wrongChoices = shuffleWords(uniquePool).slice(0, Math.min(3, uniquePool.length));
         const options = [...wrongChoices];
 
         const insertAt = Math.floor(Math.random() * (options.length + 1));
         options.splice(insertAt, 0, correctVal);
 
         return { options, correctIndex: insertAt };
-    };
+    }, [want, getDisplayChar]);
+
+    const setActiveWord = useCallback((word, nextRemainingSet, optionPool) => {
+        const prompt = buildPromptFromWord(word, given, want, getDisplayChar);
+        let mcPayload = { mcOptions: [], answerPlacement: null };
+
+        if (isMultipleChoice) {
+            const { options, correctIndex } = buildMcOptions(optionPool || currentSet?.words || [], word);
+            mcPayload = { mcOptions: options, answerPlacement: correctIndex };
+        }
+
+        patchSession({
+            lastWord: word,
+            remainingSet: nextRemainingSet,
+            term: prompt.term,
+            key: prompt.key,
+            currChar: prompt.currChar,
+            currPinyin: prompt.currPinyin,
+            currDefinition: prompt.currDefinition,
+            selectedAnswer: null,
+            ...mcPayload,
+        });
+    }, [
+        given,
+        want,
+        getDisplayChar,
+        isMultipleChoice,
+        buildMcOptions,
+        patchSession,
+        currentSet?.words,
+    ]);
+
+    const persistSessionProgress = useCallback((stateOverride = {}) => {
+        const state = { ...sessionState, ...stateOverride };
+        if (!state.sessionId) return;
+
+        updateLearningSession({
+            userId: currentUser?.uid,
+            sessionId: state.sessionId,
+            patch: {
+                setName: currentSetName,
+                mode: {
+                    given,
+                    want,
+                    isMultipleChoice,
+                    isQuickReview,
+                },
+                progress: {
+                    learnedWords: state.learnedWords,
+                    totalWords: state.totalWords,
+                    responseCount: state.responseCounts.length,
+                },
+                runtime: {
+                    responseCounts: state.responseCounts,
+                    learnedOverTime: state.learnedOverTime,
+                    answerCounts: state.answerCounts,
+                    wrongCounts: state.wrongCounts,
+                    learnedWordKeys: state.learnedWordKeys,
+                    remainingSet,
+                    key,
+                    term,
+                },
+            },
+        });
+    }, [
+        sessionState,
+        currentUser?.uid,
+        currentSetName,
+        given,
+        want,
+        isMultipleChoice,
+        isQuickReview,
+        remainingSet,
+        key,
+        term,
+    ]);
+
+    const prepareNext = useCallback(() => {
+        if (!currentSet || !currentSet.words || currentSet.words.length === 0) {
+            console.error("No valid set to train with");
+            return;
+        }
+
+        const nextTrainingWords = currentSet.words.filter((word) => {
+            const wordKey = resolveWordField(word, want, getDisplayChar);
+            const correctCount = answerCounts[wordKey] || 0;
+            const wrongCount = wrongCounts[wordKey] || 0;
+            return !hasMetLearningRequirement(correctCount, wrongCount);
+        });
+
+        if (nextTrainingWords.length > 0) {
+            const reshuffled = shuffleWords(nextTrainingWords);
+
+            if (
+                lastWord &&
+                reshuffled.length > 1 &&
+                resolveWordField(reshuffled[0], want, getDisplayChar) ===
+                    resolveWordField(lastWord, want, getDisplayChar)
+            ) {
+                const randomIndex = Math.floor(Math.random() * (reshuffled.length - 1)) + 1;
+                [reshuffled[0], reshuffled[randomIndex]] = [reshuffled[randomIndex], reshuffled[0]];
+            }
+
+            patchSession({
+                shuffledSet: reshuffled,
+                remainingSet: reshuffled,
+            });
+
+            const firstWord = reshuffled[0];
+            setActiveWord(firstWord, reshuffled.slice(1), currentSet.words);
+            return;
+        }
+
+        completeLearningSession({
+            userId: currentUser?.uid,
+            sessionId,
+            patch: {
+                progress: {
+                    learnedWords,
+                    totalWords,
+                    responseCount: responseCounts.length,
+                },
+                runtime: {
+                    responseCounts,
+                    learnedOverTime,
+                    answerCounts,
+                    wrongCounts,
+                },
+            },
+        });
+
+        if (goToPage) {
+            goToPage("finishPage");
+        }
+    }, [
+        currentSet,
+        want,
+        getDisplayChar,
+        answerCounts,
+        wrongCounts,
+        hasMetLearningRequirement,
+        lastWord,
+        patchSession,
+        setActiveWord,
+        currentUser?.uid,
+        sessionId,
+        learnedWords,
+        totalWords,
+        responseCounts,
+        learnedOverTime,
+        goToPage,
+    ]);
+
+    const presentNext = useCallback(() => {
+        if (!remainingSet || remainingSet.length === 0) {
+            prepareNext();
+            return;
+        }
+
+        const nextSet = [...remainingSet];
+        let nextWord = nextSet.pop();
+
+        if (!hasRequiredWordFields(nextWord, given, want)) {
+            prepareNext();
+            return;
+        }
+
+        if (
+            lastWord &&
+            resolveWordField(nextWord, want, getDisplayChar) === resolveWordField(lastWord, want, getDisplayChar) &&
+            nextSet.length > 0
+        ) {
+            const randomIndex = Math.floor(Math.random() * nextSet.length);
+            [nextWord, nextSet[randomIndex]] = [nextSet[randomIndex], nextWord];
+        }
+
+        setActiveWord(nextWord, nextSet, currentSet?.words || []);
+    }, [
+        remainingSet,
+        prepareNext,
+        given,
+        want,
+        lastWord,
+        getDisplayChar,
+        setActiveWord,
+        currentSet?.words,
+    ]);
 
     useEffect(() => {
         let isMounted = true;
 
         const buildFromSet = (selectedSet) => {
-            // Reset all state first
-            setCurrentSet(null);
-            setTerm("");
-            setKey("");
-            setAnswer("");
-            setKeyText(false);
-            setSubmissionNum(1);
-            setIsSubmitting(false);
-            setCurrChar("");
-            setCurrPinyin("");
-            setCurrDefinition("");
-            setButtonState("primary");
-            setButtonText("Submit");
-            setLearnedOverTime([]);
-            setLearnedWords(0);
-            setResponseCounts([]);
-            setAnswerCounts({});
-            setWrongCounts({});
-            setLearnedSet(new Set());
-            setTotalWords(0);
-            setShuffledSet([]);
-            setRemainingSet([]);
-            // Reset multiple choice states
-            setMcOptions([]);
-            setAnswerPlacement(null);
-
-            if (!selectedSet?.vocabItems || !Array.isArray(selectedSet.vocabItems)) {
-                console.error("Selected set has invalid vocabItems:", selectedSet);
-                return;
-            }
-
-            const validWords = selectedSet.vocabItems
-                .filter(item =>
-                    item &&
-                    item.character &&
-                    item.pinyin &&
-                    item.definition &&
-                    item.character.trim() !== '' &&
-                    item.pinyin.trim() !== '' &&
-                    item.definition.trim() !== ''
-                )
-                .map(item => ({
-                    character: item.character,
-                    characterTrad: item.characterTrad || '',
-                    pinyin: item.pinyin,
-                    definition: item.definition
-                }));
+            const validWords = buildValidWordsFromSet(selectedSet);
 
             if (validWords.length === 0) {
                 console.error("No valid words found in set");
                 if (onTermCountChange) onTermCountChange(0);
+                dispatch({ type: LEARNING_SESSION_ACTIONS.RESET });
                 return;
             }
 
+            const learningSession = createLearningSession({
+                userId: currentUser?.uid,
+                setId: selectedSet?.id || setChoice.replace('custom_', ''),
+                setName: selectedSet?.setName || currentSetName || '',
+                mode: {
+                    given,
+                    want,
+                    isMultipleChoice,
+                    isQuickReview,
+                },
+                totalWords: validWords.length,
+            });
+
             const transformedSet = { words: validWords };
-            setCurrentSet(transformedSet);
-            setTotalWords(validWords.length);
+            const initialShuffled = shuffleWords(validWords);
+            const firstWord = initialShuffled[0];
+
+            let mcPayload = { mcOptions: [], answerPlacement: null };
+            if (isMultipleChoice && firstWord) {
+                const { options, correctIndex } = buildMcOptions(validWords, firstWord);
+                mcPayload = { mcOptions: options, answerPlacement: correctIndex };
+            }
+
+            const prompt = firstWord
+                ? buildPromptFromWord(firstWord, given, want, getDisplayChar)
+                : {
+                    term: '',
+                    key: '',
+                    currChar: '',
+                    currPinyin: '',
+                    currDefinition: '',
+                };
+
             if (onTermCountChange) onTermCountChange(validWords.length);
 
-            let shuffled = validWords
-                .map((value) => ({ value, sort: Math.random() }))
-                .sort((a, b) => a.sort - b.sort)
-                .map(({ value }) => value);
+            dispatch({
+                type: LEARNING_SESSION_ACTIONS.INITIALIZE,
+                payload: {
+                    sessionId: learningSession.sessionId,
+                    currentSet: transformedSet,
+                    totalWords: validWords.length,
+                    shuffledSet: initialShuffled,
+                    remainingSet: initialShuffled.length > 1 ? initialShuffled.slice(1) : [],
+                    learnedWords: 0,
+                    lastWord: firstWord || null,
+                    ...prompt,
+                    ...mcPayload,
+                },
+            });
 
-            setShuffledSet(shuffled);
-            setRemainingSet(shuffled);
-            setLearnedWords(0);
-            setLastWord(null);
-
-            if (shuffled.length > 0) {
-                const firstWord = shuffled[0];
-                if (isMultipleChoice) {
-                    const { options, correctIndex } = buildMcOptions(validWords, firstWord);
-                    setMcOptions(options);
-                    setAnswerPlacement(correctIndex);
-                }
-                
-                setLastWord(firstWord);
-                setTerm(resolveField(firstWord, given));
-                setKey(resolveField(firstWord, want));
-                setCurrChar(getDisplayChar(firstWord));
-                setCurrPinyin(firstWord.pinyin);
-                setCurrDefinition(firstWord.definition);
-
-                setRemainingSet(shuffled.slice(1));
-            }
+            setResponseCounts([]);
+            setLearnedOverTime([]);
         };
 
         const loadSet = async () => {
@@ -222,13 +400,12 @@ export default function TestingZone(props) {
             }
 
             if (!setChoice || !currentUser) {
-                console.log("No set selected or user not logged in");
                 return;
             }
 
             const setId = setChoice.replace('custom_', '');
             const sets = await getUserVocabSets(currentUser.uid);
-            const selectedSet = sets.find(set => set.id === setId);
+            const selectedSet = sets.find((set) => set.id === setId);
             if (!selectedSet) {
                 console.error("Selected set not found");
                 return;
@@ -244,192 +421,71 @@ export default function TestingZone(props) {
         return () => {
             isMounted = false;
         };
-    }, [setChoice, currentUser, externalSet, isMultipleChoice, given, want]);
-
-    const shuffle = (set) => {
-        console.log("Shuffling set:", set);
-        if (!set || !set.words || !Array.isArray(set.words) || set.words.length === 0) {
-            console.error("Invalid set structure in shuffle:", set);
-            return;
-        }
-
-        let shuffled = set.words
-            .map((value) => ({ value, sort: Math.random() }))
-            .sort((a, b) => a.sort - b.sort)
-            .map(({ value }) => value);
-        
-        console.log("Shuffled words:", shuffled);
-        setShuffledSet(shuffled);
-        setRemainingSet(shuffled);
-        setLearnedWords(0);
-        
-        // Present the first word after shuffling
-        presentNext();
-    };
-
-    const presentNext = () => {
-        console.log("Presenting next word. Current state:", {
-            remainingSet,
-            currentSet,
-            answerCounts,
-            wrongCounts
-        });
-
-        if (!remainingSet || remainingSet.length === 0) {
-            console.log("No words remaining, preparing next set");
-            prepareNext();
-            return;
-        }
-
-        let nextSet = [...remainingSet];
-        let next = nextSet.pop();
-        
-        // Validate the next word before setting it
-        if (!next || !next[given] || !next[want] || !next.character || !next.pinyin || !next.definition) {
-            console.error("Invalid word data:", next);
-            prepareNext();
-            return;
-        }
-
-        // If the next word is the same as the last word shown, get a different word
-        if (lastWord && resolveField(next, want) === resolveField(lastWord, want) && nextSet.length > 0) {
-            const randomIndex = Math.floor(Math.random() * nextSet.length);
-            [next, nextSet[randomIndex]] = [nextSet[randomIndex], next];
-        }
-
-        console.log("Setting next word:", next);
-        setLastWord(next);
-        setRemainingSet(nextSet);
-        setTerm(resolveField(next, given));
-        setKey(resolveField(next, want));
-        setCurrChar(getDisplayChar(next));
-        setCurrPinyin(next.pinyin);
-        setCurrDefinition(next.definition);
-        
-        if (isMultipleChoice) {
-            assignMC(next);
-        }
-    };
-
-    const prepareNext = () => {
-        console.log("Preparing next word. Current state:", {
-            remainingSet,
-            currentSet,
-            answerCounts,
-            wrongCounts
-        });
-
-        if (!currentSet || !currentSet.words || currentSet.words.length === 0) {
-            console.error("No valid set to train with");
-            return;
-        }
-
-        // Filter words that still need practice
-        let newTrainingSet = { ...currentSet };
-        newTrainingSet.words = newTrainingSet.words.filter((word) => {
-            const wordKey = resolveField(word, want);
-            const correctCount = answerCounts[wordKey] || 0;
-            const wrongCount = wrongCounts[wordKey] || 0;
-            const keep = !hasMetLearningRequirement(correctCount, wrongCount);
-            console.log("Filtering word:", word, "correctCount:", correctCount, "wrongCount:", wrongCount, "keep:", keep);
-            return keep;
-        });
-        
-        console.log("Filtered training set:", newTrainingSet);
-        
-        if (newTrainingSet.words.length > 0) {
-            // Shuffle the remaining words
-            let shuffled = newTrainingSet.words
-                .map((value) => ({ value, sort: Math.random() }))
-                .sort((a, b) => a.sort - b.sort)
-                .map(({ value }) => value);
-            
-            // If the first word is the same as the last word shown, swap it with another word
-            if (lastWord && shuffled.length > 1 && resolveField(shuffled[0], want) === resolveField(lastWord, want)) {
-                const randomIndex = Math.floor(Math.random() * (shuffled.length - 1)) + 1;
-                [shuffled[0], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[0]];
-            }
-
-            console.log("Shuffled remaining words:", shuffled);
-            setShuffledSet(shuffled);
-            setRemainingSet(shuffled);
-
-            // Present the first word from the new set
-            if (shuffled.length > 0) {
-                const firstWord = shuffled[0];
-                setLastWord(firstWord);
-                setTerm(resolveField(firstWord, given));
-                setKey(resolveField(firstWord, want));
-                setCurrChar(getDisplayChar(firstWord));
-                setCurrPinyin(firstWord.pinyin);
-                setCurrDefinition(firstWord.definition);
-                if (isMultipleChoice) {
-                    assignMC(firstWord);
-                }
-                // Remove the first word from remaining set
-                setRemainingSet(shuffled.slice(1));
-            }
-        } else {
-            console.log("No words left to train, going to finish page");
-            if (goToPage) {
-                goToPage("finishPage");
-            }
-        }
-    };
+    }, [
+        setChoice,
+        currentUser,
+        externalSet,
+        isMultipleChoice,
+        isQuickReview,
+        given,
+        want,
+        getDisplayChar,
+        onTermCountChange,
+        buildMcOptions,
+        currentSetName,
+        setResponseCounts,
+        setLearnedOverTime,
+    ]);
 
     useEffect(() => {
-        const handler = (e) => handleButton(e);
-        document.addEventListener("keydown", handler);
-        return () => {
-            document.removeEventListener("keydown", handler);
-        };
-    }, [isMultipleChoice, mcOptions, selectedAnswer]);
+        setResponseCounts(responseCounts);
+    }, [responseCounts, setResponseCounts]);
 
-    const handleButton = (event) => {
-        if (!isMultipleChoice) return;
-        const keyMap = {
-            49: 0, 50: 1, 51: 2, 52: 3,        // keyCode for 1-4
-            '1': 0, '2': 1, '3': 2, '4': 3      // event.key for 1-4
-        };
-        const idx = keyMap[event.keyCode] ?? keyMap[event.key];
-        if (idx !== undefined && idx < mcOptions.length) {
-            setSelectedAnswer(idx);
-            handleSubmit(idx);
+    useEffect(() => {
+        setLearnedOverTime(learnedOverTime);
+    }, [learnedOverTime, setLearnedOverTime]);
+
+    useEffect(() => {
+        if (!sessionId || !currentSet) {
+            return;
         }
-    };
 
-    const assignMC = (word) => {
-        const pool = currentSet?.words || [];
-        const { options, correctIndex } = buildMcOptions(pool, word);
-        setMcOptions(options);
-        setAnswerPlacement(correctIndex);
-        setSelectedAnswer(null);
-    };
+        persistSessionProgress();
+    }, [
+        sessionId,
+        currentSet,
+        learnedWords,
+        totalWords,
+        responseCounts,
+        learnedOverTime,
+        answerCounts,
+        wrongCounts,
+        learnedWordKeys,
+        remainingSet,
+        key,
+        term,
+        persistSessionProgress,
+    ]);
 
-    const handleSubmit = (eventOrIndex) => {
+    const handleSubmit = useCallback((eventOrIndex) => {
         if (!isMultipleChoice && eventOrIndex?.preventDefault) {
             eventOrIndex.preventDefault();
         }
 
-        // If we're already showing the answer, move to next question
         if (isSubmitting) {
-            setKeyText(false);
-            setAnswer("");
-            setFormColor("black");
-            setButtonState("primary");
-            setButtonText("Submit");
-            setIsSubmitting(false);
-            setSelectedAnswer(null);
-            prepareNext();
+            patchSession({
+                keyText: false,
+                answer: "",
+                formColor: "black",
+                buttonState: "primary",
+                buttonText: "Submit",
+                isSubmitting: false,
+                selectedAnswer: null,
+            });
+            presentNext();
             return;
         }
 
-        // Otherwise, show the answer feedback
-        setKeyText(true);
-        setTerm("");
-        setIsSubmitting(true);
-
-        // Normalize both answers before comparing
         let normalizedAnswer = "";
         let normalizedKey = "";
         if (isMultipleChoice) {
@@ -453,59 +509,108 @@ export default function TestingZone(props) {
         const nextTrial = responseCounts.length + 1;
 
         if (normalizedAnswer === normalizedKey) {
-            setIsCorrect(true);
-            setFormColor("#2E972E");
-            setButtonState("success");
-            setButtonText("Next ->");
-            setResponseCounts((prev) => [...prev, 1]);
+            const newAnswerCounts = { ...answerCounts };
+            newAnswerCounts[key] = (newAnswerCounts[key] || 0) + 1;
 
-            setAnswerCounts((prevCounts) => {
-                const newCounts = { ...prevCounts };
-                newCounts[key] = (newCounts[key] || 0) + 1;
+            const correctCount = newAnswerCounts[key];
+            const wrongCount = wrongCounts[key] || 0;
 
-                const correctCount = newCounts[key];
-                const wrongCount = wrongCounts[key] || 0;
+            let nextLearnedWordKeys = learnedWordKeys;
+            let nextLearnedWords = learnedWords;
+            let nextLearnedOverTime = learnedOverTime;
 
-                setLearnedSet((prevSet) => {
-                    const safeSet = prevSet ?? new Set();
+            if (
+                !learnedWordKeys.includes(key) &&
+                learnedWords < totalWords &&
+                hasMetLearningRequirement(correctCount, wrongCount)
+            ) {
+                nextLearnedWordKeys = [...learnedWordKeys, key];
+                nextLearnedWords = learnedWords + 1;
+                const attemptsToMaster = correctCount + wrongCount;
+                nextLearnedOverTime = [
+                    ...learnedOverTime,
+                    { trial: nextTrial, learned: nextLearnedWords, term: key, attempts: attemptsToMaster },
+                ];
+            }
 
-                    if (
-                        !safeSet.has(key) &&
-                        learnedWords < totalWords &&
-                        hasMetLearningRequirement(correctCount, wrongCount)
-                    ) {
-                        const newSet = new Set(safeSet);
-                        newSet.add(key);
-                        const newCount = learnedWords + 1;
-                        setLearnedWords(newCount);
-                        learnedWordsRef.current = newCount;
-                        const attemptsToMaster = correctCount + wrongCount;
-                        setLearnedOverTime((prev) => [
-                            ...prev,
-                            { trial: nextTrial, learned: newCount, term: key, attempts: attemptsToMaster },
-                        ]);
-                        return newSet;
-                    }
-                    return safeSet;
-                });
-
-                return newCounts;
+            patchSession({
+                isCorrect: true,
+                formColor: "#2E972E",
+                buttonState: "success",
+                buttonText: "Next ->",
+                responseCounts: [...responseCounts, 1],
+                answerCounts: newAnswerCounts,
+                learnedWordKeys: nextLearnedWordKeys,
+                learnedWords: nextLearnedWords,
+                learnedOverTime: nextLearnedOverTime,
+                keyText: true,
+                term: "",
+                isSubmitting: true,
+                submissionNum: submissionNum + 1,
             });
         } else {
-            setIsCorrect(false);
-            setFormColor("#DD4F4F");
-            setButtonState("danger");
-            setButtonText("Next Term ->");
-            setResponseCounts((prev) => [...prev, 0]);
+            const newWrongCounts = { ...wrongCounts };
+            newWrongCounts[key] = (newWrongCounts[key] || 0) + 1;
 
-            setWrongCounts((answerCounts) => {
-                let newAnswerCounts = { ...answerCounts };
-                newAnswerCounts[key] = (newAnswerCounts[key] || 0) + 1;
-                return newAnswerCounts;
+            patchSession({
+                isCorrect: false,
+                formColor: "#DD4F4F",
+                buttonState: "danger",
+                buttonText: "Next Term ->",
+                responseCounts: [...responseCounts, 0],
+                wrongCounts: newWrongCounts,
+                keyText: true,
+                term: "",
+                isSubmitting: true,
+                submissionNum: submissionNum + 1,
             });
         }
-        setSubmissionNum((submissionNum) => submissionNum + 1);
-    };
+    }, [
+        isMultipleChoice,
+        isSubmitting,
+        patchSession,
+        presentNext,
+        selectedAnswer,
+        mcOptions,
+        want,
+        key,
+        answer,
+        responseCounts,
+        answerCounts,
+        wrongCounts,
+        learnedWordKeys,
+        learnedWords,
+        totalWords,
+        hasMetLearningRequirement,
+        learnedOverTime,
+        submissionNum,
+    ]);
+
+    useEffect(() => {
+        const handler = (event) => {
+            if (!isMultipleChoice) return;
+            const keyMap = {
+                49: 0,
+                50: 1,
+                51: 2,
+                52: 3,
+                '1': 0,
+                '2': 1,
+                '3': 2,
+                '4': 3,
+            };
+            const idx = keyMap[event.keyCode] ?? keyMap[event.key];
+            if (idx !== undefined && idx < mcOptions.length) {
+                setSessionSelectedAnswer(idx);
+                handleSubmit(idx);
+            }
+        };
+
+        document.addEventListener("keydown", handler);
+        return () => {
+            document.removeEventListener("keydown", handler);
+        };
+    }, [isMultipleChoice, mcOptions, handleSubmit, setSessionSelectedAnswer]);
 
     const getFontSize = (length) => {
         return length > 5 ? "25px" : "50px";
@@ -524,12 +629,12 @@ export default function TestingZone(props) {
                     }
                 `}</style>
             )}
-            <Card body style={{ width: cardWidth, ...cardStyle }}>
+            <Card body style={{ width: 400, ...cardStyle }}>
                 <Stack gap={1} className="mb-3">
                     <div style={headerStyle}>Progress: {learnedWords}/{totalWords} words learned</div>
-                    <ProgressBar 
-                        now={totalWords > 0 ? (learnedWords / totalWords) * 100 : 0} 
-                        label={totalWords > 0 ? `${Math.round((learnedWords / totalWords) * 100)}%` : '0%'} 
+                    <ProgressBar
+                        now={totalWords > 0 ? (learnedWords / totalWords) * 100 : 0}
+                        label={totalWords > 0 ? `${Math.round((learnedWords / totalWords) * 100)}%` : '0%'}
                         variant={progressBarVariant}
                         style={isDarkMode ? { backgroundColor: '#181a1b', color: '#fff' } : {}}
                     />
@@ -569,7 +674,7 @@ export default function TestingZone(props) {
                                 <Form.Label
                                     style={{
                                         fontSize: getFontSize(term.length),
-                                        ...headerStyle
+                                        ...headerStyle,
                                     }}
                                 >
                                     {formatFieldForDisplay(term, given)}
@@ -577,7 +682,7 @@ export default function TestingZone(props) {
                                 <Form.Label
                                     style={{
                                         fontSize: "25px",
-                                        ...headerStyle
+                                        ...headerStyle,
                                     }}
                                 >
                                     {keyText && (
@@ -598,7 +703,7 @@ export default function TestingZone(props) {
                                         readOnly={isSubmitting}
                                         type='text'
                                         value={answer}
-                                        onChange={(event) => setAnswer(event.target.value)}
+                                        onChange={(event) => setSessionAnswer(event.target.value)}
                                         className={isDarkMode ? 'testingzone-darkmode-input' : ''}
                                     />
                                 )}
@@ -614,21 +719,21 @@ export default function TestingZone(props) {
                                         {mcOptions.map((opt, idx) => (
                                             <Button
                                                 key={`${opt}-${idx}`}
-                                                style={{ 
-                                                    fontSize: "20px", 
+                                                style={{
+                                                    fontSize: "20px",
                                                     width: "100%",
                                                     backgroundColor: isSubmitting && answerPlacement !== null
                                                         ? (answerPlacement === idx ? "#2E972E" : "#DD4F4F")
                                                         : mcButtonBg,
                                                     border: selectedAnswer === idx ? selectedBorder : "4px solid transparent",
-                                                    color: isDarkMode ? "#fff" : undefined
+                                                    color: isDarkMode ? "#fff" : undefined,
                                                 }}
                                                 variant={buttonState}
                                                 onClick={() => {
                                                     if (isSubmitting) {
                                                         handleSubmit();
                                                     } else {
-                                                        setSelectedAnswer(idx);
+                                                        setSessionSelectedAnswer(idx);
                                                         handleSubmit(idx);
                                                     }
                                                 }}
@@ -637,47 +742,49 @@ export default function TestingZone(props) {
                                             </Button>
                                         ))}
                                     </Stack>
-                                    <div style={{ 
-                                        borderTop: isDarkMode ? '1px solid #444' : '1px solid #dee2e6',
-                                        marginTop: '0.5rem',
-                                        paddingTop: '1rem'
-                                    }}>
-                                        <Button 
+                                    <div
+                                        style={{
+                                            borderTop: isDarkMode ? '1px solid #444' : '1px solid #dee2e6',
+                                            marginTop: '0.5rem',
+                                            paddingTop: '1rem',
+                                        }}
+                                    >
+                                        <Button
                                             variant={isDarkMode ? "light" : "outline-secondary"}
                                             onClick={() => {
                                                 if (!isSubmitting) {
-                                                    // Register as incorrect answer
-                                                    setIsCorrect(false);
-                                                    setFormColor("#DD4F4F");
-                                                    setButtonState("danger");
-                                                    setButtonText("Next ->");
-                                                    setResponseCounts((prev) => [...prev, 0]);
-                                                    setWrongCounts((answerCounts) => {
-                                                        let newAnswerCounts = { ...answerCounts };
-                                                        newAnswerCounts[key] = (newAnswerCounts[key] || 0) + 1;
-                                                        return newAnswerCounts;
+                                                    const newWrongCounts = { ...wrongCounts };
+                                                    newWrongCounts[key] = (newWrongCounts[key] || 0) + 1;
+
+                                                    patchSession({
+                                                        isCorrect: false,
+                                                        formColor: "#DD4F4F",
+                                                        buttonState: "danger",
+                                                        buttonText: "Next ->",
+                                                        responseCounts: [...responseCounts, 0],
+                                                        wrongCounts: newWrongCounts,
+                                                        submissionNum: submissionNum + 1,
+                                                        keyText: true,
+                                                        term: "",
+                                                        isSubmitting: true,
                                                     });
-                                                    setSubmissionNum((submissionNum) => submissionNum + 1);
-                                                    // Show the answer feedback
-                                                    setKeyText(true);
-                                                    setTerm("");
-                                                    setIsSubmitting(true);
                                                 } else {
-                                                    // Move to next question
-                                                    setKeyText(false);
-                                                    setAnswer("");
-                                                    setFormColor("black");
-                                                    setButtonState("primary");
-                                                    setButtonText("Submit");
-                                                    setIsSubmitting(false);
-                                                    setSelectedAnswer(null);
+                                                    patchSession({
+                                                        keyText: false,
+                                                        answer: "",
+                                                        formColor: "black",
+                                                        buttonState: "primary",
+                                                        buttonText: "Submit",
+                                                        isSubmitting: false,
+                                                        selectedAnswer: null,
+                                                    });
                                                     prepareNext();
                                                 }
                                             }}
                                             style={{
                                                 width: '100%',
                                                 fontSize: '1.1rem',
-                                                fontWeight: '500'
+                                                fontWeight: '500',
                                             }}
                                         >
                                             {isSubmitting ? "Next ->" : "Skip ->"}

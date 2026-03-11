@@ -114,7 +114,9 @@ export default function Home(props) {
                 await loadSets();
             }
             const base = process.env.PUBLIC_URL || "";
-            window.location.assign(`${base}/set/${slug}`);
+            const nextSet = slug && set.slug !== slug ? { ...set, slug } : set;
+            window.history.pushState({}, "", `${base}/set/${slug}`);
+            goToPage("startLearning", { set: nextSet });
         } catch (error) {
             console.error("Error starting learning:", error);
         }
@@ -298,13 +300,14 @@ export default function Home(props) {
                             >
                                 Learn
                             </Button>
-                            <Button
-                                variant={isDarkMode ? "outline-info" : "info"}
-                                disabled={set.isPublic === false}
-                                onClick={() => handleCopyLink(set)}
-                            >
-                                Share
-                            </Button>
+                            {set.isPublic !== false && (
+                                <Button
+                                    variant={isDarkMode ? "outline-info" : "info"}
+                                    onClick={() => handleCopyLink(set)}
+                                >
+                                    Share
+                                </Button>
+                            )}
                         </Stack>
                     </Card.Body>
                 </Card>
