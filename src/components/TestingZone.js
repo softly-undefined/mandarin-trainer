@@ -14,6 +14,7 @@ export default function TestingZone(props) {
         setChoice,
         goToPage,
         isMultipleChoice,
+        isQuickReview,
         responseCounts,
         setResponseCounts,
         learnedOverTime,
@@ -84,6 +85,12 @@ export default function TestingZone(props) {
     const progressBarVariant = isDarkMode ? "light" : "primary";
     const mcButtonBg = isDarkMode ? "#343a40" : undefined;
     const selectedBorder = isDarkMode ? "4px solid #fff" : "4px solid black";
+    const hasMetLearningRequirement = useCallback((correctCount, wrongCount) => {
+        if (isQuickReview) {
+            return correctCount >= 1;
+        }
+        return correctCount >= 3 || (correctCount >= 2 && wrongCount === 0);
+    }, [isQuickReview]);
 
     const shuffleArray = (array) =>
         array
@@ -323,7 +330,7 @@ export default function TestingZone(props) {
             const wordKey = resolveField(word, want);
             const correctCount = answerCounts[wordKey] || 0;
             const wrongCount = wrongCounts[wordKey] || 0;
-            const keep = correctCount < 3 && !(correctCount >= 2 && wrongCount === 0);
+            const keep = !hasMetLearningRequirement(correctCount, wrongCount);
             console.log("Filtering word:", word, "correctCount:", correctCount, "wrongCount:", wrongCount, "keep:", keep);
             return keep;
         });
@@ -465,7 +472,7 @@ export default function TestingZone(props) {
                     if (
                         !safeSet.has(key) &&
                         learnedWords < totalWords &&
-                        (correctCount === 3 || (correctCount === 2 && wrongCount === 0))
+                        hasMetLearningRequirement(correctCount, wrongCount)
                     ) {
                         const newSet = new Set(safeSet);
                         newSet.add(key);
@@ -539,6 +546,9 @@ export default function TestingZone(props) {
                             {given} → {want}
                         </Card.Title>
                         <Card.Title style={headerStyle}>{currentSetName}</Card.Title>
+                        <div style={{ ...headerStyle, fontSize: "0.95rem", opacity: 0.85 }}>
+                            Mode: {isQuickReview ? "Quick Review" : "Standard"}
+                        </div>
                     </Stack>
                     <div className={isDarkMode ? "testingzone-darkmode-close" : undefined}>
                         <CloseButton

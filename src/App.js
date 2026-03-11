@@ -27,6 +27,7 @@ function AppContent() {
     //Code for the Multiple Choice in Settings
     const [isMultipleChoice, setIsMultipleChoice] = useState(false);
     const [multipleChoiceValue, setMultipleChoiceValue] = useState([2]);
+    const [isQuickReview, setIsQuickReview] = useState(false);
 
     //to show or not to show each of the pages
     const [showHome, setShowHome] = useState(true);
@@ -230,6 +231,7 @@ function AppContent() {
                         setSetChoice={setSetChoice}
                         goToPage={goToPage}
                         isMultipleChoice={isMultipleChoice}
+                        isQuickReview={isQuickReview}
                         responseCounts={responseCounts}
                         setResponseCounts={setResponseCounts}
                         learnedOverTime={learnedOverTime}
@@ -276,6 +278,8 @@ function AppContent() {
                         setLearnedOverTime={setLearnedOverTime}
                         isMultipleChoice={isMultipleChoice}
                         setIsMultipleChoice={setIsMultipleChoice}
+                        isQuickReview={isQuickReview}
+                        setIsQuickReview={setIsQuickReview}
                         showSettingsShortcut
                         backLabel="Back"
                         onBack={undefined}

@@ -22,6 +22,8 @@ export default function StartLearning({
     setLearnedOverTime,
     isMultipleChoice,
     setIsMultipleChoice,
+    isQuickReview,
+    setIsQuickReview,
     showSettingsShortcut = false,
     backLabel = "Back",
     onBack
@@ -317,6 +319,18 @@ export default function StartLearning({
                     checked={isMultipleChoice}
                     onChange={(e) => setIsMultipleChoice(e.target.checked)}
                     style={{ 
+                        color: isDarkMode ? '#ffffff' : '#000000',
+                        fontSize: '1.1rem',
+                        marginBottom: '1rem'
+                    }}
+                />
+                <Form.Check
+                    type="switch"
+                    id="quick-review-switch"
+                    label="Quick Review"
+                    checked={isQuickReview}
+                    onChange={(e) => setIsQuickReview(e.target.checked)}
+                    style={{
                         color: isDarkMode ? '#ffffff' : '#000000',
                         fontSize: '1.1rem',
                         marginBottom: '1rem'
